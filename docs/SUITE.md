@@ -1,0 +1,110 @@
+# La suite KDX : réglages communs et bus de messages
+
+Les applications de la suite (kdx-shell, kdx-explorer, kdx-browser, AudioLinker, KIRC) restent des programmes séparés. Elles partagent deux choses, volontairement
+minimes : un **fichier de réglages** (l'accent) et un **bus de messages** (des tubes nommés). Aucun démon central : si une application ne tourne pas, les autres
+continuent, et ce qui lui était destiné se perd sans bruit (ou la lance, voir §3.5).
+
+## 1. Réglages communs : `%APPDATA%\KDX\suite.json`
+
+```json
+{ "version": 1, "accent": "bleu" }
+```
+
+| Champ | Valeurs | Rôle |
+|---|---|---|
+| `version` | `1` | version du format ; un fichier d'une version inconnue est ignoré |
+| `accent` | `rouge` `bleu` `vert` `violet` `ambre` `sarcelle` `charbon` | la couleur d'accent de toute la suite (les thèmes de `themes.css`) |
+
+Règles :
+
+- **Absent, illisible, accent inconnu** : l'accent précédent est gardé, ou `rouge` au premier lancement. Une application ne plante jamais pour un `suite.json` abîmé.
+- **Écriture atomique** : écrire `suite.json.tmp` puis le renommer (`MoveFileEx` avec remplacement, `File.Move(…, true)`, `fs::rename`). Un lecteur ne voit jamais un fichier à moitié écrit.
+- **Lecture à chaud** : chaque application relit le fichier à l'ouverture, puis surveille sa date de modification et sa taille (sondage toutes les 250 ms : plus simple et
+  aussi fiable qu'une notification de dossier, pour un coût nul). Elle applique le nouvel accent sans redémarrer : la suite se recolore en moins d'une seconde.
+- **Dérogation** : une application peut offrir un accent à elle. KIRC garde son réglage « thème » ; il ne suit la suite que lorsqu'il est sur sa valeur par défaut (`kdx`).
+- **Qui écrit** : `kdx-shell.exe --accent <nom>` (et, plus tard, un sélecteur dans le centre rapide). Une application n'écrit jamais autre chose que `accent`.
+- Les réglages propres à chaque application restent chez elle (`%APPDATA%\KIRC`, `%APPDATA%\AudioLinker`, `%LOCALAPPDATA%\KdxShell`).
+
+## 2. Le bus : un tube par application
+
+Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `audiolinker`, `kirc`.
+
+- **Sécurité** : le tube n'est accessible qu'à l'utilisateur courant (descripteur de sécurité : un seul droit, celui du SID de l'utilisateur ; sous .NET `PipeOptions.CurrentUserOnly`),
+  les connexions distantes sont refusées (`PIPE_REJECT_REMOTE_CLIENTS`), la première instance est créée avec `FILE_FLAG_FIRST_PIPE_INSTANCE` (un autre processus ne peut pas
+  occuper le nom avant nous).
+- **Format** : du JSON, un objet par ligne (`\n`), UTF-8, **64 Ko au plus par ligne** (au-delà, la connexion est coupée).
+
+```json
+{ "type": "open-url", "from": "kirc", "data": { "url": "https://example.org/" } }
+```
+
+| Champ | Rôle |
+|---|---|
+| `type` | le nom du message, de la forme `domaine-action` ou `domaine.action` ; **liste blanche propre à chaque application** (§3) |
+| `from` | le nom de l'émetteur (informatif : le tube n'est de toute façon ouvert qu'à l'utilisateur courant) |
+| `data` | un objet, dont les champs sont définis par le type ; peut être omis |
+
+- **Rien n'est évalué** : un message est une donnée, jamais du code ni une commande de shell. Chaque application **valide** `type` (liste blanche), puis chaque champ de `data`
+  (type JSON, longueur, valeurs admises). Un message hors liste, mal formé ou invalide est **ignoré** et noté dans le journal ; il ne ferme pas la connexion.
+- **Sans réponse par défaut** : l'émetteur ouvre le tube, écrit une ou plusieurs lignes, referme (« tire et oublie »). Si le tube n'existe pas, l'application n'est pas lancée.
+- **Connexions longues** : une application peut garder la connexion ouverte pour **recevoir** des messages poussés (AudioLinker envoie `audio.state` à chaque changement).
+  Le premier message de l'abonné peut être `audio.get`, qui demande l'état tout de suite.
+- **Plusieurs émetteurs** : un serveur accepte plusieurs connexions simultanées (8 au plus) ; les lignes d'une même connexion arrivent dans l'ordre.
+
+## 3. Les messages, par destinataire
+
+### 3.1 `kdx.shell` (la barre)
+| `type` | `data` | Effet |
+|---|---|---|
+| `notify` | `title` (texte, ≤ 80), `text` (texte, ≤ 400), `level` (`info` `warn` `error`, défaut `info`) | une notification : la barre affiche une cloche et le nombre de notifications non vues, le centre rapide les liste (50 au plus, la plus récente en haut) |
+
+Émetteurs : **KIRC** (messages privés et mentions, en plus de la notification de Windows), **kdx-browser** (téléchargement terminé ou échoué), **AudioLinker** (erreurs et avertissements du groupe ; une même ligne n'est pas répétée avant 10 s).
+
+### 3.2 `kdx.explorer`
+| `type` | `data` | Effet |
+|---|---|---|
+| `open-path` | `path` (chemin absolu d'un dossier ; absent = Documents) | ouvre une fenêtre sur ce dossier |
+| `select` | `path` (chemin absolu d'un fichier ou d'un dossier) | ouvre le dossier parent avec l'élément sélectionné |
+
+Émetteur : **kdx-browser** (« Afficher dans le dossier » d'un téléchargement ; l'Explorateur est lancé au besoin, et l'explorateur de Windows reste le repli).
+
+### 3.3 `kdx.browser`
+| `type` | `data` | Effet |
+|---|---|---|
+| `open-url` | `url` (`http:` ou `https:` seulement, ≤ 2000 ; absent = onglet vide) | ouvre l'adresse dans un nouvel onglet |
+| `open-file` | `path` (chemin absolu d'un fichier qui existe, d'une extension affichable : `.html` `.htm` `.pdf` `.svg` `.png` `.jpg` `.jpeg` `.gif` `.webp` `.bmp` `.txt` `.mp3` `.ogg` `.wav` `.mp4` `.webm`) | ouvre le fichier dans un nouvel onglet (`file:///`) |
+
+Émetteurs : **KIRC** (`open-url` : un lien cliqué s'ouvre dans le navigateur KDX s'il tourne ou s'il est installé, sinon dans celui de Windows), **kdx-explorer** (`open-file` : le double-clic sur un fichier de ces types).
+
+### 3.4 `kdx.audiolinker`
+| `type` | `data` | Effet |
+|---|---|---|
+| `audio.get` | — | demande l'état |
+| `audio.toggle` | — | démarre ou arrête le groupe |
+| `audio.volume` | `v` (entier 0 à 100), `commit` (booléen) | volume du groupe ; `commit` l'enregistre et rafraîchit les fenêtres d'AudioLinker |
+| `audio.mute` | `on` (booléen) | coupe ou rétablit le son du groupe |
+| `audio.setup` | `name` (nom d'un setup existant, ≤ 200) | joue ce setup |
+
+AudioLinker répond par des messages `audio.state` (`running`, `starting`, `volume`, `muted`, `playing`, `setups` = liste de `{name, count}`), à la connexion et à chaque changement.
+Un seul abonné à la fois pour l'instant.
+
+### 3.5 Lancer la destination absente
+`%APPDATA%\KDXpps.json` donne, pour chaque nom, le chemin de l'exécutable : `{ "browser": "C:\…\kdx-browser.exe" }`. Chaque programme y écrit son propre chemin au démarrage. Un émetteur qui
+veut atteindre une application absente (un lien cliqué dans KIRC, par exemple) lance cet exécutable avec la cible en argument (`kdx-browser.exe <adresse>`) : au démarrage, l'application la traite,
+et si elle tourne déjà, sa **seconde instance** retransmet l'argument à la première par ce même bus (`open-url`, `open-path`) puis s'arrête. L'émetteur ne lance que les noms de la liste
+des applications (§2), jamais un chemin reçu d'ailleurs.
+
+### 3.6 Essais isolés
+Trois variables d'environnement, réservées aux essais, évitent de toucher aux vrais programmes : `KDX_PIPE_PREFIX` (remplace `kdx.` dans le nom des tubes et sépare aussi le verrou d'instance unique),
+`KDX_SUITE_DIR` (remplace `%APPDATA%\KDX`) et `KDX_DATA_DIR` (remplace `%LOCALAPPDATA%\KdxShell`, côté kdx-windows).
+
+## 4. Clients
+
+| Langage | Où | Contenu |
+|---|---|---|
+| C# | `kdx-windows/src/Kdx.Host/Bus.cs`, `Suite.cs` | serveur (liste blanche), émetteur, lecture et écriture de `suite.json` |
+| Rust | `kdx-ui/bus/rust` (crate `kdx-bus`) | émetteur, lecture de `suite.json`, sondage |
+| C++ | `kdx-ui/bus/cpp/kdx_bus.h` | en-tête seul : émetteur, ligne de message, lecture de `suite.json` |
+
+Chaque client a sa suite de tests de protocole (message valide, type inconnu, champ invalide, ligne trop longue, utilisateur autre). Le script d'intégration
+`kdx-windows/tests/bus.ps1` vérifie l'ensemble de bout en bout.

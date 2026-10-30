@@ -1,0 +1,17 @@
+{
+  "name": "KIRC",
+  "root": "../KIRC",
+  "files": {
+    "kdx-ui.css": "ui/kdx/kdx-ui.css",
+    "themes.css": "ui/kdx/themes.css",
+    "fonts.css": "ui/kdx/fonts.css",
+    "icons.js": "ui/kdx/icons.js",
+    "kdx_bus.rs": "src-tauri/src/kdx_bus.rs",
+    "kdx-verify.mjs": "tools/kdx-verify.mjs"
+  },
+  "lint": [
+    "ui"
+  ],
+  "notes": "Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/kdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/kdx-verify.mjs. kirc.css ne garde que la mise en page de KIRC.",
+  "manifest": "ui/kdx/kdx-sync.json"
+}

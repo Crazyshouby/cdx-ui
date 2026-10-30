@@ -1,0 +1,16 @@
+# Compatibilité : version de la charte et version des applications
+
+La charte suit [SemVer](https://semver.org/lang/fr/) (`VERSION`, `dist/MANIFEST.json`) :
+
+- **majeure** : un jeton, une classe ou un message du pont est retiré ou change de sens (une application doit être adaptée) ;
+- **mineure** : un jeton, un composant, un accent ou un message est ajouté ;
+- **correctif** : une valeur corrigée, sans changement de nom.
+
+Chaque application copie `dist/` par `charte-sync` et garde la version dans son `kdx-sync.json` (champ `kdxUi`).
+
+| kdx-ui | kdx-windows | KIRC | AudioLinker | Notes |
+|---|---|---|---|---|
+| 1.0.0 | 0.1.0 (non publié) | 0.4.0 → 0.5.0 (branche `kdx-ui-partage`, non publié) | 1.2.0 → 1.3.0 (branche `kdx-ui-partage`, non publié) | première charte partagée ; clients du bus et accent de la suite compris |
+
+Avant toute publication d'une application : son `kdx-sync.json` doit porter la version de charte de cette ligne, `node tools/kdx-verify.mjs` doit être vert, et `node tools/drift-report.mjs` (dans kdx-ui) ne doit montrer aucun écart non justifié.
+Publier AudioLinker ou KIRC avec la charte exige en plus la décision sur le nom « KDX » et sur la police (`CHARTE.md` §10).

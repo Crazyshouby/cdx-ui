@@ -1,0 +1,11 @@
+{
+  "_note": "Les fichiers qui écrivent à la main la liste des accents. Les chemins commencent par kdx-ui/ (ce dépôt) ou par le nom d'un dépôt voisin. alias : le nom que le fichier donne à un accent (KIRC appelle « kdx » le rouge).",
+  "files": [
+    { "path": "kdx-ui/bus/cpp/kdx_bus.h" },
+    { "path": "kdx-ui/bus/rust/kdx_bus.rs" },
+    { "path": "kdx-windows/src/Kdx.Host/Suite.cs" },
+    { "path": "kdx-windows/lancer.ps1" },
+    { "path": "KIRC/src-tauri/src/config.rs", "alias": { "rouge": "kdx" } },
+    { "path": "KIRC/ui/index.html", "alias": { "rouge": "kdx" } }
+  ]
+}

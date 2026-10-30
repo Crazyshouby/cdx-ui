@@ -1,0 +1,16 @@
+{
+  "name": "AudioLinker",
+  "root": "../AudioLinker",
+  "files": {
+    "kdx-ui.css": "kdx/kdx-ui.css",
+    "themes.css": "kdx/themes.css",
+    "fonts.css": "kdx/fonts.css",
+    "kdx_bus.h": "kdx/kdx_bus.h",
+    "kdx-verify.mjs": "tools/kdx-verify.mjs"
+  },
+  "lint": [
+    "assets"
+  ],
+  "notes": "C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake (marqueurs /*@kdx-ui.css@*/, /*@themes.css@*/, /*@fonts.css@*/ dans common.css, remplacés par les copies de kdx/) puis embarquées en RCDATA. kdx/ est une copie exacte de la charte et du client du bus (charte-sync), contrôlée en CI par tools/kdx-verify.mjs. icons.js reste le jeu de pictogrammes propre à AudioLinker.",
+  "manifest": "kdx/kdx-sync.json"
+}

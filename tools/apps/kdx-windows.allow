@@ -1,0 +1,2 @@
+# Exceptions justifiées propres à kdx-windows : règle<TAB>fragment du fichier<TAB>fragment de la ligne<TAB>raison. Aucune exception sans raison.
+gradient	alttab.html	--tb-grad	Réinitialisation des jetons de la fenêtre inactive : même définition que kdx-frame.css. À supprimer quand le shell sert kdx-frame.css (phase 1 du plan : le shell lit aujourd'hui l'ancien dossier KIRC\charte)

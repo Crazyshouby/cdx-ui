@@ -1,0 +1,16 @@
+{
+  "name": "kdx-windows (shell, Explorateur, Navigateur)",
+  "root": "../kdx-windows",
+  "files": {
+    "kdx-ui.css": "web/kdx/kdx-ui.css",
+    "themes.css": "web/kdx/themes.css",
+    "fonts.css": "web/kdx/fonts.css",
+    "icons.js": "web/kdx/icons.js",
+    "kdx-verify.mjs": "tools/kdx-verify.mjs"
+  },
+  "lint": [
+    "web"
+  ],
+  "notes": "C# + WebView2, trois programmes (kdx-shell, kdx-explorer, kdx-browser) autour de la bibliothèque Kdx.Host. Les pages sont servies depuis web/ par l'hôte virtuel kdx.shell ; web/kdx/ est une copie exacte de la charte (charte-sync). Les pages _test-*.html sont ignorées.",
+  "manifest": "web/kdx/kdx-sync.json"
+}

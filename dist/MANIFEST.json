@@ -1,0 +1,57 @@
+{
+  "kdxUi": "1.0.0",
+  "files": {
+    "kdx-ui.css": {
+      "sha256": "f1a7588db2ce8b8496999762a2b8e414c3309a19ff57a6e6d4f05c07a4cfda7a",
+      "bytes": 26370
+    },
+    "kdx-frame.css": {
+      "sha256": "f0eccf79e0d7ea800f2df227ba29a5dc5aeeaaaf3f6f38a1062eef47461b0fba",
+      "bytes": 1832
+    },
+    "themes.css": {
+      "sha256": "36d5fc8e9b28459cf890700d128ad50daabe9c2047bf83a489445bdff538c336",
+      "bytes": 2572
+    },
+    "fonts.css": {
+      "sha256": "807e66f40d2da77f858ad0383231fbadf89b2b6eb73397e99e8c191b5febb58b",
+      "bytes": 15338
+    },
+    "icons.js": {
+      "sha256": "e285b99c7172f5d45ffd579115cc6447e214f458864b520c91bf9b5140052ee8",
+      "bytes": 48984
+    },
+    "kdx-bridge.js": {
+      "sha256": "99baff4abb3bcb21967088639cd2eba6b4e30162b9c914c1ba0d7a7087ed0c04",
+      "bytes": 4137
+    },
+    "kdx-frame.js": {
+      "sha256": "6af7e06bb878053340aa4940750f5f4b9e0090bad9d2dd119c17cebeada5026d",
+      "bytes": 8615
+    },
+    "kdx-tokens.h": {
+      "sha256": "a4119d4bdcf553014c771963db35f1c4b67161bed1f9a360a39f9635ea3235ff",
+      "bytes": 3096
+    },
+    "tokens.rs": {
+      "sha256": "07647ee96ef72f4b5b00f39e92c70d1cc254cf91bbc9b99a16f0a6706b8c243f",
+      "bytes": 4116
+    },
+    "kdx-verify.mjs": {
+      "sha256": "92a9568326cf493ee5a9ccb66bdee00d0662e922981a3f77966a04d66a831a84",
+      "bytes": 1641
+    },
+    "kdx_bus.h": {
+      "sha256": "634c1a6438138a3b14716f331ad1c86c3b9020b4678f07cf0170c3c4b0cead85",
+      "bytes": 6589
+    },
+    "kdx_bus.rs": {
+      "sha256": "d1abd9e20ef5aaaa12fad424e3eec0dc2041c191f8db54ae045a4ac7f62365db",
+      "bytes": 11367
+    },
+    "tokens.json": {
+      "sha256": "e744d691da0c9f7c27bcc8bc30d7a38bd02a9796f917683922b7460c71568a21",
+      "bytes": 4695
+    }
+  }
+}

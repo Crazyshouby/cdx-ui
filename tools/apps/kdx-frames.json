@@ -1,0 +1,8 @@
+{
+  "name": "kdx-frames",
+  "root": "../KIRC/kdx-frames",
+  "files": {},
+  "lint": [],
+  "rust": "src/paint.rs",
+  "notes": "Rust, pas de page web : la palette et les mesures du cadre sont des constantes Rust (paint.rs), à rapprocher de tokens.json (generated/tokens.rs)."
+}

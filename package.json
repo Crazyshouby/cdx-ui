@@ -1,0 +1,16 @@
+{
+  "name": "kdx-ui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "La charte graphique KDX-UI : jetons, composants, pont et cadre de fenêtre, outils de contrôle.",
+  "type": "module",
+  "scripts": {
+    "tokens": "python gen/gen_tokens.py",
+    "dist": "node tools/build-dist.mjs",
+    "lint": "node tools/charte-lint.mjs kdx-ui.css kdx-frame.css kdx-frame.js kdx-bridge.js exemple.html",
+    "rapport": "node tools/drift-report.mjs",
+    "test": "node --test \"tests/*.test.mjs\" && node tests/run-browser-tests.mjs",
+    "verifier": "python gen/gen_tokens.py --check && node tools/build-dist.mjs --check && npm run lint && npm run accents && npm test",
+    "accents": "node tools/check-accents.mjs"
+  }
+}
