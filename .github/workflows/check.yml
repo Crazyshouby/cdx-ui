@@ -13,7 +13,7 @@ jobs:
       - run: pip install fonttools brotli
       - run: python gen/gen_tokens.py --check
       - run: node tools/build-dist.mjs --check
-      - run: node tools/charte-lint.mjs kdx-ui.css kdx-frame.css kdx-frame.js kdx-bridge.js exemple.html
+      - run: node tools/charte-lint.mjs kdx-ui.css kdx-frame.css kdx-frame.js kdx-columns.js kdx-bridge.js exemple.html
       - run: node tools/check-accents.mjs
       - run: node --test "tests/*.test.mjs"
       - run: node tests/run-browser-tests.mjs

@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 // nom dans dist/  <-  fichier source du dépôt
 export const DIST_FILES = {
   'kdx-ui.css': 'kdx-ui.css', 'kdx-frame.css': 'kdx-frame.css', 'themes.css': 'themes.css', 'fonts.css': 'fonts.css', 'icons.js': 'icons.js',
-  'kdx-bridge.js': 'kdx-bridge.js', 'kdx-frame.js': 'kdx-frame.js', 'kdx-tokens.h': 'generated/kdx-tokens.h', 'tokens.rs': 'generated/tokens.rs', 'kdx-verify.mjs': 'tools/kdx-verify.mjs', 'kdx_bus.h': 'bus/cpp/kdx_bus.h', 'kdx_bus.rs': 'bus/rust/kdx_bus.rs', 'tokens.json': 'tokens.json', 'pixel_engine.py': 'gen/pixel_engine.py', 'charte-lint.mjs': 'tools/charte-lint.mjs', 'lint.mjs': 'tools/lib/lint.mjs',
+  'kdx-bridge.js': 'kdx-bridge.js', 'kdx-frame.js': 'kdx-frame.js', 'kdx-columns.js': 'kdx-columns.js', 'kdx-tokens.h': 'generated/kdx-tokens.h', 'tokens.rs': 'generated/tokens.rs', 'kdx-verify.mjs': 'tools/kdx-verify.mjs', 'kdx_bus.h': 'bus/cpp/kdx_bus.h', 'kdx_bus.rs': 'bus/rust/kdx_bus.rs', 'tokens.json': 'tokens.json', 'pixel_engine.py': 'gen/pixel_engine.py', 'charte-lint.mjs': 'tools/charte-lint.mjs', 'lint.mjs': 'tools/lib/lint.mjs',
 };
 
 export const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');

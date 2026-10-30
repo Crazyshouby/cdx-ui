@@ -13,7 +13,8 @@
     "kdx-frame.css": "ui/kdx/kdx-frame.css",
     "tokens.json": "ui/kdx/tokens.json",
     "charte-lint.mjs": "tools/charte-lint.mjs",
-    "lint.mjs": "tools/lib/lint.mjs"
+    "lint.mjs": "tools/lib/lint.mjs",
+    "kdx-columns.js": "ui/kdx/kdx-columns.js"
   },
   "lint": [
     "ui"
