@@ -75,6 +75,10 @@ const J = x => JSON.stringify(x);
   d.querySelector('.menu [data-i="2"]').click(); ok('menu : une entrée désactivée ne fait rien', hit === 0 && !!d.querySelector('.menu'));
   d.querySelector('.menu [data-i="0"]').click(); ok('menu : clic exécute l\'action et ferme le menu', hit === 1 && !d.querySelector('.menu'));
   w.KdxFrame.menu([['A', () => { }]], 5, 5); d.body.dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('menu : clic ailleurs ferme le menu', !d.querySelector('.menu'));
+  w.KdxFrame.menu([['A', () => { }]], 5, 5); ok('menu : sans icône ni raccourci, le libellé est seul dans la ligne', d.querySelector('.menu-item').children.length === 1);
+  w.dispatchEvent(new w.Event('blur')); ok('menu : la perte du focus de la fenêtre ferme le menu', !d.querySelector('.menu'));
+  w.KdxFrame.menu([['A', () => { }]], 99999, 99999); const mr = d.querySelector('.menu').getBoundingClientRect();
+  ok('menu : ouvert hors de la fenêtre, il y est ramené', mr.right <= w.innerWidth && mr.bottom <= w.innerHeight && mr.left >= 0 && mr.top >= 0); d.querySelector('.menu').remove();
 
   document.getElementById('out').textContent = res.join('\n') + '\n' + (res.some(r => r.startsWith('ÉCHEC')) ? 'RÉSULTAT : ÉCHEC' : 'RÉSULTAT : TOUT EST BON');
 })();
