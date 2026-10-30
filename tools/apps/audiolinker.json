@@ -7,6 +7,7 @@
     "fonts.css": "kdx/fonts.css",
     "kdx_bus.h": "kdx/kdx_bus.h",
     "kdx-verify.mjs": "tools/kdx-verify.mjs",
+    "pixel_engine.py": "tools/pixel_engine.py",
     "kdx-bridge.js": "kdx/kdx-bridge.js",
     "kdx-frame.js": "kdx/kdx-frame.js",
     "kdx-frame.css": "kdx/kdx-frame.css"
@@ -14,6 +15,6 @@
   "lint": [
     "assets"
   ],
-  "notes": "C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake (marqueurs /*@kdx-ui.css@*/, /*@themes.css@*/, /*@fonts.css@*/ dans common.css, remplacés par les copies de kdx/) puis embarquées en RCDATA. kdx/ est une copie exacte de la charte et du client du bus (charte-sync), contrôlée en CI par tools/kdx-verify.mjs. icons.js reste le jeu de pictogrammes propre à AudioLinker.",
+  "notes": "C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake (marqueurs /*@kdx-ui.css@*/, /*@themes.css@*/, /*@fonts.css@*/ dans common.css, remplacés par les copies de kdx/) puis embarquées en RCDATA. kdx/ est une copie exacte de la charte et du client du bus (charte-sync), contrôlée en CI par tools/kdx-verify.mjs. icons.js reste le jeu de pictogrammes propre à AudioLinker (tools/pixel_icons.py dessine, tools/pixel_engine.py est le moteur commun).",
   "manifest": "kdx/kdx-sync.json"
 }
