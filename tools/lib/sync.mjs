@@ -64,7 +64,7 @@ export function writeApp(profile, distDir) {
     const a = path.join(profile.rootAbs, rel);
     fs.mkdirSync(path.dirname(a), { recursive: true });
     fs.copyFileSync(path.join(distDir, name), a); done.push(rel);
-    manifest.files[rel.split(path.sep).join('/')] ={ from: name, sha256: sha256(read(a)) };
+    manifest.files[rel.split(path.sep).join('/')] ={ from: name, sha256: sha256(Buffer.from(read(a).toString('latin1').replace(/\r\n/g, '\n'), 'latin1')) };   // fins de ligne ignorées (voir kdx-verify.mjs)
   }
   // kdx-sync.json : ce que kdx-verify.mjs contrôle dans la CI de l'application (copies non modifiées à la main)
   if (profile.manifest) { fs.mkdirSync(path.dirname(path.join(profile.rootAbs, profile.manifest)), { recursive: true }); fs.writeFileSync(path.join(profile.rootAbs, profile.manifest), JSON.stringify(manifest, null, 2) + '\n'); done.push(profile.manifest); }
