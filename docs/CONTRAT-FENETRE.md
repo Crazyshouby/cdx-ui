@@ -39,8 +39,18 @@ Transport des événements : Tauri `listen(type)` (charge utile = valeur) ; Audi
 - **Aimantation** : à la charge de l'hôte (10 px d'attraction, 2 px d'écart, 0 au bord de l'écran : `tokens.json`, `snap_distance` et `snap_gap`).
 - **Un thème** : l'hôte relit les réglages communs (`%APPDATA%\KDX\suite.json`, phase 2) et envoie `theme` ; en attendant, chaque application reste maîtresse du sien.
 
-## Écarts connus à résorber (phases 1 et 3)
+## Qui l'utilise (30/10/2026)
 
-- Les hôtes C# n'implémentent pas encore `win.shade` ni `win.ready` ; ils n'envoient pas `active`.
+Un seul code de cadre, `kdx-frame.js` sur `kdx-bridge.js`, pour toutes les applications : KIRC (transport `tauri`, écoute limitée à la fenêtre courante),
+AudioLinker (transport `strings`, `data-kdx-host="strings"` sur `<html>`), l'Explorateur et le navigateur de kdx-windows (transport `webview2`). Chaque application en
+reçoit une copie par `charte-sync` ; la page ne garde que ses besoins propres (menu de fenêtre de KIRC par l'événement `kdx:menu`, messages d'état d'AudioLinker).
+Les essais : `tests/bridge.test.html` (les trois transports simulés), `AudioLinker/tools/ui_smoke.py` (le transport `strings` sur la vraie page), `KIRC/tests/e2e.mjs`
+(la vraie application), `kdx-windows/tests/cadre.ps1` (les vraies fenêtres de l'Explorateur et du navigateur).
+
+## Écarts connus
+
+- Les hôtes C# ignorent `win.shade` et `win.ready` (sans erreur) ; ils n'envoient pas `active`.
 - KIRC n'a pas de commande `min` ni de `title` ; AudioLinker n'a pas d'agrandissement.
 - L'aimantation n'existe que dans KIRC (`app.rs::drag`, `SNAP_DIST`, `SNAP_GAP`).
+- Les pages du shell (barre, Démarrer, centre rapide) n'ont pas de cadre à déplacer : elles n'utilisent que le pont (`kdx.on`) par `host.js`.
+- Le menu contextuel et le dialogue de KdxFrame ne sont pas encore repris par KIRC et AudioLinker (ils gardent les leurs).

@@ -6,7 +6,10 @@
     "themes.css": "kdx/themes.css",
     "fonts.css": "kdx/fonts.css",
     "kdx_bus.h": "kdx/kdx_bus.h",
-    "kdx-verify.mjs": "tools/kdx-verify.mjs"
+    "kdx-verify.mjs": "tools/kdx-verify.mjs",
+    "kdx-bridge.js": "kdx/kdx-bridge.js",
+    "kdx-frame.js": "kdx/kdx-frame.js",
+    "kdx-frame.css": "kdx/kdx-frame.css"
   },
   "lint": [
     "assets"

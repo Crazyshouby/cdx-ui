@@ -7,7 +7,10 @@
     "fonts.css": "ui/kdx/fonts.css",
     "icons.js": "ui/kdx/icons.js",
     "kdx_bus.rs": "src-tauri/src/kdx_bus.rs",
-    "kdx-verify.mjs": "tools/kdx-verify.mjs"
+    "kdx-verify.mjs": "tools/kdx-verify.mjs",
+    "kdx-bridge.js": "ui/kdx/kdx-bridge.js",
+    "kdx-frame.js": "ui/kdx/kdx-frame.js",
+    "kdx-frame.css": "ui/kdx/kdx-frame.css"
   },
   "lint": [
     "ui"

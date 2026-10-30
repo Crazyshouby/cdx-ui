@@ -6,7 +6,7 @@
 const FRAME = (host) => `<!doctype html><html ${host === 'strings' ? 'data-kdx-host="strings"' : ''}><head><meta charset="utf-8">
 <link rel="stylesheet" href="/kdx-ui.css"><link rel="stylesheet" href="/kdx-frame.css">
 <script>window.__LOG = []; window.__H = {};
-${host === 'tauri' ? `window.__TAURI__ = { core: { invoke: (c, a) => { __LOG.push(['invoke', c, a]); return Promise.resolve(); } }, event: { listen: (t, f) => { __H[t] = f; } } };` : ''}
+${host === 'tauri' ? `window.__TAURI__ = { core: { invoke: (c, a) => { __LOG.push(['invoke', c, a]); return Promise.resolve(); } }, event: { listen: (t, f) => { __H[t] = f; __LOG.push(['listen-app', t]); } }, webviewWindow: { getCurrentWebviewWindow: () => ({ listen: (t, f) => { __H[t] = f; __LOG.push(['listen-window', t]); } }) } };` : ''}
 ${host === 'strings' ? `window.chrome = { webview: { postMessage: s => __LOG.push(s), addEventListener: (t, f) => { __H.message = f; } } };` : ''}
 ${host === 'webview2' ? `window.chrome = { webview: { postMessage: o => __LOG.push(o), addEventListener: (t, f) => { __H.message = f; } } };` : ''}
 <\/script><script src="/kdx-bridge.js"><\/script><script src="/kdx-frame.js"><\/script></head>
@@ -27,6 +27,7 @@ const J = x => JSON.stringify(x);
   let w = await load('tauri'), L = w.__LOG, d = w.document;
   ok('tauri : transport détecté', w.kdx.host === 'tauri');
   ok('tauri : init() annonce win_ready', L.some(e => e[1] === 'win_ready'), J(L));
+  ok('tauri : les événements sont écoutés sur la fenêtre courante, pas sur toute l\'application', L.some(e => e[0] === 'listen-window' && e[1] === 'active') && !L.some(e => e[0] === 'listen-app'), J(L));
   L.length = 0; const tb = d.querySelector('.tb');
   ptr(w, tb, 'pointerdown'); ok('tauri : appui sur la barre -> win_drag start', J(L[0]) === J(['invoke', 'win_drag', { phase: 'start' }]), J(L));
   ptr(w, tb, 'pointerup'); L.length = 0;

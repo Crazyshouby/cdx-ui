@@ -10,7 +10,7 @@ Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | AudioLinker | 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
 | kdx-frames | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
-| kdx-windows (shell, Explorateur, Navigateur) | 11 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 1 |
+| kdx-windows (shell, Explorateur, Navigateur) | 11 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
 | KIRC | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 24 |
 
 | règle | ce qu'elle mesure |
@@ -27,7 +27,7 @@ Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même
 
 C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake (marqueurs /*@kdx-ui.css@*/, /*@themes.css@*/, /*@fonts.css@*/ dans common.css, remplacés par les copies de kdx/) puis embarquées en RCDATA. kdx/ est une copie exacte de la charte et du client du bus (charte-sync), contrôlée en CI par tools/kdx-verify.mjs. icons.js reste le jeu de pictogrammes propre à AudioLinker.
 
-**0 écart(s)** (+ 0 toléré(s) avec raison) dans 4 fichier(s) examiné(s), 5 copie(s) identique(s) de la charte non recomptée(s).
+**0 écart(s)** (+ 0 toléré(s) avec raison) dans 4 fichier(s) examiné(s), 8 copie(s) identique(s) de la charte non recomptée(s).
 
 | fichier | radius | weight | size | blur | gradient | gray-tint | color |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -47,7 +47,10 @@ C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake 
 | `kdx/themes.css` | `themes.css` | identique | 2572 / 2572 |
 | `kdx/fonts.css` | `fonts.css` | identique | 15338 / 15338 |
 | `kdx/kdx_bus.h` | `kdx_bus.h` | identique | 6589 / 6589 |
-| `tools/kdx-verify.mjs` | `kdx-verify.mjs` | identique | 1641 / 1641 |
+| `tools/kdx-verify.mjs` | `kdx-verify.mjs` | identique | 1868 / 1868 |
+| `kdx/kdx-bridge.js` | `kdx-bridge.js` | identique | 4431 / 4431 |
+| `kdx/kdx-frame.js` | `kdx-frame.js` | identique | 8615 / 8615 |
+| `kdx/kdx-frame.css` | `kdx-frame.css` | identique | 2123 / 2123 |
 
 ## kdx-frames
 
@@ -68,7 +71,7 @@ Toutes sont des jetons de la charte.
 
 C# + WebView2, trois programmes (kdx-shell, kdx-explorer, kdx-browser) autour de la bibliothèque Kdx.Host. Les pages sont servies depuis web/ par l'hôte virtuel kdx.shell ; web/kdx/ est une copie exacte de la charte (charte-sync). Les pages _test-*.html sont ignorées.
 
-**0 écart(s)** (+ 1 toléré(s) avec raison) dans 11 fichier(s) examiné(s), 5 copie(s) identique(s) de la charte non recomptée(s).
+**0 écart(s)** (+ 0 toléré(s) avec raison) dans 11 fichier(s) examiné(s), 8 copie(s) identique(s) de la charte non recomptée(s).
 
 | fichier | radius | weight | size | blur | gradient | gray-tint | color |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -80,12 +83,6 @@ C# + WebView2, trois programmes (kdx-shell, kdx-explorer, kdx-browser) autour de
 - graisses : `400` ×2 (la charte : aucune)
 - couleurs hors jetons : **0** valeurs distinctes, dont —
 
-<details><summary><code>gradient</code> : undefined (exemples)</summary>
-
-- `web/shell/alttab.html:17` — `.card .win:not(.active) { --tb-edge: #555555; --tb-low: #222222; --tb-grad: linear-gradient(#0c0c0c, #222222 47%, #8f8f8f); --tbb-fill: #444`
-
-</details>
-
 **Copies de la charte** (comparées à `dist/`)
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
@@ -94,13 +91,16 @@ C# + WebView2, trois programmes (kdx-shell, kdx-explorer, kdx-browser) autour de
 | `web/kdx/themes.css` | `themes.css` | identique | 2572 / 2572 |
 | `web/kdx/fonts.css` | `fonts.css` | identique | 15338 / 15338 |
 | `web/kdx/icons.js` | `icons.js` | identique | 48984 / 48984 |
-| `tools/kdx-verify.mjs` | `kdx-verify.mjs` | identique | 1641 / 1641 |
+| `tools/kdx-verify.mjs` | `kdx-verify.mjs` | identique | 1868 / 1868 |
+| `web/kdx/kdx-bridge.js` | `kdx-bridge.js` | identique | 4431 / 4431 |
+| `web/kdx/kdx-frame.js` | `kdx-frame.js` | identique | 8615 / 8615 |
+| `web/kdx/kdx-frame.css` | `kdx-frame.css` | identique | 2123 / 2123 |
 
 ## KIRC
 
 Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/kdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/kdx-verify.mjs. kirc.css ne garde que la mise en page de KIRC.
 
-**0 écart(s)** (+ 24 toléré(s) avec raison) dans 3 fichier(s) examiné(s), 6 copie(s) identique(s) de la charte non recomptée(s).
+**0 écart(s)** (+ 24 toléré(s) avec raison) dans 3 fichier(s) examiné(s), 9 copie(s) identique(s) de la charte non recomptée(s).
 
 | fichier | radius | weight | size | blur | gradient | gray-tint | color |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -136,7 +136,10 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/kdx/ est u
 | `ui/kdx/fonts.css` | `fonts.css` | identique | 15338 / 15338 |
 | `ui/kdx/icons.js` | `icons.js` | identique | 48984 / 48984 |
 | `src-tauri/src/kdx_bus.rs` | `kdx_bus.rs` | identique | 11367 / 11367 |
-| `tools/kdx-verify.mjs` | `kdx-verify.mjs` | identique | 1641 / 1641 |
+| `tools/kdx-verify.mjs` | `kdx-verify.mjs` | identique | 1868 / 1868 |
+| `ui/kdx/kdx-bridge.js` | `kdx-bridge.js` | identique | 4431 / 4431 |
+| `ui/kdx/kdx-frame.js` | `kdx-frame.js` | identique | 8615 / 8615 |
+| `ui/kdx/kdx-frame.css` | `kdx-frame.css` | identique | 2123 / 2123 |
 
 ## Lecture
 

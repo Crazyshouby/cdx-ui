@@ -19,7 +19,9 @@
   if (host === "tauri") {
     const invoke = ts.core.invoke;
     send = (cmd, args) => invoke(cmd, args);
-    listen = type => ts.event.listen(type, e => emit(type, e.payload, e));
+    // Écoute limitée à cette fenêtre : un écouteur de toute l'application recevrait aussi ce qui est envoyé aux autres fenêtres (KIRC en ouvre plusieurs).
+    const here = ts.webviewWindow && ts.webviewWindow.getCurrentWebviewWindow ? ts.webviewWindow.getCurrentWebviewWindow() : ts.event;
+    listen = type => here.listen(type, e => emit(type, e.payload, e));
     Object.assign(win, {
       ready: () => send("win_ready"), close: () => send("win_close"), shade: () => send("win_shade"), max: () => send("win_zoom"),
       min: () => { }, title: () => { },

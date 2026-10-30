@@ -6,8 +6,8 @@
       "bytes": 26370
     },
     "kdx-frame.css": {
-      "sha256": "f0eccf79e0d7ea800f2df227ba29a5dc5aeeaaaf3f6f38a1062eef47461b0fba",
-      "bytes": 1832
+      "sha256": "db5aa659a691053fd4e4cb0790c0075a1f17c43e612d85ce8839c8eaacab2264",
+      "bytes": 2123
     },
     "themes.css": {
       "sha256": "36d5fc8e9b28459cf890700d128ad50daabe9c2047bf83a489445bdff538c336",
@@ -22,8 +22,8 @@
       "bytes": 48984
     },
     "kdx-bridge.js": {
-      "sha256": "99baff4abb3bcb21967088639cd2eba6b4e30162b9c914c1ba0d7a7087ed0c04",
-      "bytes": 4137
+      "sha256": "d0a8277cc6521032429352f127186a631d04d7ba52041bd2c4630f0323261121",
+      "bytes": 4431
     },
     "kdx-frame.js": {
       "sha256": "6af7e06bb878053340aa4940750f5f4b9e0090bad9d2dd119c17cebeada5026d",
