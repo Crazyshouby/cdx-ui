@@ -77,9 +77,36 @@ const J = x => JSON.stringify(x);
   w.KdxFrame.menu([['A', () => { }]], 5, 5); d.body.dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('menu : clic ailleurs ferme le menu', !d.querySelector('.menu'));
   w.KdxFrame.menu([['A', () => { }]], 5, 5); ok('menu : sans icône ni raccourci, le libellé est seul dans la ligne', d.querySelector('.menu-item').children.length === 1);
   w.dispatchEvent(new w.Event('blur')); ok('menu : la perte du focus de la fenêtre ferme le menu', !d.querySelector('.menu'));
+  // sous-menus et cases (la fenêtre de l'essai est élargie : deux niveaux de 200 px tiennent côte à côte)
+  frames.webview2.style.width = '800px';
+  { let acts = []; let built = 0;
+    w.KdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => acts.push('dossier')], ['Texte', () => acts.push('texte'), { check: true }], null, ['Désactivé', () => acts.push('x'), { disabled: true }]] }], ['Ouvrir avec', null, { sub: () => { built++; return [['Bloc-notes', () => acts.push('bn')]]; } }], ['Simple', () => acts.push('simple')]], 20, 20, 'T');
+    const top = () => [...d.querySelectorAll('.menu')];
+    ok('sous-menu : le premier niveau montre une flèche pour les éléments à sous-menu', d.querySelectorAll('.menu .subarrow').length === 2 && top().length === 1);
+    d.querySelector('.menu [data-i="0"]').click();
+    ok('sous-menu : un clic sur « Nouveau » ouvre le sous-menu (deux niveaux), l\'action du parent n\'est pas lancée', top().length === 2 && acts.length === 0);
+    const par = top()[0].getBoundingClientRect(), sub = top()[1].getBoundingClientRect();
+    ok('sous-menu : il s\'ouvre à droite du premier niveau, à la hauteur de l\'élément', sub.left >= par.right - 14 && Math.abs(sub.top - d.querySelector('.menu [data-i="0"]').getBoundingClientRect().top) < 12, J([par.right, sub.left]));
+    ok('sous-menu : la case cochée est dessinée', top()[1].querySelectorAll('.chk').length === 3 && top()[1].querySelectorAll('.chk.on').length === 1);
+    top()[1].querySelector('[data-i="3"]').click(); ok('sous-menu : un élément désactivé ne fait rien et ne ferme pas', acts.length === 0 && top().length === 2);
+    top()[1].querySelector('[data-i="0"]').click();
+    ok('sous-menu : cliquer une action la lance et ferme tous les niveaux', acts.join() === 'dossier' && top().length === 0);
+    w.KdxFrame.menu([['Ouvrir avec', null, { sub: () => { built++; return [['Bloc-notes', () => acts.push('bn')]]; } }]], 20, 20);
+    ok('sous-menu fonction : pas appelée tant qu\'on ne l\'ouvre pas', built === 0);
+    d.querySelector('.menu [data-i="0"]').click(); ok('sous-menu fonction : appelée à l\'ouverture', built === 1 && top().length === 2);
+    d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); ok('sous-menu : Échap ferme tous les niveaux', top().length === 0);
+    w.KdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => { }]] }]], 20, 20); d.querySelector('.menu [data-i="0"]').click();
+    d.body.dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('sous-menu : un clic ailleurs ferme tous les niveaux', top().length === 0);
+    w.KdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => { }]] }]], 20, 20); d.querySelector('.menu [data-i="0"]').click();
+    top()[1].dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('sous-menu : un clic dans le sous-menu ne le ferme pas (hors élément)', top().length === 2);
+    d.querySelector('.menu').dispatchEvent(new w.MouseEvent('mouseover', { bubbles: true })); w.dispatchEvent(new w.Event('blur')); ok('sous-menu : la perte du focus ferme tout', top().length === 0);
+    w.KdxFrame.menu([['Nouveau', null, { sub: [['Un sous-menu assez large pour déborder', () => { }]] }]], w.innerWidth - 180, 20); d.querySelector('.menu [data-i="0"]').click();
+    const ms = top(); ok('sous-menu : sans place à droite il s\'ouvre à gauche, dans la fenêtre', ms.length === 2 && ms[1].getBoundingClientRect().right <= w.innerWidth && ms[1].getBoundingClientRect().left < ms[0].getBoundingClientRect().left + 10);
+    w.dispatchEvent(new w.Event('blur')); }
+  frames.webview2.style.width = '400px';
   w.KdxFrame.menu([['A', () => { }]], 99999, 99999); const mr = d.querySelector('.menu').getBoundingClientRect();
   ok('menu : ouvert hors de la fenêtre, il y est ramené', mr.right <= w.innerWidth && mr.bottom <= w.innerHeight && mr.left >= 0 && mr.top >= 0); d.querySelector('.menu').remove();
 
   document.getElementById('out').textContent = res.join('\n') + '\n' + (res.some(r => r.startsWith('ÉCHEC')) ? 'RÉSULTAT : ÉCHEC' : 'RÉSULTAT : TOUT EST BON');
-})();
+})().catch(e => { document.getElementById('out').textContent = res.join(String.fromCharCode(10)) + String.fromCharCode(10) + 'ERREUR : ' + (e && e.stack || e) + String.fromCharCode(10) + 'RÉSULTAT : ÉCHEC'; });
 </script>
