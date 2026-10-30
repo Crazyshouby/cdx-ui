@@ -10,7 +10,10 @@
     "pixel_engine.py": "tools/pixel_engine.py",
     "kdx-bridge.js": "kdx/kdx-bridge.js",
     "kdx-frame.js": "kdx/kdx-frame.js",
-    "kdx-frame.css": "kdx/kdx-frame.css"
+    "kdx-frame.css": "kdx/kdx-frame.css",
+    "tokens.json": "kdx/tokens.json",
+    "charte-lint.mjs": "tools/charte-lint.mjs",
+    "lint.mjs": "tools/lib/lint.mjs"
   },
   "lint": [
     "assets"

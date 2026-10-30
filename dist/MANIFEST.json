@@ -56,6 +56,14 @@
     "pixel_engine.py": {
       "sha256": "a74d283820c38ea1dbbd3fd0fd85d02a6ccfaa37122fcee34d10e410f4ff8e9c",
       "bytes": 3394
+    },
+    "charte-lint.mjs": {
+      "sha256": "aaf8b59230f88d937c65d95af9a68e4fdeca960176ef7d78ea32354f9b3cb648",
+      "bytes": 2815
+    },
+    "lint.mjs": {
+      "sha256": "9b8c53ef75faeb6a56854a13c69f54bffa83ea759956d2ab5222603fa14110a7",
+      "bytes": 6715
     }
   }
 }

@@ -10,7 +10,10 @@
     "kdx-verify.mjs": "tools/kdx-verify.mjs",
     "kdx-bridge.js": "ui/kdx/kdx-bridge.js",
     "kdx-frame.js": "ui/kdx/kdx-frame.js",
-    "kdx-frame.css": "ui/kdx/kdx-frame.css"
+    "kdx-frame.css": "ui/kdx/kdx-frame.css",
+    "tokens.json": "ui/kdx/tokens.json",
+    "charte-lint.mjs": "tools/charte-lint.mjs",
+    "lint.mjs": "tools/lib/lint.mjs"
   },
   "lint": [
     "ui"

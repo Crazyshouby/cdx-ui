@@ -9,7 +9,10 @@
     "kdx-verify.mjs": "tools/kdx-verify.mjs",
     "kdx-bridge.js": "web/kdx/kdx-bridge.js",
     "kdx-frame.js": "web/kdx/kdx-frame.js",
-    "kdx-frame.css": "web/kdx/kdx-frame.css"
+    "kdx-frame.css": "web/kdx/kdx-frame.css",
+    "tokens.json": "web/kdx/tokens.json",
+    "charte-lint.mjs": "tools/charte-lint.mjs",
+    "lint.mjs": "tools/lib/lint.mjs"
   },
   "lint": [
     "web"

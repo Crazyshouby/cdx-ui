@@ -1,7 +1,9 @@
 // node --test tests/ : une règle de charte-lint, un cas conforme, un cas en écart.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { lintText, parseAllow, allowedBy, loadPalette } from '../tools/lib/lint.mjs';
+import { lintText, parseAllow, allowedBy, loadPalette, lintPaths } from '../tools/lib/lint.mjs';
+import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -78,4 +80,15 @@ test('exceptions justifiées', () => {
   assert.equal(allowedBy(v1, allow).reason, 'voyant rond de la charte');
   assert.equal(allowedBy(v2, allow), undefined);
   assert.ok(allowedBy(v3, allow));
+});
+
+test("exclude : une copie de la charte listée au manifeste n'est pas contrôlée, le reste l'est", () => {
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'kdxlint-'));
+  try {
+    const copie = path.join(d, 'copie.css'), page = path.join(d, 'page.css'), bad = '.x { border-radius: 4px; }\n';
+    fs.writeFileSync(copie, bad); fs.writeFileSync(page, bad);
+    const r = lintPaths([d], { palette: new Set(), exclude: new Set([copie]) });
+    assert.deepEqual(r.files, [page]);
+    assert.equal(r.violations.length, 1);
+  } finally { fs.rmSync(d, { recursive: true, force: true }); }
 });

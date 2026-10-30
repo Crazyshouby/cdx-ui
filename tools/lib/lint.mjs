@@ -86,19 +86,19 @@ const EXT = /\.(css|html?|js|mjs)$/i;
 const SKIP_NAME = /^(fonts\.css|icons\.js|themes\.css|_test-.*|.*\.test\.html|.*\.min\.(js|css))$/i;
 const SKIP_DIR = /^(node_modules|target|dist|build|build-dev|\.git|third_party)$/i;
 
-export function collect(paths, { includeGenerated = false } = {}) {
+export function collect(paths, { includeGenerated = false, exclude = new Set() } = {}) {
   const files = [];
   const walk = p => {
     const st = fs.statSync(p);
     if (st.isDirectory()) { for (const n of fs.readdirSync(p)) { if (!SKIP_DIR.test(n)) walk(path.join(p, n)); } }
-    else if (EXT.test(p) && (includeGenerated || !SKIP_NAME.test(path.basename(p)))) files.push(p);
+    else if (EXT.test(p) && !exclude.has(path.resolve(p)) && (includeGenerated || !SKIP_NAME.test(path.basename(p)))) files.push(p);
   };
   for (const p of paths) if (fs.existsSync(p)) walk(p);
   return files;
 }
 
-export function lintPaths(paths, { palette, allow = [], includeGenerated = false, base = '' } = {}) {
-  const files = collect(paths, { includeGenerated });
+export function lintPaths(paths, { palette, allow = [], includeGenerated = false, base = '', exclude = new Set() } = {}) {
+  const files = collect(paths, { includeGenerated, exclude });
   const violations = [];
   for (const f of files) {
     const rel = base ? path.relative(base, f) : f;

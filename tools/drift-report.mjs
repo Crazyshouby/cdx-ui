@@ -45,7 +45,8 @@ const res = apps.map(p => {
   const sync = exists && stale.length === 0 ? compareApp(p, dist) : [];
   // Une copie identique à dist/ est la charte elle-même : elle se contrôle à la source (avec ses exceptions), pas ici.
   const identical = new Set(sync.filter(x => x.state === 'ok').map(x => path.resolve(p.rootAbs, x.path)));
-  const allowFile = path.join(repo, 'tools', 'apps', p.slug + '.allow');
+  const own = path.join(p.rootAbs, 'charte-lint.allow');   // les exceptions vivent dans l'application (sa CI les lit) ; à défaut, ici
+  const allowFile = fs.existsSync(own) ? own : path.join(repo, 'tools', 'apps', p.slug + '.allow');
   const allow = fs.existsSync(allowFile) ? parseAllow(fs.readFileSync(allowFile, 'utf8')) : [];
   const files = exists ? collect((p.lint || []).map(x => path.join(p.rootAbs, x))).filter(f => !identical.has(path.resolve(f))) : [];
   const { violations } = exists && files.length ? lintPaths(files, { palette, allow, base: p.rootAbs }) : { violations: [] };
