@@ -1,0 +1,89 @@
+<!doctype html><meta charset="utf-8"><title>test kdx-split</title>
+<!-- Teste les volets redimensionnables (kdx-split.js) : barre dans l'espace du conteneur, bord suivi, bornes, zone souple, mémoire, double-clic, volet caché, fenêtre qui rétrécit.
+     Lancé par tests/run-browser-tests.mjs (Chrome headless) ; le résultat est écrit dans #out. -->
+<link rel="stylesheet" href="/kdx-ui.css">
+<style>
+  body { margin: 0; }
+  .row { display: flex; gap: 5px; height: 100px; width: 800px; }
+  .row > div { min-height: 0; }
+  #side { flex: none; width: 250px; min-width: 40%; max-width: 20px; }   /* bornes de CSS volontairement absurdes : le composant les remplace */
+  #main { flex: 1; min-width: 0; }
+  #pv { flex: none; width: 300px; }
+</style>
+<div class="row" id="row"><div id="side">dossiers</div><div id="main">contenu</div><div id="pv">aperçu</div></div>
+<div class="row" id="row2" style="width:600px;gap:8px"><div id="m2" style="flex:1;min-width:0">log</div><div id="mem" style="flex:none;width:34%">membres</div></div>
+<pre id="out">en attente</pre>
+<script src="/kdx-split.js"></script>
+<script>
+const res = [], ok = (name, cond, extra = '') => res.push((cond ? 'OK     ' : 'ÉCHEC  ') + name + (cond ? '' : '  ' + extra));
+const $ = id => document.getElementById(id);
+const W = id => Math.round($(id).getBoundingClientRect().width);
+const ptr = (el, type, x) => el.dispatchEvent(new PointerEvent(type, { bubbles: true, button: 0, pointerId: 4, clientX: x }));
+const drag = (h, dx) => { const s = h.firstElementChild, x = s.getBoundingClientRect().left; ptr(s, 'pointerdown', x); ptr(s, 'pointermove', x + dx); ptr(s, 'pointerup', x + dx); };
+const handles = () => [...document.querySelectorAll('#row > .kdx-split')];
+try { localStorage.removeItem('kdx.split.a'); localStorage.removeItem('kdx.split.b'); localStorage.removeItem('kdx.split.c'); } catch { }
+
+const frames = () => new Promise(r => setTimeout(r, 60));   // pas d'image dans ce Chrome sans écran : le ResizeObserver ne tourne pas, on appelle fit() à la main
+(async () => {
+  const a = KdxSplit.init({ pane: $('side'), side: 'left', key: 'a', min: 100, max: 500 });
+  const b = KdxSplit.init({ pane: $('pv'), side: 'right', key: 'b', min: 120, max: 600 });
+  await new Promise(r => setTimeout(r, 50));
+  const hs = handles();
+  ok('deux barres : l\'une après le volet de gauche, l\'autre avant le volet de droite', hs.length === 2 && hs[0].previousElementSibling === $('side') && hs[1].nextElementSibling === $('pv'));
+  ok('la mise en page ne bouge pas : 250 + souple (240) + 300, avec deux espaces de 5 px', W('side') === 250 && W('pv') === 300 && W('main') === 240, [W('side'), W('main'), W('pv')].join());
+  ok('les bornes du CSS sont remplacées par celles du composant', getComputedStyle($('side')).minWidth === '100px' && getComputedStyle($('side')).maxWidth === '500px');
+  ok('la bande de la barre couvre l\'espace de 5 px', Math.round(hs[0].firstElementChild.getBoundingClientRect().width) >= 7);
+
+  drag(hs[0], 30);
+  ok('tirer la barre de gauche de +30 : le volet passe à 280, la zone souple rétrécit (210)', W('side') === 280 && W('main') === 210, [W('side'), W('main')].join());
+  drag(hs[0], -400);
+  ok('un minimum de 100 px', W('side') === 100, W('side'));
+  drag(hs[0], 900);
+  ok('la zone souple garde 200 px au moins (le volet s\'arrête à 800-300-10-200 = 290)', W('side') === 290 && W('main') === 200, [W('side'), W('main')].join());
+  ok('la largeur est gardée (localStorage kdx.split.a)', localStorage.getItem('kdx.split.a') === '290');
+
+  hs[0].firstElementChild.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));   // retour à 250 : de la place pour le volet de droite
+  drag(hs[1], -30);
+  ok('tirer la barre du volet de droite de 30 vers la gauche l\'élargit de 30 (330)', W('pv') === 330 && W('main') === 210, [W('main'), W('pv')].join());
+  drag(hs[1], 900);
+  ok('minimum du volet de droite : 120', W('pv') === 120, W('pv'));
+  drag(hs[1], -900);
+  ok('maximum : la zone souple garde 200 px', W('main') === 200, [W('side'), W('main'), W('pv')].join());
+
+  drag(hs[0], 20); hs[0].firstElementChild.dispatchEvent(new MouseEvent('dblclick', { bubbles: true }));
+  ok('un double-clic rend la largeur d\'origine (le CSS : 250) et efface la mémoire', W('side') === 250 && localStorage.getItem('kdx.split.a') === null, W('side'));
+
+  // une barre relue au chargement
+  try { localStorage.setItem('kdx.split.c', '180'); } catch { }
+  const row = document.createElement('div'); row.className = 'row'; row.innerHTML = '<div id="s3" style="flex:none;width:250px">x</div><div id="m3" style="flex:1;min-width:0">y</div>'; document.body.appendChild(row);
+  KdxSplit.init({ pane: $('s3'), side: 'left', key: 'c', min: 100, max: 500 });
+  ok('une nouvelle page retrouve la largeur gardée (180)', W('s3') === 180, W('s3'));
+
+  // volet caché : la barre disparaît avec lui
+  $('pv').hidden = true; await new Promise(r => setTimeout(r, 30));
+  ok('volet caché (hidden) : sa barre l\'est aussi', handles()[1].hidden === true && getComputedStyle(handles()[1]).display === 'none');
+  $('pv').hidden = false; await new Promise(r => setTimeout(r, 30));
+  ok('volet réaffiché : la barre revient', handles()[1].hidden === false);
+
+  // volet en pourcentage (membres de KIRC) : la largeur de départ vient du CSS, l'espace est de 8 px
+  const m = KdxSplit.init({ pane: $('mem'), side: 'right', key: 'd', min: 120, max: 400 });
+  const w0 = W('mem'); ok('volet à 34 % : largeur de départ 204 (600 × 0,34)', w0 === 204, w0);
+  const h2 = $('row2').querySelector('.kdx-split'); ok('espace de 8 px : la barre y est (bande de 10 px)', Math.round(h2.firstElementChild.getBoundingClientRect().width) === 10, Math.round(h2.firstElementChild.getBoundingClientRect().width));
+  drag(h2, -100);
+  ok('tirer de 100 px à gauche : 304 (le CSS plafonnait à 320 : sans effet ici, mais le maximum du composant est 400)', W('mem') === 304, W('mem'));
+  drag(h2, -500);
+  ok('maximum 400', W('mem') === 400 || W('m2') === 200, [W('m2'), W('mem')].join());
+  localStorage.removeItem('kdx.split.d'); localStorage.removeItem('kdx.split.c'); localStorage.removeItem('kdx.split.a'); localStorage.removeItem('kdx.split.b');
+
+  // fenêtre qui rétrécit : le volet cède, puis reprend sa place
+  const row3 = document.createElement('div'); row3.className = 'row'; row3.style.width = '700px'; row3.innerHTML = '<div id="s4" style="flex:none;width:300px">x</div><div id="m4" style="flex:1;min-width:0">y</div>'; document.body.appendChild(row3);
+  const s4 = KdxSplit.init({ pane: $('s4'), side: 'left', key: 'e', min: 100, minOther: 200 });
+  await new Promise(r => setTimeout(r, 50));
+  row3.style.width = '400px'; s4.fit(); await frames();
+  ok('la fenêtre rétrécit à 400 : le volet cède (195) pour laisser 200 px à la zone souple', W('s4') === 195 && W('m4') === 200, [W('s4'), W('m4')].join());
+  row3.style.width = '700px'; s4.fit(); await frames();
+  ok('la fenêtre se réagrandit : le volet retrouve ses 300 px', W('s4') === 300, W('s4'));
+
+  document.getElementById('out').textContent = res.join('\n') + '\n' + (res.some(r => r.startsWith('ÉCHEC')) ? 'RÉSULTAT : ÉCHEC' : 'RÉSULTAT : TOUT EST BON');
+})();
+</script>

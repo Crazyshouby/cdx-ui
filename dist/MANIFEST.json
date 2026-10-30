@@ -2,8 +2,8 @@
   "kdxUi": "1.0.0",
   "files": {
     "kdx-ui.css": {
-      "sha256": "958821e393649076e29a1c9fa038c644d3e503477e10761c1e56163d5fb8d762",
-      "bytes": 26927
+      "sha256": "834d7f0ccc8dd23569465aa8c10a554d24cd1aaf065f96d59b15ea4e54ea1272",
+      "bytes": 27534
     },
     "kdx-frame.css": {
       "sha256": "db5aa659a691053fd4e4cb0790c0075a1f17c43e612d85ce8839c8eaacab2264",
@@ -32,6 +32,10 @@
     "kdx-columns.js": {
       "sha256": "9eea4842fa98ce675850ceb97b099619fbbdfaa3904dc1c2127825b0d4c4bfcb",
       "bytes": 3984
+    },
+    "kdx-split.js": {
+      "sha256": "0f887183b5c57b3ea5c69e83173b77e1feab9221652c1e723b9a437beb69a0f4",
+      "bytes": 4949
     },
     "kdx-tokens.h": {
       "sha256": "a4119d4bdcf553014c771963db35f1c4b67161bed1f9a360a39f9635ea3235ff",

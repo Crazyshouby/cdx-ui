@@ -14,7 +14,8 @@
     "tokens.json": "ui/kdx/tokens.json",
     "charte-lint.mjs": "tools/charte-lint.mjs",
     "lint.mjs": "tools/lib/lint.mjs",
-    "kdx-columns.js": "ui/kdx/kdx-columns.js"
+    "kdx-columns.js": "ui/kdx/kdx-columns.js",
+    "kdx-split.js": "ui/kdx/kdx-split.js"
   },
   "lint": [
     "ui"
