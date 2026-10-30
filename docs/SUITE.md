@@ -1,6 +1,6 @@
 # La suite KDX : réglages communs et bus de messages
 
-Les applications de la suite (kdx-shell, kdx-explorer, kdx-browser, AudioLinker, KIRC) restent des programmes séparés. Elles partagent deux choses, volontairement
+Les applications de la suite (kdx-shell, kdx-explorer, kdx-browser, kdx-repos, AudioLinker, KIRC) restent des programmes séparés. Elles partagent deux choses, volontairement
 minimes : un **fichier de réglages** (l'accent) et un **bus de messages** (des tubes nommés). Aucun démon central : si une application ne tourne pas, les autres
 continuent, et ce qui lui était destiné se perd sans bruit (ou la lance, voir §3.5).
 
@@ -27,7 +27,7 @@ Règles :
 
 ## 2. Le bus : un tube par application
 
-Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `audiolinker`, `kirc`.
+Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `audiolinker`, `kirc`.
 
 - **Sécurité** : le tube n'est accessible qu'à l'utilisateur courant (descripteur de sécurité : un seul droit, celui du SID de l'utilisateur ; sous .NET `PipeOptions.CurrentUserOnly`),
   les connexions distantes sont refusées (`PIPE_REJECT_REMOTE_CLIENTS`), la première instance est créée avec `FILE_FLAG_FIRST_PIPE_INSTANCE` (un autre processus ne peut pas
@@ -87,6 +87,14 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom
 
 AudioLinker répond par des messages `audio.state` (`running`, `starting`, `volume`, `muted`, `playing`, `setups` = liste de `{name, count}`), à la connexion et à chaque changement.
 Un seul abonné à la fois pour l'instant.
+
+### 3.4b `kdx.repos` (Dépôts)
+| `type` | `data` | Effet |
+|---|---|---|
+| `show` | — | passe la fenêtre de Dépôts devant (c'est ce que fait un second lancement de `kdx-repos.exe`) |
+
+Dépôts est en lecture seule : il ne reçoit que `show`. Il émet `open-path` vers l'Explorateur (« Ouvrir le dossier ») et `open-url` vers le navigateur (« Voir sur GitHub », adresses des hébergeurs connus seulement : github.com, gitlab.com, bitbucket.org, codeberg.org),
+tous deux lancés au besoin ; le repli est l'explorateur et le navigateur de Windows.
 
 ### 3.5 Lancer la destination absente
 `%APPDATA%\KDXpps.json` donne, pour chaque nom, le chemin de l'exécutable : `{ "browser": "C:\…\kdx-browser.exe" }`. Chaque programme y écrit son propre chemin au démarrage. Un émetteur qui
