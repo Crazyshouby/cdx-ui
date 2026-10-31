@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr" data-theme="rouge">
+<head>
+<meta charset="utf-8">
+<title>Maquette KDX — les fenêtres des captures de référence, avec la charte</title>
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="../cdx-ui.css">
+<link rel="stylesheet" href="../themes.css">
+<style>
+  /* Les six fenêtres des captures de kdx-reference/, aux mêmes positions et aux mêmes tailles (origine de chaque fenêtre : voir ORIGINS dans gen/kdx_reference.py),
+     bâties avec les composants de la charte. tools/kdx-compare.py capture cette page dans chaque thème et mesure les mêmes points que sur KDX.
+     Rien que de la mise en page ici : pas une couleur. */
+  body { position: relative; width: 1400px; height: 1130px; }
+  .win { position: absolute; }
+  .cb { position: relative; padding: 0; overflow: visible; }
+  .cb > *, .cb > .primary { position: absolute; margin: 0; }
+  .tb-btn[data-g] { display: grid; }
+  label { white-space: nowrap; }
+  .field { height: 20px; }
+  .lst { overflow: scroll; }
+  .lst > .fill { position: static; width: 400px; height: 400px; }
+  .sep { height: 0; border-top: 1px solid var(--field-lo); border-bottom: 1px solid var(--field-hi); }
+  .logo { display: grid; place-items: center; background: var(--ink); color: var(--faint); letter-spacing: 4px; }
+  .counters { display: flex; gap: 22px; align-items: center; }
+  .counters span { display: inline-flex; align-items: center; gap: 8px; }
+  .stack > .sbtn { position: static; }
+  .stack > .sbtn.on { position: static; }
+</style>
+</head>
+<body>
+
+<!-- KDX : le menu principal -->
+<div class="win" id="menu" style="left:38px;top:29px;width:170px;height:318px">
+  <div class="tb"><button class="tb-btn tb-l" data-g="x"></button><span class="tb-title">KDX</span><button class="tb-btn tb-r" data-g="minus"></button></div>
+  <div class="cb">
+    <div class="logo" style="left:0;top:0;width:158px;height:50px">KDX</div>
+    <div class="stack" style="left:4px;top:47px;width:148px">
+      <button class="sbtn"><span class="pix" data-ic="processeur"></span>Commands</button>
+      <button class="sbtn"><span class="pix" data-ic="connecter"></span>Connect…</button>
+      <button class="sbtn"><span class="pix" data-ic="carnet"></span>Address Book</button>
+      <button class="sbtn"><span class="pix" data-ic="message"></span>Messages</button>
+      <button class="sbtn"><span class="pix" data-ic="telecharger"></span>File Transfers</button>
+      <button class="sbtn"><span class="pix" data-ic="fichier"></span>File Browser</button>
+      <button class="sbtn"><span class="pix" data-ic="message"></span>Chat</button>
+      <button class="sbtn"><span class="pix" data-ic="journal"></span>News</button>
+      <button class="sbtn"><span class="pix" data-ic="membres"></span>User List</button>
+      <button class="sbtn"><span class="pix" data-ic="quitter"></span>Exit</button>
+    </div>
+    <div class="counters" style="left:14px;top:268px"><span><span class="pix" data-ic="connecter"></span>0</span><span><span class="pix" data-ic="telecharger"></span>0</span></div>
+  </div>
+</div>
+
+<!-- KDX Connect : fenêtre inactive, formulaire -->
+<div class="win" id="connect" style="left:214px;top:27px;width:402px;height:220px">
+  <div class="tb"><button class="tb-btn tb-l" data-g="x"></button><span class="tb-title">KDX Connect</span><button class="tb-btn tb-r" data-g="minus"></button></div>
+  <div class="cb">
+    <label style="left:8px;top:11px">Type:</label><select class="btn" style="left:102px;top:9px;width:150px;height:20px"><option>Server</option></select>
+    <label style="left:8px;top:39px">Name:</label><input class="text-input field" style="left:101px;top:37px;width:278px">
+    <label style="left:8px;top:69px">Address:</label><input class="text-input field" style="left:101px;top:67px;width:278px">
+    <label style="left:8px;top:99px">Login:</label><input class="text-input field" style="left:101px;top:97px;width:278px">
+    <label style="left:8px;top:129px">Password:</label><input class="text-input field" style="left:101px;top:127px;width:278px">
+    <button class="btn" style="left:144px;top:159px;width:90px;height:20px">Cancel</button>
+    <button class="primary" style="left:263px;top:159px;width:90px">Connect</button>
+  </div>
+  <div class="grip-rz"></div>
+</div>
+
+<!-- KDX Address Book : en-têtes, liste rayée, barres de défilement -->
+<div class="win" id="addressbook" style="left:632px;top:27px;width:326px;height:222px">
+  <div class="tb"><button class="tb-btn tb-l" data-g="x"></button><button class="tb-btn tb-m"></button><span class="tb-title">KDX Address Book</span><button class="tb-btn tb-r2" data-g="plus"></button><button class="tb-btn tb-r" data-g="minus"></button></div>
+  <div class="cb">
+    <button class="lh" style="left:0;top:-1px;width:196px;height:20px">Name</button>
+    <button class="lh" style="left:197px;top:-1px;width:95px;height:20px">Type</button>
+    <button class="lh" style="left:293px;top:-1px;width:19px;height:20px"></button>
+    <div class="list lst" style="left:0;top:18px;width:312px;height:175px;--cdx-stripes:linear-gradient(90deg, var(--col-a) 0 197px, var(--col-b) 197px 100%)">
+      <div class="row-item" style="position:static;padding:2px 8px 2px 2px;border-left:0"><span style="width:189px;flex:none">stickytack</span><span>Server</span></div>
+      <div class="fill"></div>
+    </div>
+  </div>
+  <div class="grip-rz"></div>
+</div>
+
+<!-- KDX Chat : le bouton enclenché « Chat List », une liste rayée vide -->
+<div class="win" id="chat" style="left:216px;top:259px;width:402px;height:350px">
+  <div class="tb"><button class="tb-btn tb-l" data-g="x"></button><button class="tb-btn tb-m"></button><span class="tb-title">KDX Chat</span><button class="tb-btn tb-r2" data-g="plus"></button><button class="tb-btn tb-r" data-g="minus"></button></div>
+  <div class="cb">
+    <button class="btn on" style="left:2px;top:2px;width:104px;height:20px;padding:0 8px;display:inline-flex;align-items:center;gap:6px"><span class="pix" data-ic="message"></span>Chat List</button>
+    <button class="lh" style="left:8px;top:36px;width:250px;height:20px">Name</button>
+    <button class="lh" style="left:259px;top:36px;width:110px;height:20px">Description</button>
+    <button class="lh" style="left:370px;top:36px;width:18px;height:20px"></button>
+    <div class="list lst" style="left:8px;top:55px;width:380px;height:265px;--cdx-stripes:linear-gradient(90deg, var(--col-a) 0 251px, var(--col-b) 251px 100%)"><div class="fill"></div></div>
+  </div>
+  <div class="grip-rz"></div>
+</div>
+
+<!-- KDX Settings : la fenêtre active -->
+<div class="win active" id="settings" style="left:632px;top:261px;width:462px;height:352px">
+  <div class="tb"><button class="tb-btn tb-l" data-g="x"></button><span class="tb-title">KDX Settings</span><button class="tb-btn tb-r" data-g="minus"></button></div>
+  <div class="cb">
+    <select class="btn" style="left:4px;top:7px;width:176px;height:20px"><option>Appearance</option></select>
+    <button class="btn" style="left:197px;top:7px;width:80px;height:20px">Cancel</button>
+    <button class="btn" style="left:282px;top:7px;width:68px;height:20px">Apply</button>
+    <button class="primary" style="left:362px;top:7px;width:80px">Save</button>
+    <div class="sep" style="left:4px;top:37px;width:442px"></div>
+    <label style="left:10px;top:58px">Appearance:</label><select class="btn" style="left:164px;top:51px;width:205px;height:20px"><option>Evil Chiaroscuro</option></select>
+    <label class="chk-row" style="left:12px;top:94px"><span class="switch"><input type="checkbox"><span class="track"></span></span>Use Small Icons in File Lists</label>
+    <label class="chk-row" style="left:12px;top:114px"><span class="switch"><input type="checkbox"><span class="track"></span></span>Use Small Icons in User Lists</label>
+    <label class="chk-row" style="left:12px;top:134px"><span class="switch"><input type="checkbox"><span class="track"></span></span>Small Button Bar</label>
+    <label style="left:10px;top:168px">Title Font:</label><button class="btn" style="left:160px;top:164px;width:190px;height:20px">Myoklonika, 15</button>
+    <label style="left:10px;top:198px">Chat/News Font:</label><button class="btn" style="left:160px;top:194px;width:190px;height:20px;font-family:var(--font-log)">Grand Mal, 15</button>
+    <label style="left:10px;top:228px">File List Font:</label><button class="btn" style="left:160px;top:224px;width:190px;height:20px">Myoklonika, 15</button>
+    <label style="left:10px;top:258px">User List Font:</label><button class="btn" style="left:160px;top:254px;width:190px;height:20px">Myoklonika, 15</button>
+  </div>
+</div>
+
+<!-- KDX Private Messages : une liste, une console, une saisie -->
+<div class="win" id="pm" style="left:216px;top:631px;width:766px;height:476px">
+  <div class="tb"><button class="tb-btn tb-l" data-g="x"></button><span class="tb-title">KDX Private Messages</span><button class="tb-btn tb-r2" data-g="plus"></button><button class="tb-btn tb-r" data-g="minus"></button></div>
+  <div class="cb">
+    <div class="list lst" style="left:10px;top:14px;width:200px;height:412px"><div class="fill"></div></div>
+    <div class="log lst" style="left:220px;top:14px;width:528px;height:352px"><div class="fill"></div></div>
+    <textarea class="text-input lst" style="left:220px;top:374px;width:528px;height:52px"></textarea>
+  </div>
+  <div class="grip-rz"></div>
+</div>
+
+<script src="../icons.js"></script>
+<script>
+  const GLYPH = {
+    x: '<svg viewBox="0 0 9 9"><path d="M1 1L8 8M8 1L1 8" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+    minus: '<svg viewBox="0 0 9 9"><path d="M1 4.5H8" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+    plus: '<svg viewBox="0 0 9 9"><path d="M1 4.5H8M4.5 1V8" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
+  };
+  document.querySelectorAll(".tb-btn[data-g]").forEach(b => { b.innerHTML = GLYPH[b.dataset.g]; });
+  fillPix();
+  const q = new URLSearchParams(location.search).get("theme");
+  if (q) document.documentElement.dataset.theme = q;
+</script>
+</body>
+</html>

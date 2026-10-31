@@ -1,6 +1,6 @@
 # Rapport de dérive à la charte CDX-UI
 
-Version de la charte : **1.0.0** · généré le 2026-10-31 par `node tools/drift-report.mjs`.
+Version de la charte : **2.0.0** · généré le 2026-10-31 par `node tools/drift-report.mjs`.
 Les comptes sont des **déclarations** (lignes de CSS / HTML / JS), pas des éléments affichés. Une copie identique à `dist/` n'est pas recomptée (elle se contrôle à la source) ; une exception propre à une application est déclarée, avec sa raison, dans `tools/apps/<application>.allow` et comptée à part (« tolérés »).
 Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même contrôle avec 18 exceptions justifiées dans `charte-lint.allow`.
 
@@ -10,7 +10,7 @@ Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | AudioLinker | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
 | cdx-frames | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
-| cdx-windows (shell, Explorateur, Navigateur) | 41 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 44 |
+| cdx-windows (shell, Explorateur, Navigateur) | 45 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 45 |
 | KIRC | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 24 |
 
 | règle | ce qu'elle mesure |
@@ -43,16 +43,16 @@ C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake 
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `cdx/cdx-ui.css` | `cdx-ui.css` | identique | 27970 / 27970 |
-| `cdx/themes.css` | `themes.css` | identique | 2572 / 2572 |
-| `cdx/fonts.css` | `fonts.css` | identique | 15338 / 15338 |
-| `cdx/cdx_bus.h` | `cdx_bus.h` | identique | 6589 / 6589 |
+| `cdx/cdx-ui.css` | `cdx-ui.css` | identique | 33599 / 33599 |
+| `cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
+| `cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
+| `cdx/cdx_bus.h` | `cdx_bus.h` | identique | 7222 / 7222 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
 | `tools/pixel_engine.py` | `pixel_engine.py` | identique | 3394 / 3394 |
 | `cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4431 / 4431 |
-| `cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11827 / 11827 |
-| `cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2123 / 2123 |
-| `cdx/tokens.json` | `tokens.json` | identique | 4695 / 4695 |
+| `cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11690 / 11690 |
+| `cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2269 / 2269 |
+| `cdx/tokens.json` | `tokens.json` | identique | 31740 / 31740 |
 | `tools/charte-lint.mjs` | `charte-lint.mjs` | identique | 2815 / 2815 |
 | `tools/lib/lint.mjs` | `lint.mjs` | identique | 6715 / 6715 |
 
@@ -75,17 +75,17 @@ Toutes sont des jetons de la charte.
 
 C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de la bibliothèque Cdx.Host. Les pages sont servies depuis web/ par l'hôte virtuel cdx.shell ; web/cdx/ est une copie exacte de la charte (charte-sync). Les pages _test-*.html sont ignorées.
 
-**0 écart(s)** (+ 44 toléré(s) avec raison) dans 41 fichier(s) examiné(s), 13 copie(s) identique(s) de la charte non recomptée(s).
+**0 écart(s)** (+ 45 toléré(s) avec raison) dans 45 fichier(s) examiné(s), 13 copie(s) identique(s) de la charte non recomptée(s).
 
 | fichier | radius | weight | size | blur | gradient | gray-tint | color |
 |---|---:|---:|---:|---:|---:|---:|---:|
 
 **Ce que l'application emploie réellement**
 
-- tailles de police : `28px` ×1, `14px` ×1, `11px` ×1 (la charte : une seule, 14 px)
+- tailles de police : `28px` ×2, `14px` ×1, `11px` ×1 (la charte : une seule, 14 px)
 - arrondis : — (la charte : aucun)
-- graisses : `400` ×2, `inherit` ×2, `100` ×2 (la charte : aucune)
-- couleurs hors jetons : **15** valeurs distinctes, dont `#2e3436` ×1, `#4e9a06` ×1, `#c4a000` ×1, `#3465a4` ×1, `#75507b` ×1, `#06989a` ×1
+- graisses : `inherit` ×5, `400` ×2, `100` ×2 (la charte : aucune)
+- couleurs hors jetons : **16** valeurs distinctes, dont `#ffcc99` ×1, `#2e3436` ×1, `#4e9a06` ×1, `#c4a000` ×1, `#3465a4` ×1, `#75507b` ×1
 
 <details><summary><code>weight</code> : undefined (exemples)</summary>
 
@@ -121,7 +121,7 @@ C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de
 
 <details><summary><code>color</code> : undefined (exemples)</summary>
 
-- `web/terminal/vendor/xterm.js:1` — `!function(e,t){if("object"==typeof exports&&"object"==typeof module)module.exports=t();else if("function"==typeof define&&define.amd)define(`
+- `web/terminal/terminal.js:17` — `brightBlack: '#888888', brightRed: '#ff5a4a', brightGreen: '#00ff00', brightYellow: '#ffcc99', brightBlue: '#6a8aff', brightMagenta: '#ff5cf`
 - `web/terminal/vendor/xterm.js:1` — `!function(e,t){if("object"==typeof exports&&"object"==typeof module)module.exports=t();else if("function"==typeof define&&define.amd)define(`
 - `web/terminal/vendor/xterm.js:1` — `!function(e,t){if("object"==typeof exports&&"object"==typeof module)module.exports=t();else if("function"==typeof define&&define.amd)define(`
 
@@ -131,18 +131,18 @@ C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `web/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 27970 / 27970 |
-| `web/cdx/themes.css` | `themes.css` | identique | 2572 / 2572 |
-| `web/cdx/fonts.css` | `fonts.css` | identique | 15338 / 15338 |
-| `web/cdx/icons.js` | `icons.js` | identique | 48984 / 48984 |
+| `web/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 33599 / 33599 |
+| `web/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
+| `web/cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
+| `web/cdx/icons.js` | `icons.js` | identique | 48934 / 48934 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
 | `web/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4431 / 4431 |
-| `web/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11827 / 11827 |
-| `web/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2123 / 2123 |
-| `web/cdx/tokens.json` | `tokens.json` | identique | 4695 / 4695 |
+| `web/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11690 / 11690 |
+| `web/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2269 / 2269 |
+| `web/cdx/tokens.json` | `tokens.json` | identique | 31740 / 31740 |
 | `tools/charte-lint.mjs` | `charte-lint.mjs` | identique | 2815 / 2815 |
 | `tools/lib/lint.mjs` | `lint.mjs` | identique | 6715 / 6715 |
-| `web/cdx/cdx-columns.js` | `cdx-columns.js` | identique | 3984 / 3984 |
+| `web/cdx/cdx-columns.js` | `cdx-columns.js` | identique | 5013 / 5013 |
 | `web/cdx/cdx-split.js` | `cdx-split.js` | identique | 4949 / 4949 |
 
 ## KIRC
@@ -156,7 +156,7 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 
 **Ce que l'application emploie réellement**
 
-- tailles de police : `14px` ×10, `28px` ×2, `42px` ×1 (la charte : une seule, 14 px)
+- tailles de police : `14px` ×11, `28px` ×3, `42px` ×1 (la charte : une seule, 14 px)
 - arrondis : — (la charte : aucun)
 - graisses : — (la charte : aucune)
 - couleurs hors jetons : **21** valeurs distinctes, dont `#ff8a3c` ×2, `#f58a1a` ×1, `#8a3a00` ×1, `#ff3030` ×1, `#2a5ae0` ×1, `#4a6aff` ×1
@@ -180,19 +180,19 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `ui/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 27970 / 27970 |
-| `ui/cdx/themes.css` | `themes.css` | identique | 2572 / 2572 |
-| `ui/cdx/fonts.css` | `fonts.css` | identique | 15338 / 15338 |
-| `ui/cdx/icons.js` | `icons.js` | identique | 48984 / 48984 |
-| `src-tauri/src/cdx_bus.rs` | `cdx_bus.rs` | identique | 11367 / 11367 |
+| `ui/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 33599 / 33599 |
+| `ui/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
+| `ui/cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
+| `ui/cdx/icons.js` | `icons.js` | identique | 48934 / 48934 |
+| `src-tauri/src/cdx_bus.rs` | `cdx_bus.rs` | identique | 12012 / 12012 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
 | `ui/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4431 / 4431 |
-| `ui/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11827 / 11827 |
-| `ui/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2123 / 2123 |
-| `ui/cdx/tokens.json` | `tokens.json` | identique | 4695 / 4695 |
+| `ui/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11690 / 11690 |
+| `ui/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2269 / 2269 |
+| `ui/cdx/tokens.json` | `tokens.json` | identique | 31740 / 31740 |
 | `tools/charte-lint.mjs` | `charte-lint.mjs` | identique | 2815 / 2815 |
 | `tools/lib/lint.mjs` | `lint.mjs` | identique | 6715 / 6715 |
-| `ui/cdx/cdx-columns.js` | `cdx-columns.js` | identique | 3984 / 3984 |
+| `ui/cdx/cdx-columns.js` | `cdx-columns.js` | identique | 5013 / 5013 |
 | `ui/cdx/cdx-split.js` | `cdx-split.js` | identique | 4949 / 4949 |
 
 ## Lecture

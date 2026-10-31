@@ -13,7 +13,7 @@ continuent, et ce qui lui était destiné se perd sans bruit (ou la lance, voir 
 | Champ | Valeurs | Rôle |
 |---|---|---|
 | `version` | `1` | version du format ; un fichier d'une version inconnue est ignoré |
-| `accent` | `rouge` `bleu` `vert` `violet` `ambre` `sarcelle` `charbon` | la couleur d'accent de toute la suite (les thèmes de `themes.css`) |
+| `accent` | `rouge` `marine` `ambre` `jean` `tramway` `sarcelle` `chocolat` `lavande` `oxygene` `couchant` `techno` `reve-bleu` `reve-vert` `reve-violet` `lagon` `turquoise` | le thème de toute la suite (les seize apparences de KDX de `tokens.json` ; les anciens noms `bleu` `vert` `violet` `charbon` sont encore lus et ramenés au nom actuel) |
 
 Règles :
 

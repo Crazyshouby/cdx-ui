@@ -1,17 +1,17 @@
 {
-  "cdxUi": "1.0.0",
+  "cdxUi": "2.0.0",
   "files": {
     "cdx-ui.css": {
-      "sha256": "1a5650dc9e9243de9e28820e15d13b1f4b95c8f9024fe16b17e673b513d1a8f7",
-      "bytes": 27970
+      "sha256": "dd659ae997b2c679cd8a3056e341851cafb48a589a9c9f3476741fa08d92f862",
+      "bytes": 33599
     },
     "cdx-frame.css": {
-      "sha256": "edba0157d03d56df2028b562b56cc47fc59a2ee283cc88c64ae72fc2a5b62321",
-      "bytes": 2123
+      "sha256": "6282dd7d848a1688736723ed2037a6162593143d578c6130c5a0c3517121eb98",
+      "bytes": 2269
     },
     "themes.css": {
-      "sha256": "a0d689d0cc48b636d7ee9188078294fa15df5b7e71beca69038e3d2e44947e07",
-      "bytes": 2572
+      "sha256": "9015ba7598fefedc18d417b066f2a12e36b0369738e7711e163178655db27379",
+      "bytes": 37735
     },
     "fonts.css": {
       "sha256": "42e6d1d1f8f7268a15631b5d982fc41a9080665140bfc3d844f88480ecdca0c7",
@@ -22,44 +22,44 @@
       "bytes": 48934
     },
     "cdx-bridge.js": {
-      "sha256": "f5f055ec0daec79fb04b18fd5dfe84f66aa47bdee8a8bf3468214878f839ef64",
+      "sha256": "0091f08e716e16a9b70eee00e5c2a46eac62c7250f9f1adc51e7dda3b2539663",
       "bytes": 4431
     },
     "cdx-frame.js": {
-      "sha256": "e4f7d34b1d4cc24b609e3fb47956e3da6977e7ccc66c8381bbe799ffa2ba8986",
-      "bytes": 11666
+      "sha256": "77c9cb34656eaf90d7781a181ab436bf70b153334aeb33a0c32adc6b8e7c5d7e",
+      "bytes": 11690
     },
     "cdx-columns.js": {
-      "sha256": "da30849048e92d729796e06ea4640b406c916c69801e0fad8721334929d47695",
-      "bytes": 3984
+      "sha256": "908f8232b35c519a3b8df7c6825e6fba8bfb953007a2dc8485c44b27e3fd73ef",
+      "bytes": 5013
     },
     "cdx-split.js": {
       "sha256": "d7923d23884679fe9e390fd80852d1d9d4d2a1d2d3b82d12327bbdafc30e1093",
       "bytes": 4949
     },
     "cdx-tokens.h": {
-      "sha256": "bfc03f0269c98d7df58a7481302fdef77b3814838dafafb4e0623843e35b22c7",
-      "bytes": 3096
+      "sha256": "e820a10f6b3077cf56fcb44e1ebc3ec576570d52d994043b0e6caa93a6562c3b",
+      "bytes": 13328
     },
     "tokens.rs": {
-      "sha256": "debaac1ba2e733b87358eb00cbf83d914faaa8da4a6c281bed3b50dc1d113f37",
-      "bytes": 4116
+      "sha256": "743716a2221ba8c54d2b92075ec00101cfabeded8b301f137770baf7904cf00a",
+      "bytes": 23580
     },
     "cdx-verify.mjs": {
       "sha256": "347fc3c292ee0b9ca2b3ae82b78e6c9abe62fdea38b529ebeb088b7623240982",
       "bytes": 1868
     },
     "cdx_bus.h": {
-      "sha256": "d68fbffc25fc124b04527d21276abd143902f3876a8335e09026c4f27ce1c1a7",
-      "bytes": 6589
+      "sha256": "0e71e99deebc640ab4f2ae6814746f9b432acb6a2b1f87266a4b31c622e5e93e",
+      "bytes": 7222
     },
     "cdx_bus.rs": {
-      "sha256": "a53f4a03b56bdb0ece8abd3c82b5ec1117685694434e1eafed4bf95ec775da9d",
-      "bytes": 11367
+      "sha256": "a26241c529d477b28e318e4e3add0efdb562daa5c55e6275da166d5f8106d241",
+      "bytes": 12012
     },
     "tokens.json": {
-      "sha256": "5890b92eeed1adb47c9fca378f52fb43d4c1a1cf83990024ffeb41258e2b6429",
-      "bytes": 4695
+      "sha256": "60d08b536c9073259dd19d92e80f7898bf7a2350716cf7c88b249491ce07fea7",
+      "bytes": 31740
     },
     "pixel_engine.py": {
       "sha256": "037dad564ef402d76aac774cf33f7e31a5e005d563c0d968e758bc959c705eba",

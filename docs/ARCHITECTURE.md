@@ -28,7 +28,8 @@ cdx-ui  ──dist/──►  cdx-windows   web/cdx/       (charte)        + cdx
 
 | Je veux… | Fichier |
 |---|---|
-| changer une couleur, une mesure, ajouter un accent | `cdx-ui/tokens.json`, puis `python gen/gen_tokens.py` |
+| changer une couleur ou une mesure | `cdx-ui/tokens.json`, puis `python gen/gen_tokens.py` (un thème mesuré sur KDX : `kdx-reference/kdx.json`, puis `python gen/kdx_tokens.py`) |
+| ajouter un thème | une capture de KDX pour `gen/kdx_reference.py`, ou la palette complète à la main dans `tokens.json` ; puis les listes des programmes (`node tools/check-accents.mjs`) |
 | changer un composant (bouton, liste…) | `cdx-ui/cdx-ui.css` (+ `exemple.html`), puis `node tools/build-dist.mjs` |
 | propager la charte | `node tools/charte-sync.mjs --write kirc` (et `audiolinker`, `cdx-windows`) |
 | ajouter un message du bus | `cdx-ui/docs/SUITE.md`, puis le client concerné (`cdx-windows/src/Cdx.Host/Bus.cs`, `bus/cpp`, `bus/rust`) |
@@ -40,7 +41,7 @@ cdx-ui  ──dist/──►  cdx-windows   web/cdx/       (charte)        + cdx
 
 | Où | Commande | Ce que ça couvre |
 |---|---|---|
-| cdx-ui | `npm run verifier` | jetons à jour, dist à jour, lint de la charte, accents, tests Node, tests de page |
+| cdx-ui | `npm run verifier` | jetons à jour, dist à jour, lint de la charte, accents, tests Node, tests de page, comparaison à KDX (`tools/kdx-compare.py`) |
 | cdx-windows | `cdx-shell --selftest-bus`, `--selftest-audio`, `--selftest-sys` ; `cdx-explorer --selftest-fs`, `--selftest-web` ; `cdx-browser --selftest-browser` | le bus, la liaison AudioLinker, les fichiers, les pages, le navigateur |
 | cdx-windows | `tests\bus.ps1`, `tests\suite.ps1`, `tests\navigateur.ps1` | de bout en bout, isolé (voir SUITE.md §3.6) |
 | KIRC | `cargo test`, `node tests/e2e.mjs` | 141 tests unitaires, 101 vérifications de la vraie application |

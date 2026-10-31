@@ -19,11 +19,15 @@ constexpr int kBusMaxLine = 65536;
 
 namespace suite {
 
-inline bool IsAccent(const std::string& s) {
-    static const char* const kAccents[] = { "rouge", "bleu", "vert", "violet", "ambre", "sarcelle", "charbon" };
-    for (const char* a : kAccents) if (s == a) return true;
-    return false;
+// Les accents de la suite : les seize thèmes de tokens.json (les apparences de KDX 1.6), et les anciens noms de cdx-ui 1.x en alias.
+inline const char* CanonicalAccent(const std::string& s) {
+    static const char* const kAccents[] = { "rouge", "marine", "ambre", "jean", "tramway", "sarcelle", "chocolat", "lavande", "oxygene", "couchant", "techno", "reve-bleu", "reve-vert", "reve-violet", "lagon", "turquoise" };
+    static const char* const kAliases[][2] = { {"bleu", "jean"}, {"vert", "reve-vert"}, {"violet", "reve-violet"}, {"charbon", "techno"}, {"cdx", "rouge"} };
+    for (const char* a : kAccents) if (s == a) return a;
+    for (const auto& al : kAliases) if (s == al[0]) return al[1];
+    return nullptr;
 }
+inline bool IsAccent(const std::string& s) { return CanonicalAccent(s) != nullptr; }
 
 // CDX_SUITE_DIR remplace le dossier (réservé aux essais : ne jamais toucher aux vrais réglages).
 inline std::wstring Dir() {
@@ -62,8 +66,8 @@ inline std::string ParseAccent(const std::string& json, const std::string& fallb
         long n = strtol(s, &end, 10);
         if (end == s || n != 1) return fallback;
     }
-    std::string a = StringField(json, "accent");
-    return IsAccent(a) ? a : fallback;
+    const char* a = CanonicalAccent(StringField(json, "accent"));   // un ancien nom (cdx-ui 1.x) est ramené au nom actuel
+    return a ? a : fallback;
 }
 
 inline std::string ReadAccent(const std::string& fallback = "rouge") {

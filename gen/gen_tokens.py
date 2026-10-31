@@ -3,17 +3,15 @@
     python gen_tokens.py            # écrit les fichiers
     python gen_tokens.py --check    # ne modifie rien ; code de sortie 1 si un fichier généré n'est pas à jour (pour la CI)
 
-  ../cdx-ui.css                  le bloc entre « tokens:begin » et « tokens:end » (le reste du fichier est écrit à la main)
-  ../themes.css                  une rampe d'accent par thème, hors rouge (le rouge est le défaut du :root)
-  ../generated/cdx-tokens.h      C++ : couleurs 0xRRGGBB, accents, mesures (AudioLinker : AppState.cpp, Switcher.cpp, Panels.cpp)
-  ../generated/tokens.rs         Rust : les mêmes (cdx-frames : paint.rs ; KIRC)
+  ../cdx-ui.css                  le bloc entre « tokens:begin » et « tokens:end » : les couleurs du thème par défaut (rouge) et les couleurs de statut
+  ../themes.css                  la palette complète de chaque autre thème (html[data-theme="…"]), avec les anciens noms en alias
+  ../generated/cdx-tokens.h      C++ : couleurs 0xRRGGBB, thèmes, mesures (AudioLinker)
+  ../generated/tokens.rs         Rust : les mêmes (cdx-frames, KIRC)
 
-Ajouter un accent à partir d'une teinte (même rampe que le rouge mesuré sur CDX) :
-    python gen_tokens.py --new-theme nom TEINTE SATURATION RELEVÉ ENCRE_CHAMPS FOND_SÉLECTION TEXTE_SÉLECTION
-    ex.  python gen_tokens.py --new-theme cuivre 25 0.9 1.0 "#ffcc99" "#3a1800" "#ffe090"
-(le calcul est celui de l'ancien gen_themes.py, conservé pour mémoire.)
+Les thèmes sont les seize apparences de KDX 1.6 : mesurées par gen/kdx_reference.py (kdx-reference/kdx.json), puis écrites dans tokens.json par
+gen/kdx_tokens.py. Chaque thème porte une palette complète (THEME_KEYS) : une apparence de KDX ne change pas que l'accent, mais le panneau, les boutons, le
+texte, les champs, les listes, les deux barres de titre… Il n'y a plus de thème « calculé » par rotation de teinte.
 """
-import colorsys
 import json
 import re
 import sys
@@ -21,38 +19,73 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TOKENS = ROOT / "tokens.json"
-THEME_KEYS = ["a-edge", "a-mid", "a-dark", "a-hover", "a-title-from", "a-title-to", "bar-top", "bar-mid", "bar-bot", "a-spark", "accent", "accent-rgb", "field-ink", "sel-bg", "sel-fg", "ic-accent", "ic-accent-dark"]
 BEGIN = "/* tokens:begin"
 END = "/* tokens:end */"
 
+# Les clés d'un thème, par groupe : (titre du groupe, [clés]). L'ordre est celui des blocs CSS générés.
+THEME_GROUPS = [
+    ("Surfaces", ["frame", "panel", "btn", "btn-hover", "card-2", "ink", "col-a", "col-b", "head", "sb-track", "sb-btn", "sb-thumb", "hl"]),
+    ("Texte", ["text", "faint", "btn-text", "head-text", "list-text", "title-text", "tb-text", "hl-text", "field-ink", "own-ink", "sb-arrow"]),
+    ("Contours et reliefs", ["outline", "outline-active", "btn-outline", "field-outline", "line", "hi", "hi2", "lo", "lo2", "field-hi", "field-lo",
+                             "row-hover", "row-sel", "row-sel-ring"]),
+    ("Cadre inactif", ["tb-edge", "tb-mid", "tb-low", "tb-from", "tb-grad-mid", "tb-to"]),
+    ("Cadre actif et accent", ["a-edge", "a-mid", "a-dark", "a-hover", "a-title-from", "a-title-mid", "a-title-to", "bar-top", "bar-mid", "bar-bot",
+                               "a-spark", "accent", "accent-rgb", "ic-accent", "ic-accent-dark", "def-outline", "def-edge", "def-mid"]),
+    ("Sélection", ["sel-bg", "sel-fg"]),
+]
+THEME_KEYS = [k for _, ks in THEME_GROUPS for k in ks]
+META_KEYS = ["nom", "kdx", "scheme"]
+
 
 def load():
-    return json.loads(TOKENS.read_text(encoding="utf-8"))
+    t = json.loads(TOKENS.read_text(encoding="utf-8"))
+    for tid, th in t["themes"].items():
+        missing = [k for k in THEME_KEYS + META_KEYS if k not in th]
+        if missing:
+            raise SystemExit(f"tokens.json : le thème « {tid} » n'a pas {', '.join(missing)}")
+    return t
 
 
-# ---------------------------------------------------------------- le bloc de jetons de cdx-ui.css
+def aliases_of(t, tid):
+    return [a for a, target in t.get("aliases", {}).items() if target == tid and not a.startswith("_")]
+
+
+def selector(t, tid):
+    return ", ".join(f'html[data-theme="{n}"]' for n in [tid] + aliases_of(t, tid))
+
+
+def css_lines(th, indent="  "):
+    L = []
+    for title, keys in THEME_GROUPS:
+        L.append(f"{indent}/* {title} */")
+        row = []
+        for k in keys:
+            row.append(f"--{k}: {th[k]};")
+            if len(row) == 6:
+                L.append(indent + " ".join(row)); row = []
+        if row:
+            L.append(indent + " ".join(row))
+    L.append(f"{indent}--scheme: {th['scheme']};")
+    L.append(f"{indent}/* Images : une image ne lit pas de jeton, ces flèches sont donc générées à la couleur du thème (texte des boutons, flèches de défilement). */")
+    L.append(f"{indent}--sel-arrow: {svg(9, 5, 'M0 0h9L4.5 5z', th['btn-text'])};")
+    L.append(f"{indent}--sb-up: {svg(8, 4, 'M0 4h8L4 0z', th['sb-arrow'])}; --sb-down: {svg(8, 4, 'M0 0h8L4 4z', th['sb-arrow'])};")
+    L.append(f"{indent}--sb-left: {svg(4, 8, 'M4 0v8L0 4z', th['sb-arrow'])}; --sb-right: {svg(4, 8, 'M0 0v8l4-4z', th['sb-arrow'])};")
+    return L
+
+
+def svg(w, h, d, fill):
+    return f"url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='{w}' height='{h}'%3E%3Cpath d='{d}' fill='%23{fill[1:]}'/%3E%3C/svg%3E\")"
+
+
+# ---------------------------------------------------------------- le bloc de jetons de cdx-ui.css : le thème par défaut (rouge) + les couleurs de statut
 def css_region(t):
     g, r = t["global"], t["themes"]["rouge"]
     L = [f"  {BEGIN} -- généré par gen/gen_tokens.py depuis tokens.json : ne pas modifier à la main */",
-         "  /* Gris neutres : jamais de teinte dans les gris. */"]
-    L += [f"  --{k}: {g[k]};" for k in ("frame", "panel", "btn", "card-2", "ink", "line", "hi", "lo")]
-    L += ["", "  /* Texte */"]
-    L += [f"  --{k}: {g[k]};" for k in ("text", "muted", "faint")]
-    L += [f"  --field-ink: {r['field-ink']};      /* texte des champs et des consoles (vert CDX) */"]
-    L += ["", "  /* Rampe d'accent (défaut : rouge CDX, mesuré sur KDX 1.6). themes.css la remplace par thème. */",
-          f"  --a-edge: {r['a-edge']}; --a-mid: {r['a-mid']}; --a-dark: {r['a-dark']}; --a-hover: {r['a-hover']};",
-          f"  --a-title-from: {r['a-title-from']}; --a-title-to: {r['a-title-to']};",
-          f"  --bar-top: {r['bar-top']}; --bar-mid: {r['bar-mid']}; --bar-bot: {r['bar-bot']}; --a-spark: {r['a-spark']};",
-          f"  --accent: {r['accent']}; --accent-2: {g['accent-2']}; --accent-rgb: {r['accent-rgb']};",
-          "  --bar: linear-gradient(var(--bar-top), var(--bar-mid) 45%, var(--bar-bot));",
-          "  --title-focus: linear-gradient(var(--a-title-from), var(--a-title-to));",
-          f"  --ic-accent: {r['ic-accent']}; --ic-accent-dark: {r['ic-accent-dark']};   /* le rouge des icônes pixel : suit l'accent */",
-          "", "  /* Sélection et survol */",
-          f"  --sel-bg: {r['sel-bg']}; --sel-fg: {r['sel-fg']};     /* sélection « marquée » (menus, texte sélectionné) */"]
-    L += [f"  --{k}: {g[k]};" for k in ("row-hover", "row-sel", "row-sel-ring", "hover")]
-    L += ["", "  /* États : une couleur de statut ne signifie jamais autre chose que son état. */",
+         f"  /* Thème par défaut : « {r['nom']} » ({r['kdx']}), mesuré sur KDX 1.6. themes.css remplace toute cette palette pour les autres thèmes. */"]
+    L += css_lines(r)
+    L += ["", "  /* États : une couleur de statut ne signifie jamais autre chose que son état, et ne change pas avec le thème. */",
           f"  --green: {g['green']};          /* ok, connecté */", f"  --warn: {g['warn']};           /* attention, occupé */",
-          f"  --red: {g['red']};            /* problème */", f"  --red-frame: {g['red-frame']};", f"  {END}"]
+          f"  --red: {g['red']};            /* problème */", f"  {END}"]
     return "\n".join(L) + "\n"
 
 
@@ -67,19 +100,15 @@ def patch_css(t):
 
 # ---------------------------------------------------------------- themes.css
 def themes_css(t):
-    out = ["/* Généré par gen/gen_tokens.py depuis tokens.json -- ne pas modifier. Une rampe d'accent par thème ; le rouge est le défaut du :root de cdx-ui.css. */\n"]
+    out = ["/* Généré par gen/gen_tokens.py depuis tokens.json -- ne pas modifier. La palette complète de chaque thème (les apparences de KDX 1.6) ;",
+           "   le rouge est le défaut du :root de cdx-ui.css. Les anciens noms (cdx-ui 1.x) restent acceptés comme alias. */", ""]
     for tid, v in t["themes"].items():
         if tid == "rouge":
             continue
-        out.append(f"""html[data-theme="{tid}"] {{
-  --a-edge: {v['a-edge']}; --a-mid: {v['a-mid']}; --a-dark: {v['a-dark']}; --a-hover: {v['a-hover']};
-  --a-title-from: {v['a-title-from']}; --a-title-to: {v['a-title-to']};
-  --bar-top: {v['bar-top']}; --bar-mid: {v['bar-mid']}; --bar-bot: {v['bar-bot']}; --a-spark: {v['a-spark']};
-  --accent: {v['accent']}; --accent-rgb: {v['accent-rgb']};
-  --field-ink: {v['field-ink']}; --sel-bg: {v['sel-bg']}; --sel-fg: {v['sel-fg']};
-  --ic-accent: {v['ic-accent']}; --ic-accent-dark: {v['ic-accent-dark']};
-}}
-""")
+        out.append(f"/* {v['nom']} ({v['kdx']}) */")
+        out.append(selector(t, tid) + " {")
+        out += css_lines(v)
+        out.append("}\n")
     return "\n".join(out)
 
 
@@ -93,30 +122,49 @@ def camel(k):
     return "k" + "".join(p.capitalize() for p in re.split(r"[-_]", k))
 
 
+def lower_camel(k):
+    c = camel(k)[1:]
+    return c[0].lower() + c[1:]
+
+
+def snake(k):
+    return k.replace("-", "_")
+
+
 def upper(k):
-    return re.sub(r"[-]", "_", k).upper()
+    return snake(k).upper()
 
 
-ACCENT_FIELDS = [("edge", "a-edge"), ("mid", "a-mid"), ("dark", "a-dark"), ("hover", "a-hover"), ("title_from", "a-title-from"), ("title_to", "a-title-to"),
-                 ("bar_top", "bar-top"), ("bar_mid", "bar-mid"), ("bar_bot", "bar-bot"), ("spark", "a-spark"), ("accent", "accent"), ("field_ink", "field-ink"),
-                 ("sel_bg", "sel-bg"), ("sel_fg", "sel-fg"), ("icon_accent", "ic-accent"), ("icon_accent_dark", "ic-accent-dark")]
+COLOR_KEYS = [k for k in THEME_KEYS if k != "accent-rgb"]
 
 
 def cpp_header(t):
     v = t["version"]
     L = [f"// cdx-tokens.h -- généré par gen/gen_tokens.py (cdx-ui {v}) depuis tokens.json : ne pas modifier à la main.",
-         "// Couleurs au format 0xRRGGBB. Pour un COLORREF Win32 (0x00BBGGRR) : cdx::Colorref(cdx::kFrame).",
+         "// Couleurs au format 0xRRGGBB. Pour un COLORREF Win32 (0x00BBGGRR) : cdx::Colorref(cdx::kThemes[0].panel).",
          "#pragma once", "", "namespace cdx {", "",
-         "constexpr unsigned Colorref(unsigned rgb) { return ((rgb & 0xFFu) << 16) | (rgb & 0xFF00u) | ((rgb >> 16) & 0xFFu); }", ""]
+         "constexpr unsigned Colorref(unsigned rgb) { return ((rgb & 0xFFu) << 16) | (rgb & 0xFF00u) | ((rgb >> 16) & 0xFFu); }", "",
+         "// Couleurs de statut : les mêmes dans tous les thèmes."]
     for k, val in t["global"].items():
         h = hexval(val)
         if h is not None:
             L.append(f"constexpr unsigned {camel(k)} = 0x{h:06X};")
-    L += ["", "struct Accent {", "    const char* id;", "    unsigned " + ", ".join(camel(a)[1:2].lower() + camel(a)[2:] for a, _ in ACCENT_FIELDS) + ";", "};", "",
-          "// kAccents[0] est le défaut (rouge CDX).", "constexpr Accent kAccents[] = {"]
+    L += ["", "// Un thème : la palette complète d'une apparence de KDX (voir THEME_GROUPS dans gen/gen_tokens.py). light : texte sombre sur fond clair.",
+          "struct Theme {", "    const char* id;", "    const char* nom;", "    bool light;"]
+    for title, keys in THEME_GROUPS:
+        ks = [lower_camel(k) for k in keys if k != "accent-rgb"]
+        L.append(f"    unsigned {', '.join(ks)};  // {title}")
+    L += ["};", "", "// kThemes[0] est le défaut (rouge). Les anciens noms (bleu, vert, violet, charbon, cdx) sont dans kThemeAliases.", "constexpr Theme kThemes[] = {"]
     for tid, th in t["themes"].items():
-        L.append('    {"%s", %s},' % (tid, ", ".join("0x%06X" % hexval(th[c]) for _, c in ACCENT_FIELDS)))
-    L += ["};", f"constexpr int kAccentCount = {len(t['themes'])};", ""]
+        L.append('    {"%s", "%s", %s, %s},' % (tid, th["nom"], "true" if th["scheme"] == "light" else "false", ", ".join("0x%06X" % hexval(th[c]) for c in COLOR_KEYS)))
+    L += ["};", f"constexpr int kThemeCount = {len(t['themes'])};", "",
+          "struct ThemeAlias { const char* ancien; const char* id; };", "constexpr ThemeAlias kThemeAliases[] = {"]
+    for a, target in t.get("aliases", {}).items():
+        if not a.startswith("_"):
+            L.append(f'    {{"{a}", "{target}"}},')
+    L += ["};", f"constexpr int kThemeAliasCount = {len([a for a in t.get('aliases', {}) if not a.startswith('_')])};", "",
+          "// Compatibilité cdx-ui 1.x : Accent = la partie « accent » d'un thème.", "using Accent = Theme;", "constexpr const Theme* kAccents = kThemes;",
+          "constexpr int kAccentCount = kThemeCount;", ""]
     for k, val in t["measures"].items():
         L.append(f"constexpr int {camel(k)} = {val};")
     L += ["", "}  // namespace cdx", ""]
@@ -126,37 +174,31 @@ def cpp_header(t):
 def rust_module(t):
     v = t["version"]
     L = [f"//! tokens.rs -- généré par gen/gen_tokens.py (cdx-ui {v}) depuis tokens.json : ne pas modifier à la main.",
-         "//! Couleurs au format 0xRRGGBB.", "#![allow(dead_code)]", ""]
+         "//! Couleurs au format 0xRRGGBB.", "#![allow(dead_code)]", "", "// Couleurs de statut : les mêmes dans tous les thèmes."]
     for k, val in t["global"].items():
         h = hexval(val)
         if h is not None:
             L.append(f"pub const {upper(k)}: u32 = 0x{h:06X};")
-    L += ["", "pub struct Accent {", "    pub id: &'static str,"] + [f"    pub {a}: u32," for a, _ in ACCENT_FIELDS] + ["}", "",
-          "/// `ACCENTS[0]` est le défaut (rouge CDX).", f"pub const ACCENTS: [Accent; {len(t['themes'])}] = ["]
+    L += ["", "/// Un thème : la palette complète d'une apparence de KDX (voir THEME_GROUPS dans gen/gen_tokens.py). `light` : texte sombre sur fond clair.",
+          "pub struct Theme {", "    pub id: &'static str,", "    pub nom: &'static str,", "    pub light: bool,"]
+    for title, keys in THEME_GROUPS:
+        L.append(f"    // {title}")
+        L += [f"    pub {snake(k)}: u32," for k in keys if k != "accent-rgb"]
+    L += ["}", "", "/// `THEMES[0]` est le défaut (rouge). Les anciens noms (bleu, vert, violet, charbon, cdx) sont dans `THEME_ALIASES`.",
+          f"pub const THEMES: [Theme; {len(t['themes'])}] = ["]
     for tid, th in t["themes"].items():
-        L.append('    Accent { id: "%s", %s },' % (tid, ", ".join("%s: 0x%06X" % (a, hexval(th[c])) for a, c in ACCENT_FIELDS)))
+        L.append('    Theme { id: "%s", nom: "%s", light: %s, %s },' % (tid, th["nom"], "true" if th["scheme"] == "light" else "false",
+                                                                        ", ".join("%s: 0x%06X" % (snake(c), hexval(th[c])) for c in COLOR_KEYS)))
     L += ["];", ""]
+    al = [(a, x) for a, x in t.get("aliases", {}).items() if not a.startswith("_")]
+    L += [f"pub const THEME_ALIASES: [(&str, &str); {len(al)}] = [" + ", ".join(f'("{a}", "{x}")' for a, x in al) + "];", "",
+          "/// Le nom de thème actuel pour un nom donné (alias compris) ; `None` si inconnu.",
+          "pub fn theme_id(name: &str) -> Option<&'static str> {",
+          "    THEMES.iter().map(|t| t.id).find(|id| *id == name).or_else(|| THEME_ALIASES.iter().find(|(a, _)| *a == name).map(|(_, id)| *id))",
+          "}", "", "/// Compatibilité cdx-ui 1.x.", "pub type Accent = Theme;", f"pub const ACCENTS: &[Theme; {len(t['themes'])}] = &THEMES;", ""]
     for k, val in t["measures"].items():
         L.append(f"pub const {upper(k)}: i32 = {val};")
     return "\n".join(L) + "\n"
-
-
-# ---------------------------------------------------------------- nouvel accent (algorithme de l'ancien gen_themes.py)
-def hexcolor(h, s, v):
-    r, g, b = colorsys.hsv_to_rgb((h % 360) / 360, max(0, min(1, s)), max(0, min(1, v)))
-    return "#%02x%02x%02x" % (round(r * 255), round(g * 255), round(b * 255))
-
-
-def new_theme(name, hue, sat, lift, ink, sel_bg, sel_fg):
-    def c(k, v):
-        return hexcolor(hue, sat * k, min(1, v * lift))
-    edge, mid, dark, hover = c(1, .80), c(1, .533), c(1, .267), c(1, .40)
-    top, bmid, bot = c(.74, .91), c(.92, .75), c(.99, .54)
-    accent = c(.89, .83)
-    return {"a-edge": edge, "a-mid": mid, "a-dark": dark, "a-hover": hover, "a-title-from": c(1, .196), "a-title-to": c(1, .765),
-            "bar-top": top, "bar-mid": bmid, "bar-bot": bot, "a-spark": c(.55, 1.0), "accent": accent,
-            "accent-rgb": ", ".join(str(int(accent[i:i + 2], 16)) for i in (1, 3, 5)),
-            "field-ink": ink, "sel-bg": sel_bg, "sel-fg": sel_fg, "ic-accent": bmid, "ic-accent-dark": bot}
 
 
 def outputs(t):
@@ -165,12 +207,6 @@ def outputs(t):
 
 
 def main(argv):
-    if argv[:1] == ["--new-theme"]:
-        name, hue, sat, lift, ink, sb, sf = argv[1:8]
-        t = load()
-        t["themes"][name] = new_theme(name, float(hue), float(sat), float(lift), ink, sb, sf)
-        TOKENS.write_text(json.dumps(t, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        argv = []
     t = load()
     stale = []
     for path, content in outputs(t).items():

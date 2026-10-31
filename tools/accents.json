@@ -6,6 +6,8 @@
     { "path": "cdx-windows/src/Cdx.Host/Suite.cs" },
     { "path": "cdx-windows/lancer.ps1" },
     { "path": "KIRC/src-tauri/src/config.rs", "alias": { "rouge": "cdx" } },
-    { "path": "KIRC/ui/index.html", "alias": { "rouge": "cdx" } }
+    { "path": "KIRC/ui/index.html", "alias": { "rouge": "cdx" } },
+    { "path": "cdx-windows/web/cdx/host.js" },
+    { "path": "cdx-ui/exemple.html" }
   ]
 }
