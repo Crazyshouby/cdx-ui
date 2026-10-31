@@ -14,20 +14,20 @@
       "bytes": 2572
     },
     "fonts.css": {
-      "sha256": "807e66f40d2da77f858ad0383231fbadf89b2b6eb73397e99e8c191b5febb58b",
-      "bytes": 15338
+      "sha256": "42e6d1d1f8f7268a15631b5d982fc41a9080665140bfc3d844f88480ecdca0c7",
+      "bytes": 15330
     },
     "icons.js": {
-      "sha256": "e285b99c7172f5d45ffd579115cc6447e214f458864b520c91bf9b5140052ee8",
-      "bytes": 48984
+      "sha256": "3e225987c4d5e6526cc42e42c94e1e716ff53b003bc23de80b1617295ad788b5",
+      "bytes": 48934
     },
     "cdx-bridge.js": {
       "sha256": "f5f055ec0daec79fb04b18fd5dfe84f66aa47bdee8a8bf3468214878f839ef64",
       "bytes": 4431
     },
     "cdx-frame.js": {
-      "sha256": "d4b7ff8a97eced43eb590b45566e8a1c6f59efd3be8b447312de895d2ad76f4e",
-      "bytes": 11827
+      "sha256": "e4f7d34b1d4cc24b609e3fb47956e3da6977e7ccc66c8381bbe799ffa2ba8986",
+      "bytes": 11666
     },
     "cdx-columns.js": {
       "sha256": "da30849048e92d729796e06ea4640b406c916c69801e0fad8721334929d47695",

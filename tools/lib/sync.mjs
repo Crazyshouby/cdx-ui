@@ -10,7 +10,9 @@ export const DIST_FILES = {
 };
 
 export const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
-const read = p => fs.readFileSync(p);
+// Lecture avec les fins de ligne ramenées à LF : sous Windows (autocrlf) la copie de travail est en CRLF alors que git et la CI ont du LF ; sans cela les
+// empreintes de MANIFEST.json diffèrent d'une machine à l'autre. Tout ce que dist/ contient est du texte.
+const read = p => Buffer.from(fs.readFileSync(p).toString('latin1').replace(/\r\n/g, '\n'), 'latin1');
 
 // Contenu de dist/ en mémoire : { nom: Buffer }, plus MANIFEST.json. Ne contient aucune date : deux constructions identiques donnent les mêmes octets.
 export function buildDist(repo) {
