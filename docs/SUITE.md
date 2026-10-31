@@ -27,7 +27,7 @@ Règles :
 
 ## 2. Le bus : un tube par application
 
-Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `audiolinker`, `kirc`.
+Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audiolinker`, `kirc` (et `transfers`, `notes`, décrits dans leurs applications).
 
 - **Sécurité** : le tube n'est accessible qu'à l'utilisateur courant (descripteur de sécurité : un seul droit, celui du SID de l'utilisateur ; sous .NET `PipeOptions.CurrentUserOnly`),
   les connexions distantes sont refusées (`PIPE_REJECT_REMOTE_CLIENTS`), la première instance est créée avec `FILE_FLAG_FIRST_PIPE_INSTANCE` (un autre processus ne peut pas
@@ -95,6 +95,14 @@ Un seul abonné à la fois pour l'instant.
 
 Dépôts est en lecture seule : il ne reçoit que `show`. Il émet `open-path` vers l'Explorateur (« Ouvrir le dossier ») et `open-url` vers le navigateur (« Voir sur GitHub », adresses des hébergeurs connus seulement : github.com, gitlab.com, bitbucket.org, codeberg.org),
 tous deux lancés au besoin ; le repli est l'explorateur et le navigateur de Windows.
+
+### 3.4c `kdx.terminal` (Terminal)
+| `type` | `data` | Effet |
+|---|---|---|
+| `show` | — | passe la fenêtre du terminal devant (c'est ce que fait un second lancement de `kdx-terminal.exe` sans argument) |
+| `open-path` | `path` (chemin absolu d'un dossier ; un fichier donne son dossier) | ouvre un **onglet** dont le shell démarre dans ce dossier, et passe la fenêtre devant (second lancement `kdx-terminal.exe <dossier>`, « Ouvrir dans un terminal » de l'Explorateur) |
+
+Un chemin qui n'est pas un dossier existant est refusé. L'Explorateur envoie `open-path` au terminal KDX et le lance au besoin (chemin de `apps.json`) ; le repli est Windows Terminal, puis `cmd.exe`.
 
 ### 3.5 Lancer la destination absente
 `%APPDATA%\KDXpps.json` donne, pour chaque nom, le chemin de l'exécutable : `{ "browser": "C:\…\kdx-browser.exe" }`. Chaque programme y écrit son propre chemin au démarrage. Un émetteur qui

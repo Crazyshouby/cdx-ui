@@ -24,7 +24,7 @@ vérifiée par empreinte (`dist/`). Les règles sont dans `CHARTE.md`, le plan d
 | `docs/CONTRAT-FENETRE.md` | le contrat de fenêtre et sa correspondance avec les trois hôtes |
 | `docs/RAPPORT-DERIVE.md` | état chiffré des écarts des quatre applications (`node tools/drift-report.mjs`) |
 | `tools/`, `tests/`, `charte-lint.allow` | contrôle de charte, synchronisation, rapport, tests, exceptions justifiées |
-| `gen/` | générateurs : polices (`gen_font.py`, `gen_font_gdi.py`), icônes (`pixel_icons.py`), assets (`gen_assets.py`), jetons (`gen_tokens.py`) |
+| `gen/` | générateurs : polices (`gen_font.py`, `gen_font_gdi.py`, `gen_font_mono.py` : variante à chasse fixe pour les terminaux, hors de `fonts.css`), icônes (`pixel_icons.py`), assets (`gen_assets.py`), jetons (`gen_tokens.py`) |
 
 ## Utiliser
 
