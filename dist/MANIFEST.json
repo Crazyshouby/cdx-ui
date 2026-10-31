@@ -1,16 +1,16 @@
 {
-  "kdxUi": "1.0.0",
+  "cdxUi": "1.0.0",
   "files": {
-    "kdx-ui.css": {
-      "sha256": "b6a2e7502197a6f5bcb620da26551da7c07492485cf251655ec8b09070a9adcd",
+    "cdx-ui.css": {
+      "sha256": "1a5650dc9e9243de9e28820e15d13b1f4b95c8f9024fe16b17e673b513d1a8f7",
       "bytes": 27970
     },
-    "kdx-frame.css": {
-      "sha256": "db5aa659a691053fd4e4cb0790c0075a1f17c43e612d85ce8839c8eaacab2264",
+    "cdx-frame.css": {
+      "sha256": "edba0157d03d56df2028b562b56cc47fc59a2ee283cc88c64ae72fc2a5b62321",
       "bytes": 2123
     },
     "themes.css": {
-      "sha256": "36d5fc8e9b28459cf890700d128ad50daabe9c2047bf83a489445bdff538c336",
+      "sha256": "a0d689d0cc48b636d7ee9188078294fa15df5b7e71beca69038e3d2e44947e07",
       "bytes": 2572
     },
     "fonts.css": {
@@ -21,56 +21,56 @@
       "sha256": "e285b99c7172f5d45ffd579115cc6447e214f458864b520c91bf9b5140052ee8",
       "bytes": 48984
     },
-    "kdx-bridge.js": {
-      "sha256": "d0a8277cc6521032429352f127186a631d04d7ba52041bd2c4630f0323261121",
+    "cdx-bridge.js": {
+      "sha256": "f5f055ec0daec79fb04b18fd5dfe84f66aa47bdee8a8bf3468214878f839ef64",
       "bytes": 4431
     },
-    "kdx-frame.js": {
-      "sha256": "89a9464f1022b331adbdc4df5c04ae3ab0057b7f4c90e69f4e5620eebdec5a22",
+    "cdx-frame.js": {
+      "sha256": "d4b7ff8a97eced43eb590b45566e8a1c6f59efd3be8b447312de895d2ad76f4e",
       "bytes": 11827
     },
-    "kdx-columns.js": {
-      "sha256": "9eea4842fa98ce675850ceb97b099619fbbdfaa3904dc1c2127825b0d4c4bfcb",
+    "cdx-columns.js": {
+      "sha256": "da30849048e92d729796e06ea4640b406c916c69801e0fad8721334929d47695",
       "bytes": 3984
     },
-    "kdx-split.js": {
-      "sha256": "0f887183b5c57b3ea5c69e83173b77e1feab9221652c1e723b9a437beb69a0f4",
+    "cdx-split.js": {
+      "sha256": "d7923d23884679fe9e390fd80852d1d9d4d2a1d2d3b82d12327bbdafc30e1093",
       "bytes": 4949
     },
-    "kdx-tokens.h": {
-      "sha256": "a4119d4bdcf553014c771963db35f1c4b67161bed1f9a360a39f9635ea3235ff",
+    "cdx-tokens.h": {
+      "sha256": "bfc03f0269c98d7df58a7481302fdef77b3814838dafafb4e0623843e35b22c7",
       "bytes": 3096
     },
     "tokens.rs": {
-      "sha256": "07647ee96ef72f4b5b00f39e92c70d1cc254cf91bbc9b99a16f0a6706b8c243f",
+      "sha256": "debaac1ba2e733b87358eb00cbf83d914faaa8da4a6c281bed3b50dc1d113f37",
       "bytes": 4116
     },
-    "kdx-verify.mjs": {
-      "sha256": "49afd3380630058abf08a44d3f84632054db182fce837d9eeb791fbf270dbe1a",
+    "cdx-verify.mjs": {
+      "sha256": "347fc3c292ee0b9ca2b3ae82b78e6c9abe62fdea38b529ebeb088b7623240982",
       "bytes": 1868
     },
-    "kdx_bus.h": {
-      "sha256": "634c1a6438138a3b14716f331ad1c86c3b9020b4678f07cf0170c3c4b0cead85",
+    "cdx_bus.h": {
+      "sha256": "d68fbffc25fc124b04527d21276abd143902f3876a8335e09026c4f27ce1c1a7",
       "bytes": 6589
     },
-    "kdx_bus.rs": {
-      "sha256": "d1abd9e20ef5aaaa12fad424e3eec0dc2041c191f8db54ae045a4ac7f62365db",
+    "cdx_bus.rs": {
+      "sha256": "a53f4a03b56bdb0ece8abd3c82b5ec1117685694434e1eafed4bf95ec775da9d",
       "bytes": 11367
     },
     "tokens.json": {
-      "sha256": "e744d691da0c9f7c27bcc8bc30d7a38bd02a9796f917683922b7460c71568a21",
+      "sha256": "5890b92eeed1adb47c9fca378f52fb43d4c1a1cf83990024ffeb41258e2b6429",
       "bytes": 4695
     },
     "pixel_engine.py": {
-      "sha256": "a74d283820c38ea1dbbd3fd0fd85d02a6ccfaa37122fcee34d10e410f4ff8e9c",
+      "sha256": "037dad564ef402d76aac774cf33f7e31a5e005d563c0d968e758bc959c705eba",
       "bytes": 3394
     },
     "charte-lint.mjs": {
-      "sha256": "aaf8b59230f88d937c65d95af9a68e4fdeca960176ef7d78ea32354f9b3cb648",
+      "sha256": "103784201d7461c19761ac2c4bae18f213150e6b08d3459c5c4b5bf10cd01636",
       "bytes": 2815
     },
     "lint.mjs": {
-      "sha256": "9b8c53ef75faeb6a56854a13c69f54bffa83ea759956d2ab5222603fa14110a7",
+      "sha256": "9d4adb8b900bf9b576d83f252c6a54479d79fe95f1ee68e93459befeb1226ab7",
       "bytes": 6715
     }
   }

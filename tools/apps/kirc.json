@@ -2,24 +2,24 @@
   "name": "KIRC",
   "root": "../KIRC",
   "files": {
-    "kdx-ui.css": "ui/kdx/kdx-ui.css",
-    "themes.css": "ui/kdx/themes.css",
-    "fonts.css": "ui/kdx/fonts.css",
-    "icons.js": "ui/kdx/icons.js",
-    "kdx_bus.rs": "src-tauri/src/kdx_bus.rs",
-    "kdx-verify.mjs": "tools/kdx-verify.mjs",
-    "kdx-bridge.js": "ui/kdx/kdx-bridge.js",
-    "kdx-frame.js": "ui/kdx/kdx-frame.js",
-    "kdx-frame.css": "ui/kdx/kdx-frame.css",
-    "tokens.json": "ui/kdx/tokens.json",
+    "cdx-ui.css": "ui/cdx/cdx-ui.css",
+    "themes.css": "ui/cdx/themes.css",
+    "fonts.css": "ui/cdx/fonts.css",
+    "icons.js": "ui/cdx/icons.js",
+    "cdx_bus.rs": "src-tauri/src/cdx_bus.rs",
+    "cdx-verify.mjs": "tools/cdx-verify.mjs",
+    "cdx-bridge.js": "ui/cdx/cdx-bridge.js",
+    "cdx-frame.js": "ui/cdx/cdx-frame.js",
+    "cdx-frame.css": "ui/cdx/cdx-frame.css",
+    "tokens.json": "ui/cdx/tokens.json",
     "charte-lint.mjs": "tools/charte-lint.mjs",
     "lint.mjs": "tools/lib/lint.mjs",
-    "kdx-columns.js": "ui/kdx/kdx-columns.js",
-    "kdx-split.js": "ui/kdx/kdx-split.js"
+    "cdx-columns.js": "ui/cdx/cdx-columns.js",
+    "cdx-split.js": "ui/cdx/cdx-split.js"
   },
   "lint": [
     "ui"
   ],
-  "notes": "Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/kdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/kdx-verify.mjs. kirc.css ne garde que la mise en page de KIRC.",
-  "manifest": "ui/kdx/kdx-sync.json"
+  "notes": "Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/cdx-verify.mjs. kirc.css ne garde que la mise en page de KIRC.",
+  "manifest": "ui/cdx/cdx-sync.json"
 }

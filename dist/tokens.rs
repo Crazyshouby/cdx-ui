@@ -1,4 +1,4 @@
-//! tokens.rs -- généré par gen/gen_tokens.py (kdx-ui 1.0.0) depuis tokens.json : ne pas modifier à la main.
+//! tokens.rs -- généré par gen/gen_tokens.py (cdx-ui 1.0.0) depuis tokens.json : ne pas modifier à la main.
 //! Couleurs au format 0xRRGGBB.
 #![allow(dead_code)]
 
@@ -41,7 +41,7 @@ pub struct Accent {
     pub icon_accent_dark: u32,
 }
 
-/// `ACCENTS[0]` est le défaut (rouge KDX).
+/// `ACCENTS[0]` est le défaut (rouge CDX).
 pub const ACCENTS: [Accent; 7] = [
     Accent { id: "rouge", edge: 0xCC0000, mid: 0x880000, dark: 0x440000, hover: 0x660000, title_from: 0x320000, title_to: 0xC30000, bar_top: 0xE83C3C, bar_mid: 0xC01010, bar_bot: 0x8A0202, spark: 0xFF8A74, accent: 0xD41818, field_ink: 0x00FF00, sel_bg: 0x001177, sel_fg: 0xFF00FF, icon_accent: 0xE02020, icon_accent_dark: 0x8A0202 },
     Accent { id: "bleu", edge: 0x0000FF, mid: 0x0000AA, dark: 0x000055, hover: 0x000080, title_from: 0x00003E, title_to: 0x0000F4, bar_top: 0x4242FF, bar_mid: 0x1313EF, bar_bot: 0x0202AC, spark: 0x7373FF, accent: 0x1C1CFF, field_ink: 0x8FD0FF, sel_bg: 0x001177, sel_fg: 0xFF00FF, icon_accent: 0x1313EF, icon_accent_dark: 0x0202AC },

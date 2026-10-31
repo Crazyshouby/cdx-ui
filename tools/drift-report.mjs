@@ -29,7 +29,7 @@ function measures(files) {
   return { sizes: cnt(sizes), radii: cnt(radii), weights: cnt(weights), colors: cnt(colors), distinctColors: new Set(colors).size };
 }
 
-// Constantes et couleurs de paint.rs (kdx-frames) contre tokens.json.
+// Constantes et couleurs de paint.rs (cdx-frames) contre tokens.json.
 function rustCheck(file) {
   const t = fs.readFileSync(file, 'utf8'), rows = [];
   const map = { RING: ['frame_ring + frame_outline', 'anneau de cadre : 5 px + 1 px de contour noir (CHARTE.md §4)'], TITLE: ['title_height', 'barre de titre'], BUTTON: ['title_button_size', 'boutons de titre'] };
@@ -55,7 +55,7 @@ const res = apps.map(p => {
 
 const L = [];
 const rules = Object.keys(RULES);
-L.push('# Rapport de dérive à la charte KDX-UI', '', `Version de la charte : **${version}** · généré le ${new Date().toISOString().slice(0, 10)} par \`node tools/drift-report.mjs\`.`,
+L.push('# Rapport de dérive à la charte CDX-UI', '', `Version de la charte : **${version}** · généré le ${new Date().toISOString().slice(0, 10)} par \`node tools/drift-report.mjs\`.`,
   'Les comptes sont des **déclarations** (lignes de CSS / HTML / JS), pas des éléments affichés. Une copie identique à `dist/` n\'est pas recomptée (elle se contrôle à la source) ; une exception propre à une application est déclarée, avec sa raison, dans `tools/apps/<application>.allow` et comptée à part (« tolérés »).',
   'Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même contrôle avec 18 exceptions justifiées dans `charte-lint.allow`.', '');
 if (stale.length) L.push(`> ⚠ dist/ est périmé (${stale.join(', ')}) : les comparaisons de copies sont omises. Lancer \`node tools/build-dist.mjs\`.`, '');
@@ -96,7 +96,7 @@ L.push('## Lecture', '');
 const max = total.slice().sort((a, b) => b.t - a.t)[0];
 if (max) L.push(`- L'écart brut le plus important est celui de **${max.n}** (${max.t} écart(s) sur ${total.reduce((a, b) => a + b.t, 0)} au total).`);
 L.push('- Les applications C# (shell, Explorateur, Navigateur) lisent la charte sans copie : leur dérive se mesure par ce rapport, pas par synchronisation.',
-  '- Rien n\'est corrigé ici : la phase 3 du plan traite KIRC, `kdx-frames` puis AudioLinker, une branche et une version mineure chacune, après validation de ce rapport.', '');
+  '- Rien n\'est corrigé ici : la phase 3 du plan traite KIRC, `cdx-frames` puis AudioLinker, une branche et une version mineure chacune, après validation de ce rapport.', '');
 
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, L.join('\n'), 'utf8');

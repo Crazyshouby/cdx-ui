@@ -1,6 +1,6 @@
-// Tests de protocole de kdx_bus.h : cl /EHsc /std:c++17 test_bus.cpp && test_bus.exe
-// Rien ne touche aux vrais réglages ni au vrai bus : dossier temporaire (KDX_SUITE_DIR) et préfixe de tube de test (KDX_PIPE_PREFIX).
-#include "kdx_bus.h"
+// Tests de protocole de cdx_bus.h : cl /EHsc /std:c++17 test_bus.cpp && test_bus.exe
+// Rien ne touche aux vrais réglages ni au vrai bus : dossier temporaire (CDX_SUITE_DIR) et préfixe de tube de test (CDX_PIPE_PREFIX).
+#include "cdx_bus.h"
 #include <cstdio>
 #include <thread>
 #include <vector>
@@ -14,7 +14,7 @@ static void WriteFileText(const std::wstring& path, const std::string& text) {
 }
 
 int main() {
-    using namespace kdx;
+    using namespace cdx;
     // ---- Compose
     Check("Compose : enveloppe type/from/data", bus::Compose("open-url", "kirc", "{\"url\":\"https://example.org/\"}") == "{\"type\":\"open-url\",\"from\":\"kirc\",\"data\":{\"url\":\"https://example.org/\"}}");
     Check("Compose : data absent -> {}", bus::Compose("audio.get", "shell") == "{\"type\":\"audio.get\",\"from\":\"shell\",\"data\":{}}");
@@ -31,9 +31,9 @@ int main() {
     Check("ParseAccent : vide -> repli", suite::ParseAccent("", "rouge") == "rouge");
 
     wchar_t tmp[MAX_PATH]; GetTempPathW(MAX_PATH, tmp);
-    std::wstring dir = std::wstring(tmp) + L"kdx-bus-test-" + std::to_wstring(GetCurrentProcessId());
+    std::wstring dir = std::wstring(tmp) + L"cdx-bus-test-" + std::to_wstring(GetCurrentProcessId());
     CreateDirectoryW(dir.c_str(), nullptr);
-    SetEnvironmentVariableW(L"KDX_SUITE_DIR", dir.c_str());
+    SetEnvironmentVariableW(L"CDX_SUITE_DIR", dir.c_str());
     Check("ReadAccent : fichier absent -> repli", suite::ReadAccent("sarcelle") == "sarcelle");
     suite::Watcher w("rouge");
     std::string a;
@@ -51,8 +51,8 @@ int main() {
     DeleteFileW(suite::Path().c_str()); RemoveDirectoryW(dir.c_str());
 
     // ---- Send contre un serveur de tube de test
-    std::wstring prefix = L"kdxtest" + std::to_wstring(GetCurrentProcessId()) + L".";
-    SetEnvironmentVariableW(L"KDX_PIPE_PREFIX", prefix.c_str());
+    std::wstring prefix = L"cdxtest" + std::to_wstring(GetCurrentProcessId()) + L".";
+    SetEnvironmentVariableW(L"CDX_PIPE_PREFIX", prefix.c_str());
     Check("Send : application qui n'écoute pas -> false", !bus::Send("browser", "open-url", "{}"));
     Check("Send : nom inconnu -> false", !bus::Send("nimporte", "x"));
     std::wstring pipeName = L"\\\\.\\pipe\\" + prefix + L"browser";

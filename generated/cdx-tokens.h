@@ -1,8 +1,8 @@
-// kdx-tokens.h -- généré par gen/gen_tokens.py (kdx-ui 1.0.0) depuis tokens.json : ne pas modifier à la main.
-// Couleurs au format 0xRRGGBB. Pour un COLORREF Win32 (0x00BBGGRR) : kdx::Colorref(kdx::kFrame).
+// cdx-tokens.h -- généré par gen/gen_tokens.py (cdx-ui 1.0.0) depuis tokens.json : ne pas modifier à la main.
+// Couleurs au format 0xRRGGBB. Pour un COLORREF Win32 (0x00BBGGRR) : cdx::Colorref(cdx::kFrame).
 #pragma once
 
-namespace kdx {
+namespace cdx {
 
 constexpr unsigned Colorref(unsigned rgb) { return ((rgb & 0xFFu) << 16) | (rgb & 0xFF00u) | ((rgb >> 16) & 0xFFu); }
 
@@ -30,7 +30,7 @@ struct Accent {
     unsigned edge, mid, dark, hover, titleFrom, titleTo, barTop, barMid, barBot, spark, accent, fieldInk, selBg, selFg, iconAccent, iconAccentDark;
 };
 
-// kAccents[0] est le défaut (rouge KDX).
+// kAccents[0] est le défaut (rouge CDX).
 constexpr Accent kAccents[] = {
     {"rouge", 0xCC0000, 0x880000, 0x440000, 0x660000, 0x320000, 0xC30000, 0xE83C3C, 0xC01010, 0x8A0202, 0xFF8A74, 0xD41818, 0x00FF00, 0x001177, 0xFF00FF, 0xE02020, 0x8A0202},
     {"bleu", 0x0000FF, 0x0000AA, 0x000055, 0x000080, 0x00003E, 0x0000F4, 0x4242FF, 0x1313EF, 0x0202AC, 0x7373FF, 0x1C1CFF, 0x8FD0FF, 0x001177, 0xFF00FF, 0x1313EF, 0x0202AC},
@@ -58,4 +58,4 @@ constexpr int kIconSize = 16;
 constexpr int kSnapDistance = 10;
 constexpr int kSnapGap = 2;
 
-}  // namespace kdx
+}  // namespace cdx

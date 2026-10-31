@@ -1,8 +1,8 @@
-# Charte graphique KDX-UI
+# Charte graphique CDX-UI
 
 L'interface de KIRC, mise au point pour être indiscernable de celle de KDX (Haxial Software), consignée ici pour
 servir à d'autres projets. Tout ce qui suit est mesuré au pixel sur KDX 1.6 ; les valeurs « finales » sont dans
-`kdx-ui.css`, la page `exemple.html` montre chaque élément.
+`cdx-ui.css`, la page `exemple.html` montre chaque élément.
 
 ## 1. L'esprit
 
@@ -11,7 +11,7 @@ panneau gris. Un monde **plat et gris**, éclairé **du haut gauche** : tout ce 
 qui se lit ou se saisit est creusé. L'écran est lu comme un instrument : des **pixels nets** (police bitmap, aucun
 lissage), **aucun arrondi**, une **seule couleur d'accent** qui dit quelle fenêtre est active.
 
-Les cinq règles qui font que cela « ressemble à KDX » :
+Les cinq règles qui font que cela « ressemble à CDX » :
 
 1. **Relief éclairé en haut à gauche.** Clair en haut et à gauche, sombre en bas et à droite, pour les boutons,
    cadres, barres de titre. Inverser l'éclairage (creux) pour les champs et listes.
@@ -25,7 +25,7 @@ Les cinq règles qui font que cela « ressemble à KDX » :
 
 ## 2. Couleurs
 
-### Neutres (jetons de `kdx-ui.css`)
+### Neutres (jetons de `cdx-ui.css`)
 
 | Jeton | Valeur | Rôle |
 |---|---|---|
@@ -36,14 +36,14 @@ Les cinq règles qui font que cela « ressemble à KDX » :
 | `--line` | `#555555` | filets entre les lignes d'une liste |
 | `--faint` | `#888888` | texte désactivé ou secondaire, flèches |
 | `--text` | `#ffffff` | texte |
-| `--field-ink` | `#00ff00` | texte dans les champs et consoles (vert KDX) |
+| `--field-ink` | `#00ff00` | texte dans les champs et consoles (vert CDX) |
 | relief clair | `#666`, `#444` | arêtes claires d'un bouton (extérieure puis intérieure) |
 | relief sombre | `#222`, `#111`, `#000` | arêtes sombres, contour |
 
 ### Accent (une rampe, par thème)
 
 Neuf valeurs dérivent d'une seule teinte : bord, milieu, sombre, survol, titre (début et fin), barre (haut, milieu,
-bas). Rouge KDX par défaut, mesuré sur KDX :
+bas). Rouge CDX par défaut, mesuré sur CDX :
 
 `--a-edge #cc0000` · `--a-mid #880000` · `--a-dark #440000` · `--a-hover #660000` · titre `#320000 → #c30000` ·
 barre `#e83c3c / #c01010 / #8a0202`.
@@ -182,15 +182,15 @@ gris ; **mise en évidence** fond bleu marine, filet rose ; **erreur et expulsio
 
 ## 9. Intégration dans un nouveau projet
 
-1. Copier `kdx-ui.css`, `fonts.css`, `themes.css` et `icons.js` (ou tout le dossier `charte/`).
-2. Dans la page : `<link>` vers `fonts.css`, `kdx-ui.css`, puis `themes.css` ; `<html data-theme="…">` pour l'accent.
+1. Copier `cdx-ui.css`, `fonts.css`, `themes.css` et `icons.js` (ou tout le dossier `charte/`).
+2. Dans la page : `<link>` vers `fonts.css`, `cdx-ui.css`, puis `themes.css` ; `<html data-theme="…">` pour l'accent.
 3. Structurer chaque fenêtre en `.win > .tb + .cb` (voir `exemple.html`). Mettre `body.active` (fenêtre unique) ou
    `.win.active` (plusieurs) selon le focus ; un écouteur `focus`/`blur` suffit sur le web.
 4. **Application de bureau (Tauri 2 / WebView2)** : fenêtres sans décoration (`decorations(false)`), glisser par
    la barre de titre (commande native, pas `data-tauri-drag-region`, pour pouvoir aimanter), `additional_browser_args`
    avec `--disable-lcd-text`. KIRC (`src-tauri/src/app.rs`) montre l'aimantation, l'enroulement, l'agrandissement et
    les onglets par fusion de fenêtres.
-5. Les mises en page propres à l'application (colonnes, volets) vont dans le CSS du projet, pas dans `kdx-ui.css` :
+5. Les mises en page propres à l'application (colonnes, volets) vont dans le CSS du projet, pas dans `cdx-ui.css` :
    ce fichier ne contient que des composants.
 6. Vérifier : aucune ligne de la page n'a `border-radius`, `font-weight` utile, ni couleur hors des jetons.
    Comparer à `exemple.html` côte à côte.
@@ -205,16 +205,16 @@ Régénérer les ressources : voir `README.md` (polices, icônes, thèmes).
   (`gen/gen_font.py` en est l'unique source).
 - Les icônes (`pixel_icons.py`), les couleurs et les mesures sont dessinées ou relevées pour KIRC.
 - KDX est une marque de Haxial ; aucun lien avec Haxial. Un projet qui adopte cette charte doit le préciser s'il
-  parle de KDX.
+  parle de CDX.
 
-## 11. Cadre, pont et contrôle (kdx-ui 1.0)
+## 11. Cadre, pont et contrôle (cdx-ui 1.0)
 
-- **Jetons** : `tokens.json` est la source des couleurs, des accents et des mesures. `python gen/gen_tokens.py` en tire le bloc de jetons de `kdx-ui.css`, `themes.css`,
-  `generated/kdx-tokens.h` (C++) et `generated/tokens.rs` (Rust). On ne modifie jamais ces blocs à la main.
-- **Cadre de fenêtre** : `kdx-frame.js` (+ `kdx-frame.css`) branche la barre de titre, les poignées, l'enroulement, les boîtes de dialogue et les menus ; `kdx-bridge.js` traduit les demandes
+- **Jetons** : `tokens.json` est la source des couleurs, des accents et des mesures. `python gen/gen_tokens.py` en tire le bloc de jetons de `cdx-ui.css`, `themes.css`,
+  `generated/cdx-tokens.h` (C++) et `generated/tokens.rs` (Rust). On ne modifie jamais ces blocs à la main.
+- **Cadre de fenêtre** : `cdx-frame.js` (+ `cdx-frame.css`) branche la barre de titre, les poignées, l'enroulement, les boîtes de dialogue et les menus ; `cdx-bridge.js` traduit les demandes
   de fenêtre vers l'hôte (voir `docs/CONTRAT-FENETRE.md`). Une application n'écrit plus ce code.
 - **Icônes** : le rouge des icônes pixel (`R`, `r` de `pixel_icons.py`) suit l'accent par `--ic-accent` / `--ic-accent-dark` ; le rouge d'erreur (`E`, `e`) reste fixe, comme toute couleur de statut (§2).
 - **Contrôle** : `node tools/charte-lint.mjs` applique le §8 (arrondis, gras, tailles hors multiples de 14, ombres floues, dégradés, gris teintés, couleurs hors jetons). Une exception se déclare
   dans `charte-lint.allow` **avec sa raison** ; sans raison, elle n'est pas acceptée.
-- **Fenêtres imbriquées** : une fenêtre inactive posée dans une fenêtre active hérite des jetons de titre de l'accent ; `kdx-frame.css` redonne ses gris à toute fenêtre non active.
+- **Fenêtres imbriquées** : une fenêtre inactive posée dans une fenêtre active hérite des jetons de titre de l'accent ; `cdx-frame.css` redonne ses gris à toute fenêtre non active.
 - **Double appui** sur la barre de titre : `lastDown` démarre à `-Infinity` (un premier appui juste après le chargement ne compte pas comme double).

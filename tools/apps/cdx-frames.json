@@ -1,6 +1,6 @@
 {
-  "name": "kdx-frames",
-  "root": "../KIRC/kdx-frames",
+  "name": "cdx-frames",
+  "root": "../KIRC/cdx-frames",
   "files": {},
   "lint": [],
   "rust": "src/paint.rs",

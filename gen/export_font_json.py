@@ -1,6 +1,6 @@
-"""Écrit la police d'interface (gen_font, « KIRC Pixel ») en JSON pour les programmes qui la dessinent eux-mêmes (kdx-frames).
+"""Écrit la police d'interface (gen_font, « KIRC Pixel ») en JSON pour les programmes qui la dessinent eux-mêmes (cdx-frames).
 
-    python gen/export_font_json.py <fichier.json>      (KIRC : kdx-frames/assets/ui-font.json)
+    python gen/export_font_json.py <fichier.json>      (KIRC : cdx-frames/assets/ui-font.json)
 
 { "spacing": pixels between letters, "space": width of a space, "glyphs": { char: [first row, [rows of '#' and '.']] } }
 """

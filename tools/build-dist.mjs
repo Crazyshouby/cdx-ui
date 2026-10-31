@@ -10,4 +10,4 @@ if (process.argv.includes('--check')) {
   console.log(stale.length ? 'dist/ PÉRIMÉ : ' + stale.join(', ') + '\n→ node tools/build-dist.mjs' : 'dist/ à jour');
   process.exit(stale.length ? 1 : 0);
 }
-console.log('dist/ écrit (kdx-ui ' + writeDist(repo, out) + ')');
+console.log('dist/ écrit (cdx-ui ' + writeDist(repo, out) + ')');

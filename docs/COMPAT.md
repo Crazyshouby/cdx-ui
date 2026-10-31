@@ -6,11 +6,11 @@ La charte suit [SemVer](https://semver.org/lang/fr/) (`VERSION`, `dist/MANIFEST.
 - **mineure** : un jeton, un composant, un accent ou un message est ajouté ;
 - **correctif** : une valeur corrigée, sans changement de nom.
 
-Chaque application copie `dist/` par `charte-sync` et garde la version dans son `kdx-sync.json` (champ `kdxUi`).
+Chaque application copie `dist/` par `charte-sync` et garde la version dans son `cdx-sync.json` (champ `cdxUi`).
 
-| kdx-ui | kdx-windows | KIRC | AudioLinker | Notes |
+| cdx-ui | cdx-windows | KIRC | AudioLinker | Notes |
 |---|---|---|---|---|
-| 1.0.0 | 0.1.0 (non publié) | 0.4.0 → 0.5.0 (branche `kdx-ui-partage`, non publié) | 1.2.0 → 1.3.0 (branche `kdx-ui-partage`, non publié) | première charte partagée ; clients du bus et accent de la suite compris |
+| 1.0.0 | 0.1.0 (non publié) | 0.4.0 → 0.5.0 (branche `cdx-ui-partage`, non publié) | 1.2.0 → 1.3.0 (branche `cdx-ui-partage`, non publié) | première charte partagée ; clients du bus et accent de la suite compris |
 
-Avant toute publication d'une application : son `kdx-sync.json` doit porter la version de charte de cette ligne, `node tools/kdx-verify.mjs` doit être vert, et `node tools/drift-report.mjs` (dans kdx-ui) ne doit montrer aucun écart non justifié.
-Publier AudioLinker ou KIRC avec la charte exige en plus la décision sur le nom « KDX » et sur la police (`CHARTE.md` §10).
+Avant toute publication d'une application : son `cdx-sync.json` doit porter la version de charte de cette ligne, `node tools/cdx-verify.mjs` doit être vert, et `node tools/drift-report.mjs` (dans cdx-ui) ne doit montrer aucun écart non justifié.
+Publier AudioLinker ou KIRC avec la charte exige en plus la décision sur le nom « CDX » et sur la police (`CHARTE.md` §10).

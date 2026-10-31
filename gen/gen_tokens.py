@@ -1,14 +1,14 @@
-"""Génère tout ce qui dérive de tokens.json (la source unique des couleurs et des mesures de KDX-UI) :
+"""Génère tout ce qui dérive de tokens.json (la source unique des couleurs et des mesures de CDX-UI) :
 
     python gen_tokens.py            # écrit les fichiers
     python gen_tokens.py --check    # ne modifie rien ; code de sortie 1 si un fichier généré n'est pas à jour (pour la CI)
 
-  ../kdx-ui.css                  le bloc entre « tokens:begin » et « tokens:end » (le reste du fichier est écrit à la main)
+  ../cdx-ui.css                  le bloc entre « tokens:begin » et « tokens:end » (le reste du fichier est écrit à la main)
   ../themes.css                  une rampe d'accent par thème, hors rouge (le rouge est le défaut du :root)
-  ../generated/kdx-tokens.h      C++ : couleurs 0xRRGGBB, accents, mesures (AudioLinker : AppState.cpp, Switcher.cpp, Panels.cpp)
-  ../generated/tokens.rs         Rust : les mêmes (kdx-frames : paint.rs ; KIRC)
+  ../generated/cdx-tokens.h      C++ : couleurs 0xRRGGBB, accents, mesures (AudioLinker : AppState.cpp, Switcher.cpp, Panels.cpp)
+  ../generated/tokens.rs         Rust : les mêmes (cdx-frames : paint.rs ; KIRC)
 
-Ajouter un accent à partir d'une teinte (même rampe que le rouge mesuré sur KDX) :
+Ajouter un accent à partir d'une teinte (même rampe que le rouge mesuré sur CDX) :
     python gen_tokens.py --new-theme nom TEINTE SATURATION RELEVÉ ENCRE_CHAMPS FOND_SÉLECTION TEXTE_SÉLECTION
     ex.  python gen_tokens.py --new-theme cuivre 25 0.9 1.0 "#ffcc99" "#3a1800" "#ffe090"
 (le calcul est celui de l'ancien gen_themes.py, conservé pour mémoire.)
@@ -30,7 +30,7 @@ def load():
     return json.loads(TOKENS.read_text(encoding="utf-8"))
 
 
-# ---------------------------------------------------------------- le bloc de jetons de kdx-ui.css
+# ---------------------------------------------------------------- le bloc de jetons de cdx-ui.css
 def css_region(t):
     g, r = t["global"], t["themes"]["rouge"]
     L = [f"  {BEGIN} -- généré par gen/gen_tokens.py depuis tokens.json : ne pas modifier à la main */",
@@ -38,8 +38,8 @@ def css_region(t):
     L += [f"  --{k}: {g[k]};" for k in ("frame", "panel", "btn", "card-2", "ink", "line", "hi", "lo")]
     L += ["", "  /* Texte */"]
     L += [f"  --{k}: {g[k]};" for k in ("text", "muted", "faint")]
-    L += [f"  --field-ink: {r['field-ink']};      /* texte des champs et des consoles (vert KDX) */"]
-    L += ["", "  /* Rampe d'accent (défaut : rouge KDX, mesuré sur KDX 1.6). themes.css la remplace par thème. */",
+    L += [f"  --field-ink: {r['field-ink']};      /* texte des champs et des consoles (vert CDX) */"]
+    L += ["", "  /* Rampe d'accent (défaut : rouge CDX, mesuré sur KDX 1.6). themes.css la remplace par thème. */",
           f"  --a-edge: {r['a-edge']}; --a-mid: {r['a-mid']}; --a-dark: {r['a-dark']}; --a-hover: {r['a-hover']};",
           f"  --a-title-from: {r['a-title-from']}; --a-title-to: {r['a-title-to']};",
           f"  --bar-top: {r['bar-top']}; --bar-mid: {r['bar-mid']}; --bar-bot: {r['bar-bot']}; --a-spark: {r['a-spark']};",
@@ -57,17 +57,17 @@ def css_region(t):
 
 
 def patch_css(t):
-    p = ROOT / "kdx-ui.css"
+    p = ROOT / "cdx-ui.css"
     s = p.read_text(encoding="utf-8")
     m = re.search(r"  /\* tokens:begin.*?" + re.escape(END) + r"\n", s, re.S)
     if not m:
-        raise SystemExit("kdx-ui.css : marqueurs « tokens:begin » / « tokens:end » introuvables")
+        raise SystemExit("cdx-ui.css : marqueurs « tokens:begin » / « tokens:end » introuvables")
     return p, s[:m.start()] + css_region(t) + s[m.end():]
 
 
 # ---------------------------------------------------------------- themes.css
 def themes_css(t):
-    out = ["/* Généré par gen/gen_tokens.py depuis tokens.json -- ne pas modifier. Une rampe d'accent par thème ; le rouge est le défaut du :root de kdx-ui.css. */\n"]
+    out = ["/* Généré par gen/gen_tokens.py depuis tokens.json -- ne pas modifier. Une rampe d'accent par thème ; le rouge est le défaut du :root de cdx-ui.css. */\n"]
     for tid, v in t["themes"].items():
         if tid == "rouge":
             continue
@@ -104,35 +104,35 @@ ACCENT_FIELDS = [("edge", "a-edge"), ("mid", "a-mid"), ("dark", "a-dark"), ("hov
 
 def cpp_header(t):
     v = t["version"]
-    L = [f"// kdx-tokens.h -- généré par gen/gen_tokens.py (kdx-ui {v}) depuis tokens.json : ne pas modifier à la main.",
-         "// Couleurs au format 0xRRGGBB. Pour un COLORREF Win32 (0x00BBGGRR) : kdx::Colorref(kdx::kFrame).",
-         "#pragma once", "", "namespace kdx {", "",
+    L = [f"// cdx-tokens.h -- généré par gen/gen_tokens.py (cdx-ui {v}) depuis tokens.json : ne pas modifier à la main.",
+         "// Couleurs au format 0xRRGGBB. Pour un COLORREF Win32 (0x00BBGGRR) : cdx::Colorref(cdx::kFrame).",
+         "#pragma once", "", "namespace cdx {", "",
          "constexpr unsigned Colorref(unsigned rgb) { return ((rgb & 0xFFu) << 16) | (rgb & 0xFF00u) | ((rgb >> 16) & 0xFFu); }", ""]
     for k, val in t["global"].items():
         h = hexval(val)
         if h is not None:
             L.append(f"constexpr unsigned {camel(k)} = 0x{h:06X};")
     L += ["", "struct Accent {", "    const char* id;", "    unsigned " + ", ".join(camel(a)[1:2].lower() + camel(a)[2:] for a, _ in ACCENT_FIELDS) + ";", "};", "",
-          "// kAccents[0] est le défaut (rouge KDX).", "constexpr Accent kAccents[] = {"]
+          "// kAccents[0] est le défaut (rouge CDX).", "constexpr Accent kAccents[] = {"]
     for tid, th in t["themes"].items():
         L.append('    {"%s", %s},' % (tid, ", ".join("0x%06X" % hexval(th[c]) for _, c in ACCENT_FIELDS)))
     L += ["};", f"constexpr int kAccentCount = {len(t['themes'])};", ""]
     for k, val in t["measures"].items():
         L.append(f"constexpr int {camel(k)} = {val};")
-    L += ["", "}  // namespace kdx", ""]
+    L += ["", "}  // namespace cdx", ""]
     return "\n".join(L)
 
 
 def rust_module(t):
     v = t["version"]
-    L = [f"//! tokens.rs -- généré par gen/gen_tokens.py (kdx-ui {v}) depuis tokens.json : ne pas modifier à la main.",
+    L = [f"//! tokens.rs -- généré par gen/gen_tokens.py (cdx-ui {v}) depuis tokens.json : ne pas modifier à la main.",
          "//! Couleurs au format 0xRRGGBB.", "#![allow(dead_code)]", ""]
     for k, val in t["global"].items():
         h = hexval(val)
         if h is not None:
             L.append(f"pub const {upper(k)}: u32 = 0x{h:06X};")
     L += ["", "pub struct Accent {", "    pub id: &'static str,"] + [f"    pub {a}: u32," for a, _ in ACCENT_FIELDS] + ["}", "",
-          "/// `ACCENTS[0]` est le défaut (rouge KDX).", f"pub const ACCENTS: [Accent; {len(t['themes'])}] = ["]
+          "/// `ACCENTS[0]` est le défaut (rouge CDX).", f"pub const ACCENTS: [Accent; {len(t['themes'])}] = ["]
     for tid, th in t["themes"].items():
         L.append('    Accent { id: "%s", %s },' % (tid, ", ".join("%s: 0x%06X" % (a, hexval(th[c])) for a, c in ACCENT_FIELDS)))
     L += ["];", ""]
@@ -161,7 +161,7 @@ def new_theme(name, hue, sat, lift, ink, sel_bg, sel_fg):
 
 def outputs(t):
     cssp, csst = patch_css(t)
-    return {cssp: csst, ROOT / "themes.css": themes_css(t), ROOT / "generated" / "kdx-tokens.h": cpp_header(t), ROOT / "generated" / "tokens.rs": rust_module(t)}
+    return {cssp: csst, ROOT / "themes.css": themes_css(t), ROOT / "generated" / "cdx-tokens.h": cpp_header(t), ROOT / "generated" / "tokens.rs": rust_module(t)}
 
 
 def main(argv):

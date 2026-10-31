@@ -1,0 +1,24 @@
+{
+  "name": "cdx-windows (shell, Explorateur, Navigateur)",
+  "root": "../cdx-windows",
+  "files": {
+    "cdx-ui.css": "web/cdx/cdx-ui.css",
+    "themes.css": "web/cdx/themes.css",
+    "fonts.css": "web/cdx/fonts.css",
+    "icons.js": "web/cdx/icons.js",
+    "cdx-verify.mjs": "tools/cdx-verify.mjs",
+    "cdx-bridge.js": "web/cdx/cdx-bridge.js",
+    "cdx-frame.js": "web/cdx/cdx-frame.js",
+    "cdx-frame.css": "web/cdx/cdx-frame.css",
+    "tokens.json": "web/cdx/tokens.json",
+    "charte-lint.mjs": "tools/charte-lint.mjs",
+    "lint.mjs": "tools/lib/lint.mjs",
+    "cdx-columns.js": "web/cdx/cdx-columns.js",
+    "cdx-split.js": "web/cdx/cdx-split.js"
+  },
+  "lint": [
+    "web"
+  ],
+  "notes": "C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de la bibliothèque Cdx.Host. Les pages sont servies depuis web/ par l'hôte virtuel cdx.shell ; web/cdx/ est une copie exacte de la charte (charte-sync). Les pages _test-*.html sont ignorées.",
+  "manifest": "web/cdx/cdx-sync.json"
+}

@@ -23,7 +23,7 @@ const port = srv.address().port;
 const pages = process.argv.length > 2 ? process.argv.slice(2) : fs.readdirSync(path.join(root, 'tests')).filter(f => f.endsWith('.test.html'));
 let failed = false;
 for (const p of pages) {
-  const prof = fs.mkdtempSync(path.join(os.tmpdir(), 'kdx-test-'));
+  const prof = fs.mkdtempSync(path.join(os.tmpdir(), 'cdx-test-'));
   try {
     const { stdout: dom } = await run(chrome, ['--headless=new', '--no-first-run', '--disable-component-update', '--disable-background-networking', `--user-data-dir=${prof}`, '--virtual-time-budget=8000', '--dump-dom', `http://127.0.0.1:${port}/tests/${p}`], { encoding: 'utf8', timeout: 60000, maxBuffer: 16 << 20 });
     const m = /<pre id="out">([\s\S]*?)<\/pre>/.exec(dom);

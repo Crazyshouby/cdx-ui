@@ -1,22 +1,22 @@
-<!doctype html><meta charset="utf-8"><title>test kdx-bridge / kdx-frame</title>
+<!doctype html><meta charset="utf-8"><title>test cdx-bridge / cdx-frame</title>
 <!-- Teste le contrat de fenêtre : trois transports simulés (Tauri, chaînes AudioLinker, WebView2 JSON) dans des cadres isolés, plus dialogue et menu.
      Lancé par tests/run-browser-tests.mjs (Chrome headless) ; le résultat est écrit dans #out. -->
 <pre id="out">en attente</pre>
 <script>
-const FRAME = (host) => `<!doctype html><html ${host === 'strings' ? 'data-kdx-host="strings"' : ''}><head><meta charset="utf-8">
-<link rel="stylesheet" href="/kdx-ui.css"><link rel="stylesheet" href="/kdx-frame.css">
+const FRAME = (host) => `<!doctype html><html ${host === 'strings' ? 'data-cdx-host="strings"' : ''}><head><meta charset="utf-8">
+<link rel="stylesheet" href="/cdx-ui.css"><link rel="stylesheet" href="/cdx-frame.css">
 <script>window.__LOG = []; window.__H = {};
 ${host === 'tauri' ? `window.__TAURI__ = { core: { invoke: (c, a) => { __LOG.push(['invoke', c, a]); return Promise.resolve(); } }, event: { listen: (t, f) => { __H[t] = f; __LOG.push(['listen-app', t]); } }, webviewWindow: { getCurrentWebviewWindow: () => ({ listen: (t, f) => { __H[t] = f; __LOG.push(['listen-window', t]); } }) } };` : ''}
 ${host === 'strings' ? `window.chrome = { webview: { postMessage: s => __LOG.push(s), addEventListener: (t, f) => { __H.message = f; } } };` : ''}
 ${host === 'webview2' ? `window.chrome = { webview: { postMessage: o => __LOG.push(o), addEventListener: (t, f) => { __H.message = f; } } };` : ''}
-<\/script><script src="/kdx-bridge.js"><\/script><script src="/kdx-frame.js"><\/script></head>
+<\/script><script src="/cdx-bridge.js"><\/script><script src="/cdx-frame.js"><\/script></head>
 <body><div class="win"><div class="tb" ${host === 'webview2' ? 'data-dblclick="max"' : ''}><button class="tb-btn tb-l" data-act="close"></button><span class="tb-title">T</span><button class="tb-btn tb-r2" data-act="zoom"></button><button class="tb-btn tb-r" data-act="min"></button></div><div class="cb"></div><i class="grip-rz"></i></div></body></html>`;
 
 const frames = {};
 async function load(host) {
   const f = document.createElement('iframe'); f.style.cssText = 'width:400px;height:200px'; f.srcdoc = FRAME(host); document.body.appendChild(f);
   await new Promise(r => f.onload = r); frames[host] = f; await new Promise(r => setTimeout(r, 50));
-  f.contentWindow.KdxFrame.init(); return f.contentWindow;
+  f.contentWindow.CdxFrame.init(); return f.contentWindow;
 }
 const ptr = (w, el, type) => el.dispatchEvent(new w.PointerEvent(type, { bubbles: true, button: 0, pointerId: 7 }));
 const res = []; const ok = (name, cond, extra = '') => res.push((cond ? 'OK     ' : 'ÉCHEC  ') + name + (cond ? '' : '  ' + extra));
@@ -25,7 +25,7 @@ const J = x => JSON.stringify(x);
 (async () => {
   // ---- Tauri ----
   let w = await load('tauri'), L = w.__LOG, d = w.document;
-  ok('tauri : transport détecté', w.kdx.host === 'tauri');
+  ok('tauri : transport détecté', w.cdx.host === 'tauri');
   ok('tauri : init() annonce win_ready', L.some(e => e[1] === 'win_ready'), J(L));
   ok('tauri : les événements sont écoutés sur la fenêtre courante, pas sur toute l\'application', L.some(e => e[0] === 'listen-window' && e[1] === 'active') && !L.some(e => e[0] === 'listen-app'), J(L));
   L.length = 0; const tb = d.querySelector('.tb');
@@ -42,45 +42,45 @@ const J = x => JSON.stringify(x);
 
   // ---- chaînes AudioLinker ----
   w = await load('strings'); L = w.__LOG; d = w.document; const tb2 = d.querySelector('.tb');
-  ok('strings : transport forcé par data-kdx-host', w.kdx.host === 'strings');
+  ok('strings : transport forcé par data-cdx-host', w.cdx.host === 'strings');
   L.length = 0; ptr(w, tb2, 'pointerdown'); ok('strings : appui -> "dragstart"', L[0] === 'dragstart', J(L));
   ptr(w, tb2, 'pointerup'); ok('strings : relâchement -> "dragend"', L.includes('dragend'), J(L));
   L.length = 0; ptr(w, tb2, 'pointerdown'); ptr(w, tb2, 'pointerup'); ptr(w, tb2, 'pointerdown'); ok('strings : double appui -> "shade"', L.includes('shade'), J(L));
   L.length = 0; d.querySelector('[data-act=close]').click(); ok('strings : fermer -> "closepanel"', L[0] === 'closepanel', J(L));
   L.length = 0; ptr(w, d.querySelector('.grip-rz'), 'pointerdown'); ok('strings : coin -> "resizewin"', L[0] === 'resizewin', J(L));
   w.__H.message({ data: '{"type":"active","value":true}' }); ok('strings : message texte JSON active -> classe', d.body.classList.contains('active'));
-  w.kdx.send('mastervolume', 40); ok('strings : kdx.send("mastervolume", 40) -> "mastervolume|40"', L.includes('mastervolume|40'), J(L));
+  w.cdx.send('mastervolume', 40); ok('strings : cdx.send("mastervolume", 40) -> "mastervolume|40"', L.includes('mastervolume|40'), J(L));
 
   // ---- WebView2 JSON (applications C#) ----
   w = await load('webview2'); L = w.__LOG; d = w.document; const tb3 = d.querySelector('.tb');
-  ok('webview2 : transport détecté', w.kdx.host === 'webview2');
+  ok('webview2 : transport détecté', w.cdx.host === 'webview2');
   L.length = 0; ptr(w, tb3, 'pointerdown'); ok('webview2 : appui -> win.drag', J(L[0]) === J({ cmd: 'win.drag' }), J(L));
   L.length = 0; ptr(w, tb3, 'pointermove'); ptr(w, tb3, 'pointerup'); ok('webview2 : move et end sans effet (boucle native)', L.length === 0, J(L));
   L.length = 0; ptr(w, tb3, 'pointerdown'); ptr(w, tb3, 'pointerup'); ptr(w, tb3, 'pointerdown'); ok('webview2 : double appui avec data-dblclick="max" -> win.max', L.some(e => e.cmd === 'win.max'), J(L));
   L.length = 0; d.querySelector('[data-act=min]').click(); ok('webview2 : réduire -> win.min', J(L[0]) === J({ cmd: 'win.min' }), J(L));
-  L.length = 0; w.KdxFrame.edges(); const left = d.querySelector('.rz.l'); ptr(w, left, 'pointerdown'); ok('webview2 : bord gauche -> win.resize edge 10', J(L[0]) === J({ cmd: 'win.resize', edge: 10 }), J(L));
+  L.length = 0; w.CdxFrame.edges(); const left = d.querySelector('.rz.l'); ptr(w, left, 'pointerdown'); ok('webview2 : bord gauche -> win.resize edge 10', J(L[0]) === J({ cmd: 'win.resize', edge: 10 }), J(L));
   ok('webview2 : edges() a créé 8 poignées', d.querySelectorAll('.rz').length === 8);
-  L.length = 0; w.KdxFrame.title('Documents'); ok('webview2 : title() -> win.title + texte', L.some(e => e.cmd === 'win.title' && e.t === 'Documents') && d.querySelector('.tb-title').textContent === 'Documents', J(L));
+  L.length = 0; w.CdxFrame.title('Documents'); ok('webview2 : title() -> win.title + texte', L.some(e => e.cmd === 'win.title' && e.t === 'Documents') && d.querySelector('.tb-title').textContent === 'Documents', J(L));
   w.__H.message({ data: { type: 'theme', value: 'vert' } }); ok('webview2 : message theme (objet) -> data-theme', d.documentElement.dataset.theme === 'vert');
-  L.length = 0; w.kdx.send('fs.list', { path: 'C:\\' }); ok('webview2 : kdx.send -> objet à plat', J(L[0]) === J({ cmd: 'fs.list', path: 'C:\\' }), J(L));
+  L.length = 0; w.cdx.send('fs.list', { path: 'C:\\' }); ok('webview2 : cdx.send -> objet à plat', J(L[0]) === J({ cmd: 'fs.list', path: 'C:\\' }), J(L));
 
   // ---- composants ----
-  let p = w.KdxFrame.dialog({ title: 'Supprimer', text: 'Sûr ?', yes: 'Oui', no: 'Non' });
+  let p = w.CdxFrame.dialog({ title: 'Supprimer', text: 'Sûr ?', yes: 'Oui', no: 'Non' });
   ok('dialogue : le voile est affiché avec un seul bouton par défaut', d.querySelectorAll('.veil .primary').length === 1);
   d.querySelector('.veil [data-y]').click(); ok('dialogue : Oui résout true', (await p) === true);
-  p = w.KdxFrame.dialog({ title: 'x', text: 'y' }); d.querySelector('.veil [data-n]').click(); ok('dialogue : Non résout false', (await p) === false);
-  p = w.KdxFrame.dialog({ title: 'x', text: 'y' }); d.querySelector('.veil').dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); ok('dialogue : Échap résout false', (await p) === false);
-  let hit = 0; w.KdxFrame.menu([['Ouvrir', () => hit++, { key: 'Entrée' }], null, ['Supprimer', () => hit += 10, { disabled: true }]], 20, 20, 'Titre');
+  p = w.CdxFrame.dialog({ title: 'x', text: 'y' }); d.querySelector('.veil [data-n]').click(); ok('dialogue : Non résout false', (await p) === false);
+  p = w.CdxFrame.dialog({ title: 'x', text: 'y' }); d.querySelector('.veil').dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); ok('dialogue : Échap résout false', (await p) === false);
+  let hit = 0; w.CdxFrame.menu([['Ouvrir', () => hit++, { key: 'Entrée' }], null, ['Supprimer', () => hit += 10, { disabled: true }]], 20, 20, 'Titre');
   ok('menu : deux entrées et un séparateur', d.querySelectorAll('.menu .menu-item').length === 2 && d.querySelectorAll('.menu .menu-sep').length === 1);
   d.querySelector('.menu [data-i="2"]').click(); ok('menu : une entrée désactivée ne fait rien', hit === 0 && !!d.querySelector('.menu'));
   d.querySelector('.menu [data-i="0"]').click(); ok('menu : clic exécute l\'action et ferme le menu', hit === 1 && !d.querySelector('.menu'));
-  w.KdxFrame.menu([['A', () => { }]], 5, 5); d.body.dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('menu : clic ailleurs ferme le menu', !d.querySelector('.menu'));
-  w.KdxFrame.menu([['A', () => { }]], 5, 5); ok('menu : sans icône ni raccourci, le libellé est seul dans la ligne', d.querySelector('.menu-item').children.length === 1);
+  w.CdxFrame.menu([['A', () => { }]], 5, 5); d.body.dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('menu : clic ailleurs ferme le menu', !d.querySelector('.menu'));
+  w.CdxFrame.menu([['A', () => { }]], 5, 5); ok('menu : sans icône ni raccourci, le libellé est seul dans la ligne', d.querySelector('.menu-item').children.length === 1);
   w.dispatchEvent(new w.Event('blur')); ok('menu : la perte du focus de la fenêtre ferme le menu', !d.querySelector('.menu'));
   // sous-menus et cases (la fenêtre de l'essai est élargie : deux niveaux de 200 px tiennent côte à côte)
   frames.webview2.style.width = '800px';
   { let acts = []; let built = 0;
-    w.KdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => acts.push('dossier')], ['Texte', () => acts.push('texte'), { check: true }], null, ['Désactivé', () => acts.push('x'), { disabled: true }]] }], ['Ouvrir avec', null, { sub: () => { built++; return [['Bloc-notes', () => acts.push('bn')]]; } }], ['Simple', () => acts.push('simple')]], 20, 20, 'T');
+    w.CdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => acts.push('dossier')], ['Texte', () => acts.push('texte'), { check: true }], null, ['Désactivé', () => acts.push('x'), { disabled: true }]] }], ['Ouvrir avec', null, { sub: () => { built++; return [['Bloc-notes', () => acts.push('bn')]]; } }], ['Simple', () => acts.push('simple')]], 20, 20, 'T');
     const top = () => [...d.querySelectorAll('.menu')];
     ok('sous-menu : le premier niveau montre une flèche pour les éléments à sous-menu', d.querySelectorAll('.menu .subarrow').length === 2 && top().length === 1);
     d.querySelector('.menu [data-i="0"]').click();
@@ -91,20 +91,20 @@ const J = x => JSON.stringify(x);
     top()[1].querySelector('[data-i="3"]').click(); ok('sous-menu : un élément désactivé ne fait rien et ne ferme pas', acts.length === 0 && top().length === 2);
     top()[1].querySelector('[data-i="0"]').click();
     ok('sous-menu : cliquer une action la lance et ferme tous les niveaux', acts.join() === 'dossier' && top().length === 0);
-    w.KdxFrame.menu([['Ouvrir avec', null, { sub: () => { built++; return [['Bloc-notes', () => acts.push('bn')]]; } }]], 20, 20);
+    w.CdxFrame.menu([['Ouvrir avec', null, { sub: () => { built++; return [['Bloc-notes', () => acts.push('bn')]]; } }]], 20, 20);
     ok('sous-menu fonction : pas appelée tant qu\'on ne l\'ouvre pas', built === 0);
     d.querySelector('.menu [data-i="0"]').click(); ok('sous-menu fonction : appelée à l\'ouverture', built === 1 && top().length === 2);
     d.dispatchEvent(new w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); ok('sous-menu : Échap ferme tous les niveaux', top().length === 0);
-    w.KdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => { }]] }]], 20, 20); d.querySelector('.menu [data-i="0"]').click();
+    w.CdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => { }]] }]], 20, 20); d.querySelector('.menu [data-i="0"]').click();
     d.body.dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('sous-menu : un clic ailleurs ferme tous les niveaux', top().length === 0);
-    w.KdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => { }]] }]], 20, 20); d.querySelector('.menu [data-i="0"]').click();
+    w.CdxFrame.menu([['Nouveau', null, { sub: [['Dossier', () => { }]] }]], 20, 20); d.querySelector('.menu [data-i="0"]').click();
     top()[1].dispatchEvent(new w.MouseEvent('mousedown', { bubbles: true })); ok('sous-menu : un clic dans le sous-menu ne le ferme pas (hors élément)', top().length === 2);
     d.querySelector('.menu').dispatchEvent(new w.MouseEvent('mouseover', { bubbles: true })); w.dispatchEvent(new w.Event('blur')); ok('sous-menu : la perte du focus ferme tout', top().length === 0);
-    w.KdxFrame.menu([['Nouveau', null, { sub: [['Un sous-menu assez large pour déborder', () => { }]] }]], w.innerWidth - 180, 20); d.querySelector('.menu [data-i="0"]').click();
+    w.CdxFrame.menu([['Nouveau', null, { sub: [['Un sous-menu assez large pour déborder', () => { }]] }]], w.innerWidth - 180, 20); d.querySelector('.menu [data-i="0"]').click();
     const ms = top(); ok('sous-menu : sans place à droite il s\'ouvre à gauche, dans la fenêtre', ms.length === 2 && ms[1].getBoundingClientRect().right <= w.innerWidth && ms[1].getBoundingClientRect().left < ms[0].getBoundingClientRect().left + 10);
     w.dispatchEvent(new w.Event('blur')); }
   frames.webview2.style.width = '400px';
-  w.KdxFrame.menu([['A', () => { }]], 99999, 99999); const mr = d.querySelector('.menu').getBoundingClientRect();
+  w.CdxFrame.menu([['A', () => { }]], 99999, 99999); const mr = d.querySelector('.menu').getBoundingClientRect();
   ok('menu : ouvert hors de la fenêtre, il y est ramené', mr.right <= w.innerWidth && mr.bottom <= w.innerHeight && mr.left >= 0 && mr.top >= 0); d.querySelector('.menu').remove();
 
   document.getElementById('out').textContent = res.join('\n') + '\n' + (res.some(r => r.startsWith('ÉCHEC')) ? 'RÉSULTAT : ÉCHEC' : 'RÉSULTAT : TOUT EST BON');

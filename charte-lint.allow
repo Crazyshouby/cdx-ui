@@ -1,9 +1,9 @@
 # Exceptions justifiées de charte-lint : règle<TAB>fragment du fichier<TAB>fragment de la ligne<TAB>raison. Aucune exception sans raison.
 # Un « # » en début de ligne commente. « * » vaut pour toute règle.
-weight	kdx-ui.css	font-weight	Repli Segoe UI seulement : sans effet avec la police pixel qui n'a qu'une graisse (CHARTE.md §3)
-radius	kdx-ui.css	.orb	Voyant rond : composant .orb de la charte (CHARTE.md §6)
-gradient	kdx-ui.css	.orb	Sphère du voyant : dégradé radial du composant .orb (CHARTE.md §6)
-gradient	kdx-ui.css	--tb-grad	Dégradé de barre de titre : jeton de la charte, défini ici et nulle part ailleurs (CHARTE.md §4)
-gradient	kdx-ui.css	linear-gradient(#1c1c1c	Deux aplats superposés (flèche de la liste déroulante) : pas un dégradé visible
-gradient	kdx-frame.css	--tb-grad	Dégradé de barre de titre inactive : même jeton que kdx-ui.css
+weight	cdx-ui.css	font-weight	Repli Segoe UI seulement : sans effet avec la police pixel qui n'a qu'une graisse (CHARTE.md §3)
+radius	cdx-ui.css	.orb	Voyant rond : composant .orb de la charte (CHARTE.md §6)
+gradient	cdx-ui.css	.orb	Sphère du voyant : dégradé radial du composant .orb (CHARTE.md §6)
+gradient	cdx-ui.css	--tb-grad	Dégradé de barre de titre : jeton de la charte, défini ici et nulle part ailleurs (CHARTE.md §4)
+gradient	cdx-ui.css	linear-gradient(#1c1c1c	Deux aplats superposés (flèche de la liste déroulante) : pas un dégradé visible
+gradient	cdx-frame.css	--tb-grad	Dégradé de barre de titre inactive : même jeton que cdx-ui.css
 color	exemple.html	--nc:	Couleur d'auteur d'un message de console : donnée de l'exemple, choisie par l'utilisateur (CHARTE.md §6)

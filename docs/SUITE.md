@@ -1,10 +1,10 @@
-# La suite KDX : réglages communs et bus de messages
+# La suite CDX : réglages communs et bus de messages
 
-Les applications de la suite (kdx-shell, kdx-explorer, kdx-browser, kdx-repos, AudioLinker, KIRC) restent des programmes séparés. Elles partagent deux choses, volontairement
+Les applications de la suite (cdx-shell, cdx-explorer, cdx-browser, cdx-repos, AudioLinker, KIRC) restent des programmes séparés. Elles partagent deux choses, volontairement
 minimes : un **fichier de réglages** (l'accent) et un **bus de messages** (des tubes nommés). Aucun démon central : si une application ne tourne pas, les autres
 continuent, et ce qui lui était destiné se perd sans bruit (ou la lance, voir §3.5).
 
-## 1. Réglages communs : `%APPDATA%\KDX\suite.json`
+## 1. Réglages communs : `%APPDATA%\CDX\suite.json`
 
 ```json
 { "version": 1, "accent": "bleu" }
@@ -21,13 +21,13 @@ Règles :
 - **Écriture atomique** : écrire `suite.json.tmp` puis le renommer (`MoveFileEx` avec remplacement, `File.Move(…, true)`, `fs::rename`). Un lecteur ne voit jamais un fichier à moitié écrit.
 - **Lecture à chaud** : chaque application relit le fichier à l'ouverture, puis surveille sa date de modification et sa taille (sondage toutes les 250 ms : plus simple et
   aussi fiable qu'une notification de dossier, pour un coût nul). Elle applique le nouvel accent sans redémarrer : la suite se recolore en moins d'une seconde.
-- **Dérogation** : une application peut offrir un accent à elle. KIRC garde son réglage « thème » ; il ne suit la suite que lorsqu'il est sur sa valeur par défaut (`kdx`).
-- **Qui écrit** : `kdx-shell.exe --accent <nom>` (et, plus tard, un sélecteur dans le centre rapide). Une application n'écrit jamais autre chose que `accent`.
-- Les réglages propres à chaque application restent chez elle (`%APPDATA%\KIRC`, `%APPDATA%\AudioLinker`, `%LOCALAPPDATA%\KdxShell`).
+- **Dérogation** : une application peut offrir un accent à elle. KIRC garde son réglage « thème » ; il ne suit la suite que lorsqu'il est sur sa valeur par défaut (`cdx`).
+- **Qui écrit** : `cdx-shell.exe --accent <nom>` (et, plus tard, un sélecteur dans le centre rapide). Une application n'écrit jamais autre chose que `accent`.
+- Les réglages propres à chaque application restent chez elle (`%APPDATA%\KIRC`, `%APPDATA%\AudioLinker`, `%LOCALAPPDATA%\CdxShell`).
 
 ## 2. Le bus : un tube par application
 
-Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audiolinker`, `kirc` (et `transfers`, `notes`, décrits dans leurs applications).
+Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audiolinker`, `kirc` (et `transfers`, `notes`, décrits dans leurs applications).
 
 - **Sécurité** : le tube n'est accessible qu'à l'utilisateur courant (descripteur de sécurité : un seul droit, celui du SID de l'utilisateur ; sous .NET `PipeOptions.CurrentUserOnly`),
   les connexions distantes sont refusées (`PIPE_REJECT_REMOTE_CLIENTS`), la première instance est créée avec `FILE_FLAG_FIRST_PIPE_INSTANCE` (un autre processus ne peut pas
@@ -53,30 +53,30 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom
 
 ## 3. Les messages, par destinataire
 
-### 3.1 `kdx.shell` (la barre)
+### 3.1 `cdx.shell` (la barre)
 | `type` | `data` | Effet |
 |---|---|---|
 | `notify` | `title` (texte, ≤ 80), `text` (texte, ≤ 400), `level` (`info` `warn` `error`, défaut `info`) | une notification : la barre affiche une cloche et le nombre de notifications non vues, le centre rapide les liste (50 au plus, la plus récente en haut) |
 
-Émetteurs : **KIRC** (messages privés et mentions, en plus de la notification de Windows), **kdx-browser** (téléchargement terminé ou échoué), **AudioLinker** (erreurs et avertissements du groupe ; une même ligne n'est pas répétée avant 10 s).
+Émetteurs : **KIRC** (messages privés et mentions, en plus de la notification de Windows), **cdx-browser** (téléchargement terminé ou échoué), **AudioLinker** (erreurs et avertissements du groupe ; une même ligne n'est pas répétée avant 10 s).
 
-### 3.2 `kdx.explorer`
+### 3.2 `cdx.explorer`
 | `type` | `data` | Effet |
 |---|---|---|
 | `open-path` | `path` (chemin absolu d'un dossier ; absent = Documents) | ouvre une fenêtre sur ce dossier |
 | `select` | `path` (chemin absolu d'un fichier ou d'un dossier) | ouvre le dossier parent avec l'élément sélectionné |
 
-Émetteur : **kdx-browser** (« Afficher dans le dossier » d'un téléchargement ; l'Explorateur est lancé au besoin, et l'explorateur de Windows reste le repli).
+Émetteur : **cdx-browser** (« Afficher dans le dossier » d'un téléchargement ; l'Explorateur est lancé au besoin, et l'explorateur de Windows reste le repli).
 
-### 3.3 `kdx.browser`
+### 3.3 `cdx.browser`
 | `type` | `data` | Effet |
 |---|---|---|
 | `open-url` | `url` (`http:` ou `https:` seulement, ≤ 2000 ; absent = onglet vide) | ouvre l'adresse dans un nouvel onglet |
 | `open-file` | `path` (chemin absolu d'un fichier qui existe, d'une extension affichable : `.html` `.htm` `.pdf` `.svg` `.png` `.jpg` `.jpeg` `.gif` `.webp` `.bmp` `.txt` `.mp3` `.ogg` `.wav` `.mp4` `.webm`) | ouvre le fichier dans un nouvel onglet (`file:///`) |
 
-Émetteurs : **KIRC** (`open-url` : un lien cliqué s'ouvre dans le navigateur KDX s'il tourne ou s'il est installé, sinon dans celui de Windows), **kdx-explorer** (`open-file` : le double-clic sur un fichier de ces types).
+Émetteurs : **KIRC** (`open-url` : un lien cliqué s'ouvre dans le navigateur CDX s'il tourne ou s'il est installé, sinon dans celui de Windows), **cdx-explorer** (`open-file` : le double-clic sur un fichier de ces types).
 
-### 3.4 `kdx.audiolinker`
+### 3.4 `cdx.audiolinker`
 | `type` | `data` | Effet |
 |---|---|---|
 | `audio.get` | — | demande l'état |
@@ -88,39 +88,39 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\kdx.<nom>`, nom
 AudioLinker répond par des messages `audio.state` (`running`, `starting`, `volume`, `muted`, `playing`, `setups` = liste de `{name, count}`), à la connexion et à chaque changement.
 Un seul abonné à la fois pour l'instant.
 
-### 3.4b `kdx.repos` (Dépôts)
+### 3.4b `cdx.repos` (Dépôts)
 | `type` | `data` | Effet |
 |---|---|---|
-| `show` | — | passe la fenêtre de Dépôts devant (c'est ce que fait un second lancement de `kdx-repos.exe`) |
+| `show` | — | passe la fenêtre de Dépôts devant (c'est ce que fait un second lancement de `cdx-repos.exe`) |
 
 Dépôts est en lecture seule : il ne reçoit que `show`. Il émet `open-path` vers l'Explorateur (« Ouvrir le dossier ») et `open-url` vers le navigateur (« Voir sur GitHub », adresses des hébergeurs connus seulement : github.com, gitlab.com, bitbucket.org, codeberg.org),
 tous deux lancés au besoin ; le repli est l'explorateur et le navigateur de Windows.
 
-### 3.4c `kdx.terminal` (Terminal)
+### 3.4c `cdx.terminal` (Terminal)
 | `type` | `data` | Effet |
 |---|---|---|
-| `show` | — | passe la fenêtre du terminal devant (c'est ce que fait un second lancement de `kdx-terminal.exe` sans argument) |
-| `open-path` | `path` (chemin absolu d'un dossier ; un fichier donne son dossier) | ouvre un **onglet** dont le shell démarre dans ce dossier, et passe la fenêtre devant (second lancement `kdx-terminal.exe <dossier>`, « Ouvrir dans un terminal » de l'Explorateur) |
+| `show` | — | passe la fenêtre du terminal devant (c'est ce que fait un second lancement de `cdx-terminal.exe` sans argument) |
+| `open-path` | `path` (chemin absolu d'un dossier ; un fichier donne son dossier) | ouvre un **onglet** dont le shell démarre dans ce dossier, et passe la fenêtre devant (second lancement `cdx-terminal.exe <dossier>`, « Ouvrir dans un terminal » de l'Explorateur) |
 
-Un chemin qui n'est pas un dossier existant est refusé. L'Explorateur envoie `open-path` au terminal KDX et le lance au besoin (chemin de `apps.json`) ; le repli est Windows Terminal, puis `cmd.exe`.
+Un chemin qui n'est pas un dossier existant est refusé. L'Explorateur envoie `open-path` au terminal CDX et le lance au besoin (chemin de `apps.json`) ; le repli est Windows Terminal, puis `cmd.exe`.
 
 ### 3.5 Lancer la destination absente
-`%APPDATA%\KDXpps.json` donne, pour chaque nom, le chemin de l'exécutable : `{ "browser": "C:\…\kdx-browser.exe" }`. Chaque programme y écrit son propre chemin au démarrage. Un émetteur qui
-veut atteindre une application absente (un lien cliqué dans KIRC, par exemple) lance cet exécutable avec la cible en argument (`kdx-browser.exe <adresse>`) : au démarrage, l'application la traite,
+`%APPDATA%\CDXpps.json` donne, pour chaque nom, le chemin de l'exécutable : `{ "browser": "C:\…\cdx-browser.exe" }`. Chaque programme y écrit son propre chemin au démarrage. Un émetteur qui
+veut atteindre une application absente (un lien cliqué dans KIRC, par exemple) lance cet exécutable avec la cible en argument (`cdx-browser.exe <adresse>`) : au démarrage, l'application la traite,
 et si elle tourne déjà, sa **seconde instance** retransmet l'argument à la première par ce même bus (`open-url`, `open-path`) puis s'arrête. L'émetteur ne lance que les noms de la liste
 des applications (§2), jamais un chemin reçu d'ailleurs.
 
 ### 3.6 Essais isolés
-Trois variables d'environnement, réservées aux essais, évitent de toucher aux vrais programmes : `KDX_PIPE_PREFIX` (remplace `kdx.` dans le nom des tubes et sépare aussi le verrou d'instance unique),
-`KDX_SUITE_DIR` (remplace `%APPDATA%\KDX`) et `KDX_DATA_DIR` (remplace `%LOCALAPPDATA%\KdxShell`, côté kdx-windows).
+Trois variables d'environnement, réservées aux essais, évitent de toucher aux vrais programmes : `CDX_PIPE_PREFIX` (remplace `cdx.` dans le nom des tubes et sépare aussi le verrou d'instance unique),
+`CDX_SUITE_DIR` (remplace `%APPDATA%\CDX`) et `CDX_DATA_DIR` (remplace `%LOCALAPPDATA%\CdxShell`, côté cdx-windows).
 
 ## 4. Clients
 
 | Langage | Où | Contenu |
 |---|---|---|
-| C# | `kdx-windows/src/Kdx.Host/Bus.cs`, `Suite.cs` | serveur (liste blanche), émetteur, lecture et écriture de `suite.json` |
-| Rust | `kdx-ui/bus/rust` (crate `kdx-bus`) | émetteur, lecture de `suite.json`, sondage |
-| C++ | `kdx-ui/bus/cpp/kdx_bus.h` | en-tête seul : émetteur, ligne de message, lecture de `suite.json` |
+| C# | `cdx-windows/src/Cdx.Host/Bus.cs`, `Suite.cs` | serveur (liste blanche), émetteur, lecture et écriture de `suite.json` |
+| Rust | `cdx-ui/bus/rust` (crate `cdx-bus`) | émetteur, lecture de `suite.json`, sondage |
+| C++ | `cdx-ui/bus/cpp/cdx_bus.h` | en-tête seul : émetteur, ligne de message, lecture de `suite.json` |
 
 Chaque client a sa suite de tests de protocole (message valide, type inconnu, champ invalide, ligne trop longue, utilisateur autre). Le script d'intégration
-`kdx-windows/tests/bus.ps1` vérifie l'ensemble de bout en bout.
+`cdx-windows/tests/bus.ps1` vérifie l'ensemble de bout en bout.

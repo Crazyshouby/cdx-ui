@@ -73,9 +73,9 @@ test('numéros de ligne', () => {
 });
 
 test('exceptions justifiées', () => {
-  const allow = parseAllow('# commentaire\nradius\tkdx-ui.css\t.orb\tvoyant rond de la charte\n*\tvendor/\t\ttiers\n');
-  const v1 = { rule: 'radius', file: 'a/kdx-ui.css', text: '.orb { border-radius: 50%; }' };
-  const v2 = { rule: 'radius', file: 'a/kdx-ui.css', text: '.btn { border-radius: 4px; }' };
+  const allow = parseAllow('# commentaire\nradius\tcdx-ui.css\t.orb\tvoyant rond de la charte\n*\tvendor/\t\ttiers\n');
+  const v1 = { rule: 'radius', file: 'a/cdx-ui.css', text: '.orb { border-radius: 50%; }' };
+  const v2 = { rule: 'radius', file: 'a/cdx-ui.css', text: '.btn { border-radius: 4px; }' };
   const v3 = { rule: 'size', file: 'vendor/x.css', text: 'font-size: 11px' };
   assert.equal(allowedBy(v1, allow).reason, 'voyant rond de la charte');
   assert.equal(allowedBy(v2, allow), undefined);
@@ -83,7 +83,7 @@ test('exceptions justifiées', () => {
 });
 
 test("exclude : une copie de la charte listée au manifeste n'est pas contrôlée, le reste l'est", () => {
-  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'kdxlint-'));
+  const d = fs.mkdtempSync(path.join(os.tmpdir(), 'cdxlint-'));
   try {
     const copie = path.join(d, 'copie.css'), page = path.join(d, 'page.css'), bad = '.x { border-radius: 4px; }\n';
     fs.writeFileSync(copie, bad); fs.writeFileSync(page, bad);

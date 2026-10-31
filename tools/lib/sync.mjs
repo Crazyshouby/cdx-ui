@@ -5,8 +5,8 @@ import crypto from 'node:crypto';
 
 // nom dans dist/  <-  fichier source du dépôt
 export const DIST_FILES = {
-  'kdx-ui.css': 'kdx-ui.css', 'kdx-frame.css': 'kdx-frame.css', 'themes.css': 'themes.css', 'fonts.css': 'fonts.css', 'icons.js': 'icons.js',
-  'kdx-bridge.js': 'kdx-bridge.js', 'kdx-frame.js': 'kdx-frame.js', 'kdx-columns.js': 'kdx-columns.js', 'kdx-split.js': 'kdx-split.js', 'kdx-tokens.h': 'generated/kdx-tokens.h', 'tokens.rs': 'generated/tokens.rs', 'kdx-verify.mjs': 'tools/kdx-verify.mjs', 'kdx_bus.h': 'bus/cpp/kdx_bus.h', 'kdx_bus.rs': 'bus/rust/kdx_bus.rs', 'tokens.json': 'tokens.json', 'pixel_engine.py': 'gen/pixel_engine.py', 'charte-lint.mjs': 'tools/charte-lint.mjs', 'lint.mjs': 'tools/lib/lint.mjs',
+  'cdx-ui.css': 'cdx-ui.css', 'cdx-frame.css': 'cdx-frame.css', 'themes.css': 'themes.css', 'fonts.css': 'fonts.css', 'icons.js': 'icons.js',
+  'cdx-bridge.js': 'cdx-bridge.js', 'cdx-frame.js': 'cdx-frame.js', 'cdx-columns.js': 'cdx-columns.js', 'cdx-split.js': 'cdx-split.js', 'cdx-tokens.h': 'generated/cdx-tokens.h', 'tokens.rs': 'generated/tokens.rs', 'cdx-verify.mjs': 'tools/cdx-verify.mjs', 'cdx_bus.h': 'bus/cpp/cdx_bus.h', 'cdx_bus.rs': 'bus/rust/cdx_bus.rs', 'tokens.json': 'tokens.json', 'pixel_engine.py': 'gen/pixel_engine.py', 'charte-lint.mjs': 'tools/charte-lint.mjs', 'lint.mjs': 'tools/lib/lint.mjs',
 };
 
 export const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');
@@ -18,10 +18,10 @@ export function buildDist(repo) {
   const files = {};
   for (const [name, src] of Object.entries(DIST_FILES)) {
     let buf = read(path.join(repo, src));
-    if (name === 'kdx-bridge.js') buf = Buffer.from(buf.toString('utf8').replace('KDX_UI_VERSION', version), 'utf8');
+    if (name === 'cdx-bridge.js') buf = Buffer.from(buf.toString('utf8').replace('CDX_UI_VERSION', version), 'utf8');
     files[name] = buf;
   }
-  const manifest = { kdxUi: version, files: Object.fromEntries(Object.entries(files).map(([n, b]) => [n, { sha256: sha256(b), bytes: b.length }])) };
+  const manifest = { cdxUi: version, files: Object.fromEntries(Object.entries(files).map(([n, b]) => [n, { sha256: sha256(b), bytes: b.length }])) };
   files['MANIFEST.json'] = Buffer.from(JSON.stringify(manifest, null, 2) + '\n', 'utf8');
   return { version, files, manifest };
 }
@@ -40,7 +40,7 @@ export function checkDist(repo, outDir) {
   return stale;
 }
 
-// Un profil d'application : { name, root (relatif au dépôt kdx-ui ou absolu), files: { "nom dans dist": "chemin relatif à root" }, lint: [chemins relatifs à root], notes }.
+// Un profil d'application : { name, root (relatif au dépôt cdx-ui ou absolu), files: { "nom dans dist": "chemin relatif à root" }, lint: [chemins relatifs à root], notes }.
 export function loadProfile(file, repo) {
   const p = JSON.parse(fs.readFileSync(file, 'utf8'));
   p.rootAbs = path.resolve(repo, p.root);
@@ -59,14 +59,14 @@ export function compareApp(profile, distDir) {
 }
 
 export function writeApp(profile, distDir) {
-  const done = [], manifest = { kdxUi: JSON.parse(read(path.join(distDir, 'MANIFEST.json')).toString('utf8')).kdxUi, files: {} };
+  const done = [], manifest = { cdxUi: JSON.parse(read(path.join(distDir, 'MANIFEST.json')).toString('utf8')).cdxUi, files: {} };
   for (const [name, rel] of Object.entries(profile.files || {})) {
     const a = path.join(profile.rootAbs, rel);
     fs.mkdirSync(path.dirname(a), { recursive: true });
     fs.copyFileSync(path.join(distDir, name), a); done.push(rel);
-    manifest.files[rel.split(path.sep).join('/')] ={ from: name, sha256: sha256(Buffer.from(read(a).toString('latin1').replace(/\r\n/g, '\n'), 'latin1')) };   // fins de ligne ignorées (voir kdx-verify.mjs)
+    manifest.files[rel.split(path.sep).join('/')] ={ from: name, sha256: sha256(Buffer.from(read(a).toString('latin1').replace(/\r\n/g, '\n'), 'latin1')) };   // fins de ligne ignorées (voir cdx-verify.mjs)
   }
-  // kdx-sync.json : ce que kdx-verify.mjs contrôle dans la CI de l'application (copies non modifiées à la main)
+  // cdx-sync.json : ce que cdx-verify.mjs contrôle dans la CI de l'application (copies non modifiées à la main)
   if (profile.manifest) { fs.mkdirSync(path.dirname(path.join(profile.rootAbs, profile.manifest)), { recursive: true }); fs.writeFileSync(path.join(profile.rootAbs, profile.manifest), JSON.stringify(manifest, null, 2) + '\n'); done.push(profile.manifest); }
   return done;
 }
