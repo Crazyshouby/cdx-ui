@@ -436,14 +436,14 @@ ICONS = dict(serveur=server, salon=channel, membres=users, message=bubble, carne
 
 
 # ---- Icônes d'application de la suite (01/11/2026) : une famille ------------------------------------------------------------
-# Même corps rouge (R, suit l'accent), arête claire en haut et à gauche (O), ombre en bas et à droite (r), détails blancs (W) : la même
-# lumière que l'icône de KIRC. Chaque application porte son objet ; « cdx » est la suite elle-même (barre, installeur). L'Explorateur garde
-# le dossier jaune (« dossier »), au choix de Valentin.
+# Chaque application porte son objet, dans les couleurs de l'objet (choix de Valentin du 01/11/2026 : pas le même rouge partout) ; la même lumière
+# que l'icône de KIRC (arête claire en haut et à gauche, ombre en bas et à droite, contour noir). « cdx » est la suite elle-même (barre,
+# installeur) et garde le rouge de l'accent. L'Explorateur garde le dossier jaune (« dossier »).
 
-def _card(c, x0, y0, x1, y1):
-    """Le corps rouge éclairé d'une icône d'application."""
-    c.rect(x0, y0, x1, y1, 'R'); c.rect(x0, y0, x1, y0, 'O'); c.rect(x0, y0, x0, y1, 'O')
-    c.rect(x1, y0 + 1, x1, y1, 'r'); c.rect(x0 + 1, y1, x1, y1, 'r')
+def _card(c, x0, y0, x1, y1, body='R', light='O', dark='r'):
+    """Un corps éclairé : couleur, arête claire en haut et à gauche, ombre en bas et à droite."""
+    c.rect(x0, y0, x1, y1, body); c.rect(x0, y0, x1, y0, light); c.rect(x0, y0, x0, y1, light)
+    c.rect(x1, y0 + 1, x1, y1, dark); c.rect(x0 + 1, y1, x1, y1, dark)
 
 
 def _ring(c, cx, cy, r_out, r_in, col):
@@ -455,45 +455,46 @@ def _ring(c, cx, cy, r_out, r_in, col):
 
 
 def app_repos():
-    """Dépôts : un classeur rouge à deux tiroirs, poignées claires (l'Explorateur garde le dossier)."""
+    """Dépôts : un classeur gris à deux tiroirs, poignées sombres (l'Explorateur garde le dossier)."""
     c = C()
-    _card(c, 2, 1, 13, 14)
-    c.rect(3, 7, 12, 7, 'r'); c.rect(3, 8, 12, 8, 'O')
-    c.rect(6, 4, 9, 4, 'W'); c.rect(6, 11, 9, 11, 'W')
+    _card(c, 2, 1, 13, 14, 'g', 'w', 'G')
+    c.rect(3, 7, 12, 7, 'G'); c.rect(3, 8, 12, 8, 'w')
+    c.rect(6, 4, 9, 4, 'D'); c.rect(6, 11, 9, 11, 'D')
     return c.outline()
 
 
 def app_browser():
-    """Navigateur : une boussole rouge, aiguille blanche vers le nord-est, queue sombre."""
+    """Navigateur : le globe terrestre, océan bleu, continents verts."""
     c = C()
-    c.circ(7.5, 7.5, 6.6, 'R'); _ring(c, 7.5, 7.5, 6.6, 5.6, 'r')
+    c.circ(7.5, 7.5, 6.6, 'B')
     for (x, y), col in list(c.p.items()):
-        if col == 'r' and x + y < 9:
-            c.set(x, y, 'O')
-    for i in range(8):
-        col = 'W' if i >= 4 else 'D'
-        c.set(4 + i, 11 - i, col); c.set(5 + i, 11 - i, col)
-    c.set(11, 4, 'W'); c.set(10, 4, 'W'); c.set(11, 5, 'W'); c.set(4, 11, 'D'); c.set(4, 10, 'D'); c.set(5, 11, 'D')
+        d = (x - 7.5) ** 2 + (y - 7.5) ** 2
+        if d > 30 and x + y > 16:
+            c.set(x, y, 'N')
+        elif d > 30 and x + y < 8:
+            c.set(x, y, 'b')
+    c.pat(2, 3, ['..LL.', '.LLLL', 'LLLLl', '.LLl.', '..Ll.'])
+    c.pat(8, 6, ['LLL..', 'LLLL.', '.LLl.', '..Ll.', '..L..'])
+    c.pat(5, 11, ['.LL', 'LLl'])
     return c.outline()
 
 
-
 def app_notes():
-    """Notes : un carnet rouge à spirale, page écrite."""
+    """Notes : un carnet à spirale, page blanche aux lignes bleues."""
     c = C()
-    _card(c, 3, 1, 13, 14)
+    _card(c, 3, 1, 13, 14, 'W', 'w', 'g')
     for y in (3, 6, 9, 12):
-        c.rect(2, y, 4, y, 'g'); c.set(2, y, 'G')
-    c.rect(6, 4, 11, 4, 'W'); c.rect(6, 6, 11, 6, 'W'); c.rect(6, 8, 10, 8, 'W'); c.rect(6, 10, 11, 10, 'W')
+        c.rect(2, y, 4, y, 'G'); c.set(2, y, 'd')
+    c.rect(6, 4, 11, 4, 'b'); c.rect(6, 7, 11, 7, 'b'); c.rect(6, 10, 10, 10, 'b')
     return c.outline()
 
 
 def app_terminal():
-    """Terminal : un écran noir dans un cadre rouge, chevron et curseur."""
+    """Terminal : un écran noir dans un cadre gris, invite verte."""
     c = C()
-    _card(c, 1, 1, 14, 14)
+    _card(c, 1, 1, 14, 14, 'g', 'w', 'G')
     c.rect(3, 3, 12, 12, 'K'); c.rect(3, 3, 12, 3, 'D')
-    c.set(5, 6, 'W'); c.set(6, 7, 'W'); c.set(5, 8, 'W'); c.rect(8, 9, 10, 9, 'W')
+    c.set(5, 6, 'L'); c.set(6, 7, 'L'); c.set(5, 8, 'L'); c.rect(8, 9, 10, 9, 'L')
     return c.outline()
 
 
@@ -511,35 +512,36 @@ def app_agenda():
 
 
 def app_mail():
-    """Courrier : une enveloppe rouge, le rabat marqué."""
+    """Courrier : une enveloppe beige, le rabat marqué."""
     c = C()
-    _card(c, 1, 3, 14, 12)
-    c.line(1, 4, 6, 9, 'r'); c.line(14, 4, 9, 9, 'r'); c.rect(7, 9, 8, 9, 'r')
-    c.line(2, 4, 6, 8, 'O'); c.line(13, 4, 9, 8, 'O')
+    _card(c, 1, 3, 14, 12, 'W', 'w', 'g')
+    c.line(1, 4, 6, 9, 'G'); c.line(14, 4, 9, 9, 'G'); c.rect(7, 9, 8, 9, 'G')
+    c.line(2, 4, 6, 8, 'g'); c.line(13, 4, 9, 8, 'g')
     return c.outline()
 
 
 def app_pilot():
-    """Pilote : un volant rouge, trois rayons et le moyeu blancs."""
+    """Pilote : un volant noir, trois rayons gris, le klaxon rouge au centre."""
     c = C()
-    _ring(c, 7.5, 7.5, 7.0, 4.9, 'R')
+    _ring(c, 7.5, 7.5, 7.0, 4.9, 'd')
     for (x, y), col in list(c.p.items()):
-        if col == 'R' and x + y > 16 and (x - 7.5) ** 2 + (y - 7.5) ** 2 > 36:
-            c.set(x, y, 'r')
-        elif col == 'R' and x + y < 8 and (x - 7.5) ** 2 + (y - 7.5) ** 2 > 36:
-            c.set(x, y, 'O')
-    c.rect(7, 3, 8, 7, 'W')
-    c.line(6, 8, 3, 11, 'W'); c.line(7, 8, 4, 11, 'W'); c.line(8, 8, 11, 11, 'W'); c.line(9, 8, 12, 11, 'W')
-    c.rect(6, 6, 9, 9, 'W'); c.rect(7, 7, 8, 8, 'g')
+        far = (x - 7.5) ** 2 + (y - 7.5) ** 2 > 36
+        if col == 'd' and far and x + y > 16:
+            c.set(x, y, 'D')
+        elif col == 'd' and far and x + y < 8:
+            c.set(x, y, 'G')
+    c.rect(7, 3, 8, 7, 'g')
+    c.line(6, 8, 3, 11, 'g'); c.line(7, 8, 4, 11, 'g'); c.line(8, 8, 11, 11, 'g'); c.line(9, 8, 12, 11, 'g')
+    c.rect(6, 6, 9, 9, 'G'); c.rect(7, 7, 8, 8, 'R')
     return c.outline()
 
 
 def app_transfers():
-    """Transferts : deux flèches blanches qui se croisent sur le corps rouge."""
+    """Transferts : deux flèches qui se croisent sur une carte blanche, verte (envoi) et bleue (réception)."""
     c = C()
-    _card(c, 1, 1, 14, 14)
-    c.rect(3, 5, 10, 5, 'W'); c.set(10, 4, 'W'); c.set(10, 6, 'W'); c.set(11, 5, 'W'); c.set(9, 3, 'W'); c.set(9, 7, 'W')
-    c.rect(5, 10, 12, 10, 'W'); c.set(5, 9, 'W'); c.set(5, 11, 'W'); c.set(4, 10, 'W'); c.set(6, 8, 'W'); c.set(6, 12, 'W')
+    _card(c, 1, 1, 14, 14, 'W', 'w', 'g')
+    c.rect(3, 5, 10, 5, 'L'); c.set(10, 4, 'L'); c.set(10, 6, 'L'); c.set(11, 5, 'L'); c.set(9, 3, 'L'); c.set(9, 7, 'L')
+    c.rect(5, 10, 12, 10, 'B'); c.set(5, 9, 'B'); c.set(5, 11, 'B'); c.set(4, 10, 'B'); c.set(6, 8, 'B'); c.set(6, 12, 'B')
     return c.outline()
 
 
