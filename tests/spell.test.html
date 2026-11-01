@@ -1,0 +1,110 @@
+<!doctype html><meta charset="utf-8"><title>test cdx-spell</title>
+<!-- Teste le correcteur orthographique (cdx-spell.js) contre un faux hôte (window.chrome.webview) : découpage en mots, parties masquées (code, liens,
+     étiquettes, adresses), calque sous la zone de texte (position, taille, mots soulignés), mot en cours de frappe, menu de suggestions au clic droit,
+     ajout au dictionnaire, arrêt et retrait. Lancé par tests/run-browser-tests.mjs (Chrome headless) ; le résultat est écrit dans #out. -->
+<link rel="stylesheet" href="/cdx-ui.css">
+<link rel="stylesheet" href="/cdx-frame.css">
+<style>
+  body { margin: 0; }
+  .box { display: flex; gap: 5px; width: 600px; height: 160px; padding: 20px; }
+  #ta { flex: 1; min-width: 0; height: auto; white-space: pre-wrap; }
+</style>
+<div class="box" id="box"><textarea id="ta" class="text-input"></textarea></div>
+<pre id="out">en attente</pre>
+<script>
+  // Le faux hôte : « marchée », « orthografe » et « écolle » sont inconnus ; les suggestions sont fixes ; sp.add rend sp.added.
+  const sent = [], listeners = [];
+  const reply = m => setTimeout(() => listeners.forEach(l => l({ data: m })), 0);
+  window.chrome = { webview: {
+    postMessage(o) {
+      sent.push(o);
+      if (o.cmd === 'sp.check') reply({ type: 'sp.result', id: o.id, bad: o.words.filter(w => ['marchée', 'orthografe', 'écolle', 'Orthografe'].includes(w)) });
+      if (o.cmd === 'sp.suggest') reply({ type: 'sp.suggestions', id: o.id, word: o.word, list: o.word === 'marchée' ? ['marché', 'marchés'] : [] });
+      if (o.cmd === 'sp.add') reply({ type: 'sp.added', word: o.word });
+    },
+    addEventListener(t, fn) { if (t === 'message') listeners.push(fn); },
+  } };
+</script>
+<script src="/cdx-frame.js"></script>
+<script src="/cdx-spell.js"></script>
+<script>
+const res = [], ok = (name, cond, extra = '') => res.push((cond ? 'OK     ' : 'ÉCHEC  ') + name + (cond ? '' : '  ' + extra));
+const $ = id => document.getElementById(id);
+const tick = (ms = 250) => new Promise(r => setTimeout(r, ms));
+const marks = () => [...document.querySelectorAll('.cdx-spell mark')].map(m => m.textContent);
+const R = el => el.getBoundingClientRect();
+(async () => {
+  const toks = CdxSpell.tokens("Bonjour l'école, peut-être CDX a1 x https://cdx.shell/page e@x.fr #tag [[Note liée]] `code` ```\nbloc\n``` [texte](cible)", true).map(t => t.w);
+  ok('découpage : mots et traits d\'union gardés, élision retirée ; sigle, mot avec chiffre, lettre seule, adresses, code, liens et étiquette écartés', toks.join(' ') === 'Bonjour école peut-être texte', toks.join(' '));
+  const t2 = CdxSpell.tokens("#tag reste [[lien]] sans markdown", false).map(t => t.w);
+  ok('sans l\'option markdown, étiquettes et liens sont des mots', t2.join(' ') === 'tag reste lien sans markdown', t2.join(' '));
+  const pos = CdxSpell.tokens('ab marchée.', false);
+  ok('les positions sont celles du texte d\'origine', pos.length === 2 && pos[1].s === 3 && pos[1].e === 10);
+
+  const ta = $('ta'); ta.value = "Je suis allé au marchée hier.\nL'orthografe est libre ; `marchée` dans du code ne compte pas.";
+  const sp = CdxSpell.attach(ta, { markdown: true });
+  await tick();
+  const bd = document.querySelector('.cdx-spell');
+  ok('un calque est posé avant la zone de texte, sous elle', !!bd && bd.nextElementSibling === ta && getComputedStyle(bd).zIndex === '0' && getComputedStyle(ta).zIndex === '1' && getComputedStyle(ta).position === 'relative');
+  ok('la zone de texte est devenue transparente, le calque a pris son fond', getComputedStyle(ta).backgroundColor === 'rgba(0, 0, 0, 0)' && getComputedStyle(bd).backgroundColor !== 'rgba(0, 0, 0, 0)');
+  const a = R(ta), b = R(bd);
+  ok('le calque a la position et la taille de la zone de texte', Math.abs(a.left - b.left) < 1 && Math.abs(a.top - b.top) < 1 && Math.abs(a.width - b.width) < 1 && Math.abs(a.height - b.height) < 1, [a.left, b.left, a.top, b.top, a.width, b.width].join());
+  ok('même police et même padding (mêmes retours à la ligne)', getComputedStyle(bd).fontFamily === getComputedStyle(ta).fontFamily && getComputedStyle(bd).paddingLeft === getComputedStyle(ta).paddingLeft && getComputedStyle(bd).whiteSpace === 'pre-wrap');
+  ok('une seule demande à l\'hôte, avec les mots à vérifier une fois chacun', sent.filter(m => m.cmd === 'sp.check').length === 1 && sent[0].words.includes('marchée') && sent[0].words.includes('orthografe') && new Set(sent[0].words).size === sent[0].words.length);
+  ok('les mots inconnus sont soulignés (deux marques), pas celui du code', marks().join(',') === 'marchée,orthografe', marks().join(','));
+  ok('le texte transparent du calque est le texte entier', bd.textContent === ta.value);
+
+  ta.focus(); ta.setSelectionRange(23, 23);   // le curseur dans « marchée »
+  document.dispatchEvent(new Event('selectionchange')); await tick();
+  ok('le mot sous le curseur n\'est pas souligné pendant la frappe', marks().join(',') === 'orthografe', marks().join(','));
+  ta.blur(); await tick();
+  ok('la zone quittée : il est souligné de nouveau', marks().join(',') === 'marchée,orthografe', marks().join(','));
+
+  const before = sent.length;
+  ta.value += ' Bonjour.'; ta.dispatchEvent(new Event('input')); await tick();
+  ok('un mot connu après coup : une seule demande, pour lui seul', sent.length === before + 1 && sent[before].words.join() === 'Bonjour', JSON.stringify(sent.slice(before)));
+
+  // clic droit sur « marchée » : le menu de la charte avec les suggestions
+  const mk = document.querySelector('.cdx-spell mark'), r = R(mk);
+  ta.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: r.left + 3, clientY: r.top + r.height / 2 }));
+  await tick();
+  let menu = document.querySelector('.menu[data-cdx]'); let items = menu ? [...menu.querySelectorAll('.menu-item')].map(i => i.textContent.trim()) : [];
+  ok('le menu propose les suggestions, l\'ajout au dictionnaire, puis les actions d\'édition', items[0] === 'marché' && items[1] === 'marchés' && items.includes('Ajouter au dictionnaire') && items.includes('Ignorer ici') && items.some(i => i.startsWith('Copier')), items.join(' | '));
+  ok('le titre du menu est le mot', menu && menu.querySelector('.menu-title') && menu.querySelector('.menu-title').textContent === 'marchée');
+  menu.querySelectorAll('.menu-item')[0].click(); await tick();
+  ok('choisir « marché » remplace le mot dans le texte', ta.value.startsWith('Je suis allé au marché hier.'), ta.value.slice(0, 40));
+  ok('plus qu\'une marque', marks().join(',') === 'orthografe', marks().join(','));
+
+  const mk2 = document.querySelector('.cdx-spell mark'), r2 = R(mk2);
+  ta.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: r2.left + 3, clientY: r2.top + r2.height / 2 })); await tick();
+  menu = document.querySelector('.menu[data-cdx]'); items = menu ? [...menu.querySelectorAll('.menu-item')] : [];
+  ok('sans suggestion : « Aucune suggestion » grisé', items[0] && items[0].textContent.trim() === 'Aucune suggestion' && items[0].classList.contains('off'));
+  items.find(i => i.textContent.trim() === 'Ajouter au dictionnaire').click(); await tick();
+  ok('« Ajouter au dictionnaire » : sp.add envoyé, le mot n\'est plus souligné', sent.some(m => m.cmd === 'sp.add' && m.word === 'orthografe') && marks().length === 0);
+
+  ta.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: R(ta).left + 5, clientY: R(ta).bottom - 5 })); await tick();
+  menu = document.querySelector('.menu[data-cdx]'); items = menu ? [...menu.querySelectorAll('.menu-item')].map(i => i.textContent.trim()) : [];
+  ok('clic droit hors d\'un mot souligné : les actions d\'édition seules', items[0].startsWith('Annuler') && items.some(i => i.startsWith('Tout sélectionner')) && !items.includes('Ajouter au dictionnaire'), items.join(' | '));
+  document.body.click(); await tick();
+
+  ta.blur(); ta.value = 'écolle écolle'; ta.dispatchEvent(new Event('input')); await tick();
+  const checks = sent.filter(m => m.cmd === 'sp.check').length;
+  sp.enable(false); await tick();
+  ok('correcteur coupé : plus de marque, le texte reste dans le calque', marks().length === 0 && bd.textContent === 'écolle écolle');
+  sp.enable(true); await tick();
+  ok('remis : les marques reviennent sans redemander (mémoire des mots)', marks().length === 2 && sent.filter(m => m.cmd === 'sp.check').length === checks, sent.filter(m => m.cmd === 'sp.check').length + ' / ' + checks);
+
+  ta.scrollTop = 0; ta.style.height = '30px'; ta.value = Array.from({ length: 30 }, (_, i) => 'ligne ' + i).join('\n'); ta.dispatchEvent(new Event('input')); await tick();
+  ta.scrollTop = 100; ta.dispatchEvent(new Event('scroll'));
+  ok('le calque défile avec la zone de texte', Math.abs(bd.scrollTop - ta.scrollTop) < 1 && ta.scrollTop > 0, bd.scrollTop + ' / ' + ta.scrollTop);
+
+  sp.destroy(); await tick();
+  ok('retiré : plus de calque, fond et position d\'origine rendus', !document.querySelector('.cdx-spell') && ta.style.background === '' && ta.style.position === '' && !ta.__cdxSpell);
+
+  const again = CdxSpell.attach(ta, {}); await tick();
+  reply({ type: 'sp.off' }); await tick();
+  ok('sp.off (pas de dictionnaire dans l\'hôte) : plus rien n\'est souligné ni demandé', CdxSpell.off && marks().length === 0);
+  again.destroy();
+  $('out').textContent = res.join('\n') + '\n' + (res.some(l => l.startsWith('ÉCHEC')) ? 'ÉCHEC' : 'TOUT EST BON');
+})().catch(e => { $('out').textContent = res.join('\n') + '\nEXCEPTION ' + (e && e.stack || e); });
+</script>

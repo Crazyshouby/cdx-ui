@@ -14,7 +14,8 @@
     "charte-lint.mjs": "tools/charte-lint.mjs",
     "lint.mjs": "tools/lib/lint.mjs",
     "cdx-columns.js": "web/cdx/cdx-columns.js",
-    "cdx-split.js": "web/cdx/cdx-split.js"
+    "cdx-split.js": "web/cdx/cdx-split.js",
+    "cdx-spell.js": "web/cdx/cdx-spell.js"
   },
   "lint": [
     "web"

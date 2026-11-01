@@ -37,6 +37,10 @@
       "sha256": "d7923d23884679fe9e390fd80852d1d9d4d2a1d2d3b82d12327bbdafc30e1093",
       "bytes": 4949
     },
+    "cdx-spell.js": {
+      "sha256": "c304545b412f6fc9ced1698f21609b62345ffe41d64195150a008ae593146c6b",
+      "bytes": 12328
+    },
     "cdx-tokens.h": {
       "sha256": "12a73e7c8066e9fa52814a62aefe766d5cec25f980e8d8c7efc683f1e308a47b",
       "bytes": 13328
