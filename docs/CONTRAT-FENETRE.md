@@ -51,6 +51,6 @@ Les essais : `tests/bridge.test.html` (les trois transports simulés), `AudioLin
 
 - Les hôtes C# ignorent `win.shade` et `win.ready` (sans erreur) ; ils n'envoient pas `active`.
 - KIRC n'a pas de commande `min` ni de `title` ; AudioLinker n'a pas d'agrandissement.
-- L'aimantation n'existe que dans KIRC (`app.rs::drag`, `SNAP_DIST`, `SNAP_GAP`).
+- L'aimantation existe dans KIRC (`app.rs::drag`, `SNAP_DIST`, `SNAP_GAP`) et, depuis le 01/11/2026, dans l'hôte C# de cdx-windows (`Cdx.Host/Snap.cs`, corrige le rectangle de `WM_MOVING` / `WM_SIZING`, voisines = toutes les fenêtres de la suite) ; pas dans AudioLinker.
 - Les pages du shell (barre, Démarrer, centre rapide) n'ont pas de cadre à déplacer : elles n'utilisent que le pont (`cdx.on`) par `host.js`.
 - KIRC prend le menu contextuel de CdxFrame (`CdxFrame.menu`) ; il n'a pas de dialogue modal. Le menu des périphériques d'AudioLinker (cases, listes déroulantes, pastilles de couleur) est plus riche que `CdxFrame.menu` : il reste le sien.
