@@ -52,7 +52,9 @@ node tools/charte-sync.mjs --check <app>  # compare les copies d'une application
 node tools/drift-report.mjs               # régénère docs/RAPPORT-DERIVE.md
 ```
 
-## État (01/11/2026, cdx-ui 2.0.1)
+## État (01/11/2026, cdx-ui 2.0.2)
+
+**2.0.2** : l'aimantation des fenêtres se fait sans écart (`snap_gap` 2 → 0 px) : deux fenêtres de la suite qui se collent sont bord à bord, comme contre le bord de l'écran.
 
 **2.0.1** : le texte des boutons, onglets, menus, lignes de liste, sélecteurs et lignes d'état est centré au pixel (mesuré dans Chrome : les capitales étaient 1 à 2 px trop haut, et 1 px trop à gauche dans les boutons) ; les hauteurs ne changent pas.
 

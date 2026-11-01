@@ -36,7 +36,7 @@ Transport des événements : Tauri `listen(type)` (charge utile = valeur) ; Audi
 
 - **Minimum** : `close`, `drag`, `active`. Un hôte qui ignore le reste reste conforme (les demandes inconnues sont sans effet).
 - **Fenêtre redimensionnable** : `resize` ; l'hôte peut déléguer à Windows (`WM_NCLBUTTONDOWN` avec le code de bord, comme le fait l'hôte C#).
-- **Aimantation** : à la charge de l'hôte (10 px d'attraction, 2 px d'écart, 0 au bord de l'écran : `tokens.json`, `snap_distance` et `snap_gap`).
+- **Aimantation** : à la charge de l'hôte (10 px d'attraction, aucun écart, ni entre deux fenêtres ni au bord de l'écran : `tokens.json`, `snap_distance` et `snap_gap` = 0 depuis la 2.0.2).
 - **Un thème** : l'hôte relit les réglages communs (`%APPDATA%\CDX\suite.json`, phase 2) et envoie `theme` ; en attendant, chaque application reste maîtresse du sien.
 
 ## Qui l'utilise (30/10/2026)

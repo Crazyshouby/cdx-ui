@@ -183,6 +183,6 @@ const R = el => el.getBoundingClientRect();
   reply({ type: 'sp.off' }); await tick();
   ok('sp.off (pas de dictionnaire dans l\'hôte) : plus rien n\'est souligné ni demandé', CdxSpell.off && marks().length === 0);
   again.destroy();
-  $('out').textContent = res.join('\n') + '\n' + (res.some(l => l.startsWith('ÉCHEC')) ? 'ÉCHEC' : 'TOUT EST BON');
-})().catch(e => { $('out').textContent = res.join('\n') + '\nEXCEPTION ' + (e && e.stack || e); });
+  $('out').textContent = res.join('\n') + '\n' + (res.some(l => l.startsWith('ÉCHEC')) ? 'RÉSULTAT : ÉCHEC' : 'RÉSULTAT : TOUT EST BON');
+})().catch(e => { $('out').textContent = res.join('\n') + '\nEXCEPTION ' + (e && e.stack || e) + '\nRÉSULTAT : ÉCHEC'; });
 </script>

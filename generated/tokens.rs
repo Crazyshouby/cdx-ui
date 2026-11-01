@@ -128,4 +128,4 @@ pub const COLUMN_HEADER_HEIGHT: i32 = 22;
 pub const CHECKBOX_SIZE: i32 = 14;
 pub const ICON_SIZE: i32 = 16;
 pub const SNAP_DISTANCE: i32 = 10;
-pub const SNAP_GAP: i32 = 2;
+pub const SNAP_GAP: i32 = 0;

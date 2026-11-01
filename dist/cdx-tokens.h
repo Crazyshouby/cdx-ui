@@ -74,6 +74,6 @@ constexpr int kColumnHeaderHeight = 22;
 constexpr int kCheckboxSize = 14;
 constexpr int kIconSize = 16;
 constexpr int kSnapDistance = 10;
-constexpr int kSnapGap = 2;
+constexpr int kSnapGap = 0;
 
 }  // namespace cdx
