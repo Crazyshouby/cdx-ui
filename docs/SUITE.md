@@ -7,7 +7,7 @@ continuent, et ce qui lui était destiné se perd sans bruit (ou la lance, voir 
 ## 1. Réglages communs : `%APPDATA%\CDX\suite.json`
 
 ```json
-{ "version": 1, "accent": "bleu" }
+{ "version": 1, "accent": "jean" }
 ```
 
 | Champ | Valeurs | Rôle |
