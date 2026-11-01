@@ -437,7 +437,8 @@ ICONS = dict(serveur=server, salon=channel, membres=users, message=bubble, carne
 
 # ---- Icônes d'application de la suite (01/11/2026) : une famille ------------------------------------------------------------
 # Même corps rouge (R, suit l'accent), arête claire en haut et à gauche (O), ombre en bas et à droite (r), détails blancs (W) : la même
-# lumière que l'icône de KIRC. Chaque application porte son objet ; « cdx » est la suite elle-même (barre, installeur).
+# lumière que l'icône de KIRC. Chaque application porte son objet ; « cdx » est la suite elle-même (barre, installeur). L'Explorateur garde
+# le dossier jaune (« dossier »), au choix de Valentin.
 
 def _card(c, x0, y0, x1, y1):
     """Le corps rouge éclairé d'une icône d'application."""
@@ -453,8 +454,8 @@ def _ring(c, cx, cy, r_out, r_in, col):
                 c.set(x, y, col)
 
 
-def app_explorer():
-    """Explorateur : un classeur rouge à deux tiroirs, poignées claires."""
+def app_repos():
+    """Dépôts : un classeur rouge à deux tiroirs, poignées claires (l'Explorateur garde le dossier)."""
     c = C()
     _card(c, 2, 1, 13, 14)
     c.rect(3, 7, 12, 7, 'r'); c.rect(3, 8, 12, 8, 'O')
@@ -475,15 +476,6 @@ def app_browser():
     c.set(11, 4, 'W'); c.set(10, 4, 'W'); c.set(11, 5, 'W'); c.set(4, 11, 'D'); c.set(4, 10, 'D'); c.set(5, 11, 'D')
     return c.outline()
 
-
-def app_repos():
-    """Dépôts : un graphe git (trois nœuds, une branche) sur le corps rouge."""
-    c = C()
-    _card(c, 1, 1, 14, 14)
-    c.rect(4, 6, 4, 10, 'W'); c.line(5, 5, 10, 10, 'W')
-    c.circ(4, 4, 1.4, 'W'); c.circ(4, 12, 1.4, 'W'); c.circ(11, 11, 1.4, 'W')
-    c.set(4, 4, 'r'); c.set(4, 12, 'r'); c.set(11, 11, 'r')
-    return c.outline()
 
 
 def app_notes():
@@ -559,7 +551,7 @@ def app_cdx():
     return c.outline()
 
 
-APPS = dict(explorateur=app_explorer, navigateur=app_browser, depots=app_repos, notes=app_notes, terminal=app_terminal,
+APPS = dict(explorateur=folder, navigateur=app_browser, depots=app_repos, notes=app_notes, terminal=app_terminal,
             agenda=app_agenda, courrier=app_mail, pilote=app_pilot, transferts=app_transfers, cdx=app_cdx)
 ICONS.update(APPS)
 
