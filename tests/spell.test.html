@@ -25,6 +25,26 @@
     addEventListener(t, fn) { if (t === 'message') listeners.push(fn); },
   } };
 </script>
+<script>
+  // Le faux worker de grammaire (un objet, pas un vrai Worker : sous le temps virtuel de Chrome headless, un vrai worker ne répondrait pas à temps) :
+  // « Les chat mange » → deux erreurs avec message et suggestions ; le reste est propre.
+  const fakeWorker = {
+    onmessage: null,
+    postMessage(m) {
+      const reply = d => setTimeout(() => this.onmessage && this.onmessage({ data: d }), 0);
+      if (m.type === 'init') { reply({ type: 'ready' }); return; }
+      if (m.type !== 'parse') return;
+      const errors = []; let i = m.text.indexOf('chat mange');
+      if (i >= 0) {
+        errors.push({ s: i, e: i + 4, type: 'gn', msg: 'Accord de nombre erroné : « chat » devrait être au pluriel.', sugg: ['chats'], rule: 'gn_les_2m' });
+        errors.push({ s: i + 5, e: i + 10, type: 'conj', msg: 'Conjugaison erronée. Accord avec « chat ».', sugg: ['mangent'], rule: 'conj_les_nom' });
+      } else if ((i = m.text.indexOf('chats mange')) >= 0) {
+        errors.push({ s: i + 6, e: i + 11, type: 'conj', msg: 'Conjugaison erronée. Accord avec « chats ».', sugg: ['mangent'], rule: 'conj_les_nom' });
+      }
+      reply({ type: 'result', id: m.id, errors });
+    },
+  };
+</script>
 <script src="/cdx-frame.js"></script>
 <script src="/cdx-spell.js"></script>
 <script>
@@ -94,11 +114,38 @@ const R = el => el.getBoundingClientRect();
   sp.enable(true); await tick();
   ok('remis : les marques reviennent sans redemander (mémoire des mots)', marks().length === 2 && sent.filter(m => m.cmd === 'sp.check').length === checks, sent.filter(m => m.cmd === 'sp.check').length + ' / ' + checks);
 
+  // ---- grammaire ----
+  sp.destroy(); await tick();
+  const gp = CdxSpell.attach(ta, { grammar: fakeWorker });
+  ta.blur(); ta.value = 'Les chat mange ici. Tout va bien.'; ta.dispatchEvent(new Event('input')); await tick(900);
+  const gmarks = () => [...document.querySelectorAll('.cdx-spell mark.g')].map(m => m.textContent);
+  ok('les erreurs de grammaire du worker sont soulignées (classe g) : « chat », « mange »', gmarks().join(',') === 'chat,mange', gmarks().join(','));
+  ta.focus(); ta.setSelectionRange(6, 6); document.dispatchEvent(new Event('selectionchange')); await tick();
+  ok('une erreur de grammaire qui contient le curseur attend la fin de la frappe', gmarks().join(',') === 'mange', gmarks().join(','));
+  ta.blur(); await tick();
+  const gm = document.querySelector('.cdx-spell mark.g'), gr = R(gm);
+  ta.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: gr.left + 3, clientY: gr.top + gr.height / 2 })); await tick();
+  menu = document.querySelector('.menu[data-cdx]'); items = menu ? [...menu.querySelectorAll('.menu-item')].map(i => i.textContent.trim()) : [];
+  ok('clic droit sur une erreur de grammaire : le message en titre, la suggestion, « Ignorer ici », les actions d\'édition', menu && menu.querySelector('.menu-title').textContent.startsWith('Accord de nombre') && items[0] === 'chats' && items.includes('Ignorer ici') && !items.includes('Ajouter au dictionnaire'), items.join(' | '));
+  menu.querySelectorAll('.menu-item')[0].click(); await tick(900);
+  ok('la suggestion remplace le texte ; le texte modifié est revérifié (il ne reste que « mange »)', ta.value.startsWith('Les chats mange') && gmarks().join(',') === 'mange', ta.value + ' / ' + gmarks().join(','));
+  const gm2 = document.querySelector('.cdx-spell mark.g'), gr2 = R(gm2);
+  ta.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: gr2.left + 3, clientY: gr2.top + gr2.height / 2 })); await tick();
+  menu = document.querySelector('.menu[data-cdx]'); [...menu.querySelectorAll('.menu-item')].find(i => i.textContent.trim() === 'Ignorer ici').click(); await tick();
+  ok('« Ignorer ici » retire le soulignement de cette erreur', gmarks().length === 0);
+  gp.grammar(false); await tick(); ta.value = 'Les chat mange encore.'; ta.dispatchEvent(new Event('input')); await tick(900);
+  ok('grammaire coupée : rien n\'est souligné', gmarks().length === 0);
+  gp.grammar(true); await tick(900);
+  ok('grammaire remise : les erreurs reviennent, sauf celle ignorée (« mange », même règle et même mot)', gmarks().join(',') === 'chat', gmarks().join(','));
+  gp.destroy(); await tick();
+  const sp2 = CdxSpell.attach(ta, { markdown: true }); await tick();
+
   ta.scrollTop = 0; ta.style.height = '30px'; ta.value = Array.from({ length: 30 }, (_, i) => 'ligne ' + i).join('\n'); ta.dispatchEvent(new Event('input')); await tick();
   ta.scrollTop = 100; ta.dispatchEvent(new Event('scroll'));
-  ok('le calque défile avec la zone de texte', Math.abs(bd.scrollTop - ta.scrollTop) < 1 && ta.scrollTop > 0, bd.scrollTop + ' / ' + ta.scrollTop);
+  const bd2 = document.querySelector('.cdx-spell');
+  ok('le calque défile avec la zone de texte', Math.abs(bd2.scrollTop - ta.scrollTop) < 1 && ta.scrollTop > 0, bd2.scrollTop + ' / ' + ta.scrollTop);
 
-  sp.destroy(); await tick();
+  sp2.destroy(); await tick();
   ok('retiré : plus de calque, fond et position d\'origine rendus', !document.querySelector('.cdx-spell') && ta.style.background === '' && ta.style.position === '' && !ta.__cdxSpell);
 
   const again = CdxSpell.attach(ta, {}); await tick();
