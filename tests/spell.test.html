@@ -19,7 +19,7 @@
     postMessage(o) {
       sent.push(o);
       if (o.cmd === 'sp.check') reply({ type: 'sp.result', id: o.id, bad: o.words.filter(w => ['marchée', 'orthografe', 'écolle', 'Orthografe'].includes(w)) });
-      if (o.cmd === 'sp.suggest') reply({ type: 'sp.suggestions', id: o.id, word: o.word, list: o.word === 'marchée' ? ['marché', 'marchés'] : [] });
+      if (o.cmd === 'sp.suggest') reply({ type: 'sp.suggestions', id: o.id, word: o.word, known: !['marchée', 'orthografe', 'écolle', 'Orthografe', 'bonjuor', 'Bonjuor', 'automatque', 'grammère'].includes(o.word), list: o.word === 'marchée' ? ['marché', 'marchés'] : /^bonjuor$/i.test(o.word) ? [o.word[0] + 'onjour', o.word[0] + 'onjours'] : o.word === 'automatque' ? ['automatique'] : o.word === 'grammère' ? ['grammaire'] : [] });
       if (o.cmd === 'sp.add') reply({ type: 'sp.added', word: o.word });
     },
     addEventListener(t, fn) { if (t === 'message') listeners.push(fn); },
@@ -114,8 +114,39 @@ const R = el => el.getBoundingClientRect();
   sp.enable(true); await tick();
   ok('remis : les marques reviennent sans redemander (mémoire des mots)', marks().length === 2 && sent.filter(m => m.cmd === 'sp.check').length === checks, sent.filter(m => m.cmd === 'sp.check').length + ' / ' + checks);
 
-  // ---- grammaire ----
+  // ---- correction automatique ----
+  ok('distance : lettres inversées 1, accent 1, lettre en plus 1, ph pour f 2', CdxSpell.distance('bonjuor', 'bonjour', 2) === 1 && CdxSpell.distance('marchee', 'marchée', 2) === 1 && CdxSpell.distance('marchée', 'marché', 2) === 1 && CdxSpell.distance('orthografe', 'orthographe', 2) === 2);
+  ok('choix sûr : une seule candidate proche ; rien si plusieurs ; deux lettres admises dès six lettres', CdxSpell.pick('bonjuor', ['bonjour', 'bonjours']) === 'bonjour' && CdxSpell.pick('marchée', ['matchée', 'marchés', 'marché']) === null && CdxSpell.pick('orthografe', ['orthographe']) === 'orthographe' && CdxSpell.pick('tres', ['très', 'trek']) === null && CdxSpell.pick('tres', ['très']) === 'très');
   sp.destroy(); await tick();
+  const ap = CdxSpell.attach(ta, {}); await tick();
+  const typeEnd = (text, ch, type = 'insertText') => { ta.focus(); ta.value = text + ch; ta.setSelectionRange(ta.value.length, ta.value.length); ta.dispatchEvent(new InputEvent('input', { inputType: type, data: type === 'insertText' ? ch : null, bubbles: true })); };
+  typeEnd('Je dis bonjuor', ' '); await tick();
+  const amarks = () => [...document.querySelectorAll('.cdx-spell mark.a')].map(m => m.textContent);
+  ok('à l\'espace, « bonjuor » devient « bonjour », le curseur reste après l\'espace, le mot corrigé est marqué', ta.value === 'Je dis bonjour ' && ta.selectionStart === 15 && amarks().join() === 'bonjour', ta.value + ' | ' + ta.selectionStart + ' | ' + amarks().join());
+  ok('le mot corrigé n\'est pas aussi souligné en faute', marks().join() === 'bonjour' && document.querySelectorAll('.cdx-spell mark:not(.a)').length === 0);
+  typeEnd('Je dis marchée', '.'); await tick();
+  ok('« marchée » (trois candidates proches) n\'est pas corrigé tout seul : il reste souligné en faute', ta.value === 'Je dis marchée.' && document.querySelectorAll('.cdx-spell mark:not(.a)').length === 1, ta.value);
+  typeEnd('Je dis l\'automatque', ' '); await tick();
+  ok('« l\'automatque » : l\'élision est gardée, le mot corrigé', ta.value === 'Je dis l\'automatique ', ta.value);
+  typeEnd('Je dis grammère', ' '); await tick();
+  ok('« grammère » : deux lettres d\'écart admises dès six lettres', ta.value === 'Je dis grammaire ', ta.value);
+  typeEnd('Bonjuor', '\n', 'insertLineBreak'); await tick();
+  ok('à la ligne aussi, et la majuscule est gardée', ta.value === 'Bonjour\n', ta.value);
+  const am = document.querySelector('.cdx-spell mark.a'), ar = R(am);
+  ta.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true, clientX: ar.left + 3, clientY: ar.top + ar.height / 2 })); await tick();
+  menu = document.querySelector('.menu[data-cdx]'); items = menu ? [...menu.querySelectorAll('.menu-item')].map(i => i.textContent.trim()) : [];
+  ok('clic droit sur le mot corrigé : « Rétablir », « Ajouter au dictionnaire », titre « Corrigé : … »', items[0] === 'Rétablir « Bonjuor »' && items[1].startsWith('Ajouter « Bonjuor »') && menu.querySelector('.menu-title').textContent === 'Corrigé : Bonjuor → Bonjour', items.join(' | '));
+  menu.querySelectorAll('.menu-item')[0].click(); await tick();
+  ok('« Rétablir » rend le mot tapé, sans le souligner', ta.value === 'Bonjuor\n' && document.querySelectorAll('.cdx-spell mark').length === 0, ta.value);
+  typeEnd('Bonjuor', ' '); await tick();
+  ok('un mot rétabli n\'est plus corrigé dans la fenêtre', ta.value === 'Bonjuor ', ta.value);
+  ap.auto(false); typeEnd('Je dis grammère', ' '); await tick();
+  ok('correction automatique coupée : le mot reste tel quel, souligné', ta.value === 'Je dis grammère ' && document.querySelectorAll('.cdx-spell mark:not(.a)').length === 1, ta.value);
+  ap.destroy(); await tick();
+  const sp3 = CdxSpell.attach(ta, { markdown: true }); await tick();
+
+  // ---- grammaire ----
+  sp3.destroy(); await tick();
   const gp = CdxSpell.attach(ta, { grammar: fakeWorker });
   ta.blur(); ta.value = 'Les chat mange ici. Tout va bien.'; ta.dispatchEvent(new Event('input')); await tick(900);
   const gmarks = () => [...document.querySelectorAll('.cdx-spell mark.g')].map(m => m.textContent);
