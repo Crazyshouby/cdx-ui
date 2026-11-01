@@ -1,6 +1,6 @@
 # Rapport de dérive à la charte CDX-UI
 
-Version de la charte : **2.0.0** · généré le 2026-10-31 par `node tools/drift-report.mjs`.
+Version de la charte : **2.0.1** · généré le 2026-11-01 par `node tools/drift-report.mjs`.
 Les comptes sont des **déclarations** (lignes de CSS / HTML / JS), pas des éléments affichés. Une copie identique à `dist/` n'est pas recomptée (elle se contrôle à la source) ; une exception propre à une application est déclarée, avec sa raison, dans `tools/apps/<application>.allow` et comptée à part (« tolérés »).
 Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même contrôle avec 18 exceptions justifiées dans `charte-lint.allow`.
 
@@ -43,7 +43,7 @@ C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake 
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `cdx/cdx-ui.css` | `cdx-ui.css` | identique | 33599 / 33599 |
+| `cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34150 / 34150 |
 | `cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
 | `cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
 | `cdx/cdx_bus.h` | `cdx_bus.h` | identique | 7222 / 7222 |
@@ -131,7 +131,7 @@ C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `web/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 33599 / 33599 |
+| `web/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34150 / 34150 |
 | `web/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
 | `web/cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
 | `web/cdx/icons.js` | `icons.js` | identique | 48934 / 48934 |
@@ -163,16 +163,16 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 
 <details><summary><code>gradient</code> : undefined (exemples)</summary>
 
-- `ui/kirc.css:57` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
-- `ui/kirc.css:61` — `color: transparent; background: linear-gradient(#fff 0, #b9b9b9 45%, #444 55%, #9a9a9a); -webkit-background-clip: text; background-clip: tex`
+- `ui/kirc.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
+- `ui/kirc.css:62` — `color: transparent; background: linear-gradient(#fff 0, #b9b9b9 45%, #444 55%, #9a9a9a); -webkit-background-clip: text; background-clip: tex`
 
 </details>
 
 <details><summary><code>color</code> : undefined (exemples)</summary>
 
-- `ui/kirc.css:57` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
-- `ui/kirc.css:57` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
-- `ui/kirc.css:154` — `.mem.r0 { border-left-color: #ff5cf0; } .mem.r1 { border-left-color: #ff8a3c; } .mem.r2 { border-left-color: #ff3030; }`
+- `ui/kirc.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
+- `ui/kirc.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
+- `ui/kirc.css:155` — `.mem.r0 { border-left-color: #ff5cf0; } .mem.r1 { border-left-color: #ff8a3c; } .mem.r2 { border-left-color: #ff3030; }`
 
 </details>
 
@@ -180,11 +180,11 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `ui/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 33599 / 33599 |
+| `ui/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34150 / 34150 |
 | `ui/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
 | `ui/cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
 | `ui/cdx/icons.js` | `icons.js` | identique | 48934 / 48934 |
-| `src-tauri/src/cdx_bus.rs` | `cdx_bus.rs` | identique | 12012 / 12012 |
+| `src-tauri/src/cdx_bus.rs` | `cdx_bus.rs` | identique | 12365 / 12365 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
 | `ui/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4431 / 4431 |
 | `ui/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11690 / 11690 |

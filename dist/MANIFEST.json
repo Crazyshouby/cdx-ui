@@ -1,9 +1,9 @@
 {
-  "cdxUi": "2.0.0",
+  "cdxUi": "2.0.1",
   "files": {
     "cdx-ui.css": {
-      "sha256": "dd659ae997b2c679cd8a3056e341851cafb48a589a9c9f3476741fa08d92f862",
-      "bytes": 33599
+      "sha256": "d40121fa7b74d04188b1c8b113b8f455420736c194e12f051af8149ec0a463c8",
+      "bytes": 34150
     },
     "cdx-frame.css": {
       "sha256": "6282dd7d848a1688736723ed2037a6162593143d578c6130c5a0c3517121eb98",
@@ -22,7 +22,7 @@
       "bytes": 48934
     },
     "cdx-bridge.js": {
-      "sha256": "0091f08e716e16a9b70eee00e5c2a46eac62c7250f9f1adc51e7dda3b2539663",
+      "sha256": "9066861fa5c108b69ee1f46acec158a742baebc030b489fdd97430bc61783ebf",
       "bytes": 4431
     },
     "cdx-frame.js": {
@@ -38,11 +38,11 @@
       "bytes": 4949
     },
     "cdx-tokens.h": {
-      "sha256": "e820a10f6b3077cf56fcb44e1ebc3ec576570d52d994043b0e6caa93a6562c3b",
+      "sha256": "12a73e7c8066e9fa52814a62aefe766d5cec25f980e8d8c7efc683f1e308a47b",
       "bytes": 13328
     },
     "tokens.rs": {
-      "sha256": "743716a2221ba8c54d2b92075ec00101cfabeded8b301f137770baf7904cf00a",
+      "sha256": "98322be6ef49ef6a6f74f5e6e0e90d9bc4396471dc037073292b6360aa618d57",
       "bytes": 23580
     },
     "cdx-verify.mjs": {
@@ -58,7 +58,7 @@
       "bytes": 12365
     },
     "tokens.json": {
-      "sha256": "60d08b536c9073259dd19d92e80f7898bf7a2350716cf7c88b249491ce07fea7",
+      "sha256": "a9be8971fe2fc8fc5052ba8495a5882dd6f5075c8b840dfff8cf4db1dc68feb3",
       "bytes": 31740
     },
     "pixel_engine.py": {

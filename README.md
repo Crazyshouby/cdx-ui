@@ -51,7 +51,10 @@ node tools/charte-sync.mjs --check <app>  # compare les copies d'une application
 node tools/drift-report.mjs               # régénère docs/RAPPORT-DERIVE.md
 ```
 
-## État (31/10/2026, cdx-ui 2.0.0)
+## État (01/11/2026, cdx-ui 2.0.1)
+
+**2.0.1** : le texte des boutons, onglets, menus, lignes de liste, sélecteurs et lignes d'état est centré au pixel (mesuré dans Chrome : les capitales étaient 1 à 2 px trop haut, et 1 px trop à gauche dans les boutons) ; les hauteurs ne changent pas.
+
 
 **2.0.0** : les sept accents calculés par rotation de teinte sont remplacés par les **seize apparences de KDX**, mesurées sur des captures ; chaque thème porte toute sa palette
 (soixante jetons : plus un gris en dur dans `cdx-ui.css`), le modèle de jetons change donc (version majeure). Composants mis au niveau de KDX : listes rayées par colonne,

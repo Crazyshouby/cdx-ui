@@ -1,4 +1,4 @@
-//! tokens.rs -- généré par gen/gen_tokens.py (cdx-ui 2.0.0) depuis tokens.json : ne pas modifier à la main.
+//! tokens.rs -- généré par gen/gen_tokens.py (cdx-ui 2.0.1) depuis tokens.json : ne pas modifier à la main.
 //! Couleurs au format 0xRRGGBB.
 #![allow(dead_code)]
 
