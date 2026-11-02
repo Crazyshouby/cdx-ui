@@ -1,7 +1,7 @@
-"""Variante « contours simples » des polices KIRC Pixel, pour GDI (Win32 classique).
+"""Variante « contours simples » des polices CDX Pixel, pour GDI (Win32 classique).
 
 Les polices du kit sont en couches COLR avec des glyphes de base vides (voir gen_font.py) : GDI ne sait pas les
-dessiner. Ici les contours sont dans les glyphes de base. Familles « KIRC Pixel GDI » et « KIRC Pixel Log GDI ».
+dessiner. Ici les contours sont dans les glyphes de base. Familles « CDX Pixel GDI » et « CDX Pixel Log GDI ».
 À 14 px, avec le lissage coupé (GDI+ SingleBitPerPixelGridFit, ou GDI sans ClearType), chaque pixel tombe sur un
 pixel d'écran : testé le 30/10/2026.
 
@@ -48,7 +48,7 @@ def plain(family):
 
 if __name__ == "__main__":
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent / "polices"
-    for fam in ("KIRC Pixel", "KIRC Pixel Log"):
+    for fam in ("CDX Pixel", "CDX Pixel Log"):
         p = out / (fam.lower().replace(" ", "-") + "-gdi.ttf")
         plain(fam).save(str(p))
         print(p.name, p.stat().st_size)

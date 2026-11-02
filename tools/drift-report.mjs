@@ -96,7 +96,7 @@ L.push('## Lecture', '');
 const max = total.slice().sort((a, b) => b.t - a.t)[0];
 if (max) L.push(`- L'écart brut le plus important est celui de **${max.n}** (${max.t} écart(s) sur ${total.reduce((a, b) => a + b.t, 0)} au total).`);
 L.push('- Les applications C# (shell, Explorateur, Navigateur) lisent la charte sans copie : leur dérive se mesure par ce rapport, pas par synchronisation.',
-  '- Rien n\'est corrigé ici : la phase 3 du plan traite KIRC, `cdx-frames` puis AudioLinker, une branche et une version mineure chacune, après validation de ce rapport.', '');
+  '- Rien n\'est corrigé ici : ce rapport mesure ; les corrections se font dans chaque application, une branche et une version mineure chacune.', '');
 
 fs.mkdirSync(path.dirname(out), { recursive: true });
 fs.writeFileSync(out, L.join('\n'), 'utf8');

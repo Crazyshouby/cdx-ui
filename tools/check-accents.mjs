@@ -1,5 +1,5 @@
 // node tools/check-accents.mjs
-// La liste des accents (rouge, bleu, vert…) est écrite à la main dans plusieurs programmes (clients du bus, cdx-windows, KIRC) : tokens.json en est la source,
+// La liste des accents (rouge, bleu, vert…) est écrite à la main dans plusieurs programmes (clients du bus, cdx-windows, Messages) : tokens.json en est la source,
 // ce contrôle vérifie que chaque fichier de tools/accents.json les connaît tous (entre guillemets) et n'en invente aucun. Un fichier absent (dépôt voisin non
 // présent, en CI par exemple) est signalé et ignoré ; un fichier présent qui s'écarte fait échouer.
 import fs from 'node:fs';

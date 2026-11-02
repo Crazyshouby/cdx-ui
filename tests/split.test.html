@@ -65,7 +65,7 @@ const frames = () => new Promise(r => setTimeout(r, 60));   // pas d'image dans 
   $('pv').hidden = false; await new Promise(r => setTimeout(r, 30));
   ok('volet réaffiché : la barre revient', handles()[1].hidden === false);
 
-  // volet en pourcentage (membres de KIRC) : la largeur de départ vient du CSS, l'espace est de 8 px
+  // volet en pourcentage (membres de Messages) : la largeur de départ vient du CSS, l'espace est de 8 px
   const m = CdxSplit.init({ pane: $('mem'), side: 'right', key: 'd', min: 120, max: 400 });
   const w0 = W('mem'); ok('volet à 34 % : largeur de départ 204 (600 × 0,34)', w0 === 204, w0);
   const h2 = $('row2').querySelector('.cdx-split'); ok('espace de 8 px : la barre y est (bande de 10 px)', Math.round(h2.firstElementChild.getBoundingClientRect().width) === 10, Math.round(h2.firstElementChild.getBoundingClientRect().width));

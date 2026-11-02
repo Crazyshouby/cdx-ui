@@ -1,6 +1,6 @@
 {
-  "name": "KIRC",
-  "root": "../KIRC",
+  "name": "Messages",
+  "root": "../cdx-messages",
   "files": {
     "cdx-ui.css": "ui/cdx/cdx-ui.css",
     "themes.css": "ui/cdx/themes.css",
@@ -20,6 +20,6 @@
   "lint": [
     "ui"
   ],
-  "notes": "Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/cdx-verify.mjs. kirc.css ne garde que la mise en page de KIRC.",
+  "notes": "Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/cdx-verify.mjs. messages.css ne garde que la mise en page de Messages.",
   "manifest": "ui/cdx/cdx-sync.json"
 }

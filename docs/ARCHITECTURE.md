@@ -1,10 +1,10 @@
 # Architecture de la suite CDX
 
-Quatre dépôts voisins (dans `Dev\`), un seul sens de circulation : **cdx-ui produit, les autres copient**.
+Quatre dépôts voisins (dans `Dev\CDX\`), un seul sens de circulation : **cdx-ui produit, les autres copient**.
 
 ```
 cdx-ui  ──dist/──►  cdx-windows   web/cdx/       (charte)        + cdx-sync.json
-        │           KIRC          ui/cdx/        (charte)        + src-tauri/src/cdx_bus.rs
+        │           cdx-messages  ui/cdx/        (charte)        + src-tauri/src/cdx_bus.rs
         └──────────► AudioLinker  cdx/           (charte + cdx_bus.h)
 ```
 
@@ -12,7 +12,7 @@ cdx-ui  ──dist/──►  cdx-windows   web/cdx/       (charte)        + cdx
 |---|---|---|---|
 | **cdx-ui** | la charte (jetons, composants CSS, cadre de fenêtre, pont), les générateurs (polices, pictogrammes, jetons), les clients du bus C++ et Rust, les contrôles (lint, synchro, accents), la documentation | CSS, JS, Python, Node | `npm run verifier` |
 | **cdx-windows** | cdx-shell (barre, Démarrer, centre rapide), cdx-explorer, cdx-browser, la bibliothèque commune Cdx.Host, le client du bus C#, couche1 (cadre DWM), les maquettes | C# .NET 8, HTML/CSS/JS (WebView2) | `build.ps1` |
-| **KIRC** | le client IRC (Tauri), cdx-frames (cadres autour de programmes tiers) | Rust, HTML/CSS/JS | `npm run build`, `cargo test`, `node tests/e2e.mjs` |
+| **cdx-messages** | Messages : la messagerie (IRC, WhatsApp ; Tauri) | Rust, HTML/CSS/JS | `npm run build`, `cargo test`, `node tests/e2e.mjs` |
 | **AudioLinker** | le mixeur multi-sorties | C++ (Win32, WASAPI), HTML/CSS/JS (WebView2) | `build.cmd tests` |
 
 ## Règles
@@ -31,11 +31,11 @@ cdx-ui  ──dist/──►  cdx-windows   web/cdx/       (charte)        + cdx
 | changer une couleur ou une mesure | `cdx-ui/tokens.json`, puis `python gen/gen_tokens.py` (un thème mesuré sur KDX : `kdx-reference/kdx.json`, puis `python gen/kdx_tokens.py`) |
 | ajouter un thème | une capture de KDX pour `gen/kdx_reference.py`, ou la palette complète à la main dans `tokens.json` ; puis les listes des programmes (`node tools/check-accents.mjs`) |
 | changer un composant (bouton, liste…) | `cdx-ui/cdx-ui.css` (+ `exemple.html`), puis `node tools/build-dist.mjs` |
-| propager la charte | `node tools/charte-sync.mjs --write kirc` (et `audiolinker`, `cdx-windows`) |
+| propager la charte | `node tools/charte-sync.mjs --write messages` (et `audiolinker`, `cdx-windows`) |
 | ajouter un message du bus | `cdx-ui/docs/SUITE.md`, puis le client concerné (`cdx-windows/src/Cdx.Host/Bus.cs`, `bus/cpp`, `bus/rust`) |
 | ajouter une page à la barre ou au centre rapide | `cdx-windows/web/shell/` et `src/Cdx.Shell/` |
 | modifier une fenêtre de l'Explorateur ou du navigateur | `cdx-windows/web/explorer|browser/` et `src/Cdx.Explorer|Browser/` |
-| régénérer l'icône de KIRC | `python gen/gen_kirc_icon.py <KIRC>/src-tauri/icons/source.png` |
+| régénérer l'icône de Messages | `python gen/gen_messages_icon.py <cdx-messages>/src-tauri/icons/source.png` |
 
 ## Essais
 
@@ -44,5 +44,5 @@ cdx-ui  ──dist/──►  cdx-windows   web/cdx/       (charte)        + cdx
 | cdx-ui | `npm run verifier` | jetons à jour, dist à jour, lint de la charte, accents, tests Node, tests de page, comparaison à KDX (`tools/kdx-compare.py`) |
 | cdx-windows | `cdx-shell --selftest-bus`, `--selftest-audio`, `--selftest-sys` ; `cdx-explorer --selftest-fs`, `--selftest-web` ; `cdx-browser --selftest-browser` | le bus, la liaison AudioLinker, les fichiers, les pages, le navigateur |
 | cdx-windows | `tests\bus.ps1`, `tests\suite.ps1`, `tests\navigateur.ps1` | de bout en bout, isolé (voir SUITE.md §3.6) |
-| KIRC | `cargo test`, `node tests/e2e.mjs` | 141 tests unitaires, 101 vérifications de la vraie application |
+| cdx-messages | `cargo test`, `node tests/e2e.mjs` | 141 tests unitaires, 101 vérifications de la vraie application |
 | AudioLinker | `build.cmd tests`, `python tools/ui_smoke.py build-dev/gen/ui.gen.html` | 4 tests unitaires, la page principale |

@@ -1,4 +1,4 @@
-"""The two bitmap fonts of the KIRC interface, built pixel by pixel.
+"""The two bitmap fonts of the CDX interface (born in KIRC), built pixel by pixel.
 
 KDX draws its windows with two bitmap fonts: a larger one for buttons, labels and titles (capitals 9 px high,
 x-height 7, 2 px stems, letters two pixels apart) and a smaller one for chat transcripts (capitals 8 px, x-height 6,
@@ -6,14 +6,14 @@ letters one pixel apart). Both are rebuilt here as TrueType outlines made of who
 (100 font units per pixel, 14 pixels to the em) every font pixel is exactly one CSS pixel. They are colour fonts (COLR),
 because only those are drawn without the half-pixel blur DirectWrite puts on ordinary outlines:
 
-    KIRC Pixel      interface font
-    KIRC Pixel Log  transcript font
+    CDX Pixel      interface font
+    CDX Pixel Log  transcript font
 
 The letter shapes in font_glyphs.py were read off screenshots of KDX 1.6 (its documentation and a running client).
 What the screenshots do not show (a few capitals, punctuation, accents, the transcript's capitals and digits) is drawn
 here in the same style, and the transcript letters that were not seen are derived from the interface ones.
 
-    python tools/gen_font.py        writes tools/kirc-pixel*.ttf (to look at) and prints the glyph counts
+    python tools/gen_font.py        writes tools/cdx-pixel*.ttf (to look at) and prints the glyph counts
 
 tools/gen_assets.py embeds both in ui/fonts.css. Needs fontTools and brotli (pip install fonttools brotli).
 """
@@ -242,9 +242,9 @@ LOG_ITALIC = italic(LOG)
 
 FACES = {
     # family: (table, pixels between letters, width of a space, columns of padding that the advance ignores)
-    "KIRC Pixel": (UI, 2, 4, 0),
-    "KIRC Pixel Log": (LOG, 1, 7, 0),
-    "KIRC Pixel Log Italic": (LOG_ITALIC, 1, 7, 2),
+    "CDX Pixel": (UI, 2, 4, 0),
+    "CDX Pixel Log": (LOG, 1, 7, 0),
+    "CDX Pixel Log Italic": (LOG_ITALIC, 1, 7, 2),
 }
 
 

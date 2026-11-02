@@ -53,9 +53,9 @@
 
   <!-- Polices -->
   <section class="win"><div class="tb"><span class="tb-title">Typographie</span></div><div class="cb">
-    <div class="faint">KIRC Pixel — interface, 14 px / 16 px</div>
+    <div class="faint">CDX Pixel — interface, 14 px / 16 px</div>
     <div class="sample16">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 .,;:!?()[]{}+-*/=&lt;&gt; éèàùçêôîï « »</div>
-    <div class="faint" style="margin-top:6px">KIRC Pixel Log — console, 14 px / 13 px</div>
+    <div class="faint" style="margin-top:6px">CDX Pixel Log — console, 14 px / 13 px</div>
     <div class="sample13">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz<br>0123456789 .,;:!?()[]{}+-*/=&lt;&gt; éèàùçêôîï « »</div>
     <div class="sample13" style="font-family:var(--font-log-italic)">Italique (Log Italic) : action, arrivées et départs</div>
     <p class="note">Une seule taille (14 px), une seule graisse. Pas de gras, pas de lissage : un pixel de la police est un pixel de l'écran.</p>
@@ -65,7 +65,7 @@
   <section class="win active"><div class="tb">
       <button class="tb-btn tb-l" id="demoClose" aria-label="Fermer"></button>
       <button class="tb-btn tb-m" aria-label="Menu de la fenêtre"></button>
-      <span class="tb-title"><span class="pix" data-ic="kirc" data-size="14" style="vertical-align:-2px;margin-right:6px"></span>Fenêtre active</span>
+      <span class="tb-title"><span class="pix" data-ic="messages" data-size="14" style="vertical-align:-2px;margin-right:6px"></span>Fenêtre active</span>
       <button class="tb-btn tb-r2" id="demoZoom" aria-label="Agrandir"></button>
       <button class="tb-btn tb-r" id="demoMin" aria-label="Enrouler"></button>
     </div>
@@ -101,7 +101,7 @@
   <!-- Champs -->
   <section class="win"><div class="tb"><span class="tb-title">Champs et cases</span></div><div class="cb">
     <div class="form">
-      <label for="f1">Pseudo</label><input id="f1" class="text-input" value="kirc">
+      <label for="f1">Pseudo</label><input id="f1" class="text-input" value="val">
       <label for="f2">Serveur</label><select id="f2" class="btn"><option>irc.exemple.org</option><option>127.0.0.1</option></select>
       <label for="f3">Message</label><textarea id="f3" class="text-input" rows="2">Texte saisi, vert sur noir.</textarea>
       <label for="f4">Désactivé</label><input id="f4" class="text-input" value="inactif" disabled>
@@ -134,7 +134,7 @@
   <section class="win"><div class="tb"><span class="tb-title">Console</span></div><div class="cb">
     <div class="log" style="min-height:230px">
       <div class="ln"><span class="ts">12:01</span><span class="nk" style="--nc:#5cf0ff">alice</span><span class="tx">bonjour tout le monde</span></div>
-      <div class="ln own"><span class="ts">12:01</span><span class="nk">kirc</span><span class="tx">salut alice</span></div>
+      <div class="ln own"><span class="ts">12:01</span><span class="nk">val</span><span class="tx">salut alice</span></div>
       <div class="ln"><span class="ts">12:02</span><span class="nk" style="--nc:#ffcc66">bob</span><span class="tx">regardez https://exemple.org</span></div>
       <div class="ln action">* bob s'étire</div>
       <div class="ln join">+++ carol arrive dans #salon</div>
@@ -143,7 +143,7 @@
       <div class="ln mode">*** alice donne le statut d'opérateur à bob</div>
       <div class="ln notice">-Service- Votre pseudo est protégé</div>
       <div class="ln info">*** Connexion à 127.0.0.1…</div>
-      <div class="ln hl"><span class="nk" style="--nc:#fff">bob</span><span class="tx">kirc : mention (ligne mise en évidence)</span></div>
+      <div class="ln hl"><span class="nk" style="--nc:#fff">bob</span><span class="tx">val : mention (ligne mise en évidence)</span></div>
       <div class="ln kick">*** bob a été expulsé</div>
       <div class="ln error">*** Connexion perdue</div>
     </div>

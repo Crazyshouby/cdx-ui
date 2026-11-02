@@ -3,7 +3,7 @@
     python gen_assets.py                ../fonts.css, ../icons.js
 
 Outputs are committed: the build itself never runs Python.
-  fonts.css               KIRC Pixel and KIRC Pixel Log (tools/gen_font.py) as base64 @font-face
+  fonts.css               CDX Pixel and CDX Pixel Log (tools/gen_font.py) as base64 @font-face
   icons.js                the pixel icons of tools/pixel_icons.py as SVG strings
 """
 import base64

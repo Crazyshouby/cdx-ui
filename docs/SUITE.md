@@ -1,6 +1,6 @@
 # La suite CDX : réglages communs et bus de messages
 
-Les applications de la suite (cdx-shell, cdx-explorer, cdx-browser, cdx-repos, AudioLinker, KIRC) restent des programmes séparés. Elles partagent deux choses, volontairement
+Les applications de la suite (cdx-shell, cdx-explorer, cdx-browser, cdx-repos, AudioLinker, Messages) restent des programmes séparés. Elles partagent deux choses, volontairement
 minimes : un **fichier de réglages** (l'accent) et un **bus de messages** (des tubes nommés). Aucun démon central : si une application ne tourne pas, les autres
 continuent, et ce qui lui était destiné se perd sans bruit (ou la lance, voir §3.5).
 
@@ -21,13 +21,13 @@ Règles :
 - **Écriture atomique** : écrire `suite.json.tmp` puis le renommer (`MoveFileEx` avec remplacement, `File.Move(…, true)`, `fs::rename`). Un lecteur ne voit jamais un fichier à moitié écrit.
 - **Lecture à chaud** : chaque application relit le fichier à l'ouverture, puis surveille sa date de modification et sa taille (sondage toutes les 250 ms : plus simple et
   aussi fiable qu'une notification de dossier, pour un coût nul). Elle applique le nouvel accent sans redémarrer : la suite se recolore en moins d'une seconde.
-- **Dérogation** : une application peut offrir un accent à elle. KIRC garde son réglage « thème » ; il ne suit la suite que lorsqu'il est sur sa valeur par défaut (`cdx`).
+- **Dérogation** : une application peut offrir un accent à elle. Messages garde son réglage « thème » ; il ne suit la suite que lorsqu'il est sur sa valeur par défaut (`cdx`).
 - **Qui écrit** : `cdx-shell.exe --accent <nom>` (et, plus tard, un sélecteur dans le centre rapide). Une application n'écrit jamais autre chose que `accent`.
-- Les réglages propres à chaque application restent chez elle (`%APPDATA%\KIRC`, `%APPDATA%\AudioLinker`, `%LOCALAPPDATA%\CdxShell`).
+- Les réglages propres à chaque application restent chez elle (`%APPDATA%\CDX\Messages`, `%APPDATA%\AudioLinker`, `%LOCALAPPDATA%\CdxShell`).
 
 ## 2. Le bus : un tube par application
 
-Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audiolinker`, `kirc` (et `transfers`, `notes`, `agenda`, `mail`, `pilote`, décrits dans leurs applications).
+Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audiolinker`, `messages` (et `transfers`, `notes`, `agenda`, `mail`, `pilote`, décrits dans leurs applications).
 
 - **Sécurité** : le tube n'est accessible qu'à l'utilisateur courant (descripteur de sécurité : un seul droit, celui du SID de l'utilisateur ; sous .NET `PipeOptions.CurrentUserOnly`),
   les connexions distantes sont refusées (`PIPE_REJECT_REMOTE_CLIENTS`), la première instance est créée avec `FILE_FLAG_FIRST_PIPE_INSTANCE` (un autre processus ne peut pas
@@ -35,7 +35,7 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom
 - **Format** : du JSON, un objet par ligne (`\n`), UTF-8, **64 Ko au plus par ligne** (au-delà, la connexion est coupée).
 
 ```json
-{ "type": "open-url", "from": "kirc", "data": { "url": "https://example.org/" } }
+{ "type": "open-url", "from": "messages", "data": { "url": "https://example.org/" } }
 ```
 
 | Champ | Rôle |
@@ -58,7 +58,7 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom
 |---|---|---|
 | `notify` | `title` (texte, ≤ 80), `text` (texte, ≤ 400), `level` (`info` `warn` `error`, défaut `info`) | une notification : la barre affiche une cloche et le nombre de notifications non vues, le centre rapide les liste (50 au plus, la plus récente en haut) |
 
-Émetteurs : **KIRC** (messages privés et mentions, en plus de la notification de Windows), **cdx-browser** (téléchargement terminé ou échoué), **AudioLinker** (erreurs et avertissements du groupe ; une même ligne n'est pas répétée avant 10 s).
+Émetteurs : **Messages** (messages privés et mentions, en plus de la notification de Windows), **cdx-browser** (téléchargement terminé ou échoué), **AudioLinker** (erreurs et avertissements du groupe ; une même ligne n'est pas répétée avant 10 s).
 
 ### 3.2 `cdx.explorer`
 | `type` | `data` | Effet |
@@ -74,7 +74,7 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom
 | `open-url` | `url` (`http:` ou `https:` seulement, ≤ 2000 ; absent = onglet vide) | ouvre l'adresse dans un nouvel onglet |
 | `open-file` | `path` (chemin absolu d'un fichier qui existe, d'une extension affichable : `.html` `.htm` `.pdf` `.svg` `.png` `.jpg` `.jpeg` `.gif` `.webp` `.bmp` `.txt` `.mp3` `.ogg` `.wav` `.mp4` `.webm`) | ouvre le fichier dans un nouvel onglet (`file:///`) |
 
-Émetteurs : **KIRC** (`open-url` : un lien cliqué s'ouvre dans le navigateur CDX s'il tourne ou s'il est installé, sinon dans celui de Windows), **cdx-explorer** (`open-file` : le double-clic sur un fichier de ces types).
+Émetteurs : **Messages** (`open-url` : un lien cliqué s'ouvre dans le navigateur CDX s'il tourne ou s'il est installé, sinon dans celui de Windows), **cdx-explorer** (`open-file` : le double-clic sur un fichier de ces types).
 
 ### 3.4 `cdx.audiolinker`
 | `type` | `data` | Effet |
@@ -112,7 +112,7 @@ le fait du canal de test `.ctl`, qui n'existe qu'avec `debug.txt`. Un message re
 
 ### 3.5 Lancer la destination absente
 `%APPDATA%\CDXpps.json` donne, pour chaque nom, le chemin de l'exécutable : `{ "browser": "C:\…\cdx-browser.exe" }`. Chaque programme y écrit son propre chemin au démarrage. Un émetteur qui
-veut atteindre une application absente (un lien cliqué dans KIRC, par exemple) lance cet exécutable avec la cible en argument (`cdx-browser.exe <adresse>`) : au démarrage, l'application la traite,
+veut atteindre une application absente (un lien cliqué dans Messages, par exemple) lance cet exécutable avec la cible en argument (`cdx-browser.exe <adresse>`) : au démarrage, l'application la traite,
 et si elle tourne déjà, sa **seconde instance** retransmet l'argument à la première par ce même bus (`open-url`, `open-path`) puis s'arrête. L'émetteur ne lance que les noms de la liste
 des applications (§2), jamais un chemin reçu d'ailleurs.
 

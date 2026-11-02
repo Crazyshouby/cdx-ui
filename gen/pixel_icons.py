@@ -195,7 +195,7 @@ def listing():
     return c.outline()
 
 
-def kirc_app():
+def messages_app():
     """The application icon: a red chat bubble holding a hash sign."""
     c = C()
     c.rect(1, 1, 14, 11, 'R'); c.rect(1, 1, 14, 1, 'O'); c.rect(1, 1, 1, 11, 'O')
@@ -428,7 +428,7 @@ def chip():
 
 ICONS = dict(serveur=server, salon=channel, membres=users, message=bubble, carnet=book, console=terminal,
              connecter=plug, deconnecter=unplug, quitter=door, info=info, reglages=gear, cle=key, absent=moon,
-             journal=journal, kirc=kirc_app, liste=listing, cloche=bell, editer=pencil, supprimer=trash,
+             journal=journal, messages=messages_app, liste=listing, cloche=bell, editer=pencil, supprimer=trash,
              dossier=folder, fichier=sheet, image=picture, disque=drive, pc=computer, wifi=wifi, volume=speaker,
              recherche=magnifier, demarrer=panes, musique=note, video=film, telecharger=download, bouclier=shield,
              horloge=clock, utilisateur=person, palette=palette, apps=apps, maj=refresh, avertissement=warning,
@@ -437,7 +437,7 @@ ICONS = dict(serveur=server, salon=channel, membres=users, message=bubble, carne
 
 # ---- Icônes d'application de la suite (01/11/2026) : une famille ------------------------------------------------------------
 # Chaque application porte son objet, dans les couleurs de l'objet (choix de Valentin du 01/11/2026 : pas le même rouge partout) ; la même lumière
-# que l'icône de KIRC (arête claire en haut et à gauche, ombre en bas et à droite, contour noir). « cdx » est la suite elle-même (barre,
+# que l'icône de Messages (arête claire en haut et à gauche, ombre en bas et à droite, contour noir). « cdx » est la suite elle-même (barre,
 # installeur) et garde le rouge de l'accent. L'Explorateur garde le dossier jaune (« dossier »).
 
 def _card(c, x0, y0, x1, y1, body='R', light='O', dark='r'):

@@ -1,7 +1,7 @@
 # cdx-ui : la charte graphique CDX, source unique
 
-L'apparence KDX (Haxial) de KIRC, extraite pour toutes les applications de la suite : fenêtres sans cadre système, relief éclairé en haut à gauche, polices bitmap,
-icônes pixel, et **seize thèmes : les seize apparences de KDX 1.6, mesurées au pixel** (panneau, boutons, texte, champs, listes, les deux barres de titre), sombres ou claires. Ce dépôt est la **source** ; KIRC, AudioLinker, `cdx-frames` et les applications Windows en consomment une copie
+L'apparence KDX (Haxial) de Messages (ex-KIRC), extraite pour toutes les applications de la suite : fenêtres sans cadre système, relief éclairé en haut à gauche, polices bitmap,
+icônes pixel, et **seize thèmes : les seize apparences de KDX 1.6, mesurées au pixel** (panneau, boutons, texte, champs, listes, les deux barres de titre), sombres ou claires. Ce dépôt est la **source** ; Messages, AudioLinker et les applications Windows en consomment une copie
 vérifiée par empreinte (`dist/`). Les règles sont dans `CHARTE.md`, le plan d'ensemble dans le plan de la suite (phases 0 à 6).
 
 | Fichier | Rôle |
@@ -12,12 +12,12 @@ vérifiée par empreinte (`dist/`). Les règles sont dans `CHARTE.md`, le plan d
 | `kdx-reference/` | la référence : `kdx.json`, les mesures brutes des seize captures de KDX (`gen/kdx_reference.py`), et les découpes de leurs fenêtres |
 | `cdx-ui.css` | composants et jetons (le bloc entre `tokens:begin` et `tokens:end` est généré) ; aucune couleur écrite hors de ce bloc |
 | `themes.css` | la palette complète de chaque thème (généré) ; le rouge est le défaut du `:root` ; les anciens noms (bleu, vert, violet, charbon) sont des alias |
-| `cdx-frame.css`, `cdx-frame.js` | le cadre de fenêtre (barre de titre, poignées, enroulement), dialogue et menu contextuel : **le seul code de cadre de la suite**, copié dans KIRC, AudioLinker et cdx-windows |
-| `cdx-columns.js` | les colonnes redimensionnables des listes à en-têtes (poignée sur chaque bord, largeurs gardées, double-clic : largeurs d'origine) ; les lignes se mettent en grille sur `--cdx-cols` : KIRC (liste des salons), Explorateur, Dépôts |
+| `cdx-frame.css`, `cdx-frame.js` | le cadre de fenêtre (barre de titre, poignées, enroulement), dialogue et menu contextuel : **le seul code de cadre de la suite**, copié dans Messages, AudioLinker et cdx-windows |
+| `cdx-columns.js` | les colonnes redimensionnables des listes à en-têtes (poignée sur chaque bord, largeurs gardées, double-clic : largeurs d'origine) ; les lignes se mettent en grille sur `--cdx-cols` : Messages (liste des salons), Explorateur, Dépôts |
 | `cdx-spell.js` | le correcteur des zones de texte : calque de soulignement sous la textarea, menu de suggestions au clic droit, « Ajouter au dictionnaire » ; l'orthographe est dans l'hôte (contrat `sp.check` / `sp.suggest` / `sp.add` en tête du fichier), la grammaire dans un worker de la page (option `grammar`, contrat en tête du fichier) : cdx-windows (Hunspell + Grammalecte ; Notes, Courrier, Pilote) |
 | `cdx-bridge.js` | le pont vers l'hôte natif : un contrat de fenêtre, trois transports (Tauri, chaînes AudioLinker, WebView2 JSON) |
 | `fonts.css`, `icons.js`, `polices/` | polices pixel (base64) et 50 icônes 16 × 16, dont les dix icônes d'application de la suite, chacune dans les couleurs de son objet (`gen/pixel_icons.py` APPS, 01/11/2026 : explorateur (le dossier), navigateur (globe), depots (classeur), notes, terminal, agenda, courrier, pilote, transferts, cdx ; `gen/gen_app_icons.py` en fait des .ico) ; le rouge des icônes suit l'accent |
-| `generated/cdx-tokens.h`, `generated/tokens.rs` | les jetons pour C++ (AudioLinker) et Rust (`cdx-frames`, KIRC) |
+| `generated/cdx-tokens.h`, `generated/tokens.rs` | les jetons pour C++ (AudioLinker) et Rust (Messages) |
 | `dist/` | ce que les applications embarquent + `MANIFEST.json` (version, empreintes) |
 | `tools/cdx-verify.mjs`, `tools/check-accents.mjs` | le contrôle des copies (copié dans chaque application, à mettre dans sa CI : `cdx-sync.json` donne l'empreinte de chaque copie) et celui de la liste des accents écrite à la main dans plusieurs programmes |
 | `docs/ARCHITECTURE.md`, `docs/COMPAT.md` | le plan des quatre dépôts et leurs règles ; la version de la charte face à celle des applications |
@@ -66,7 +66,7 @@ paires de flèches de défilement, bouton enclenché rempli de la mise en évide
 
 ### Avant (30/10/2026)
 
-Les phases 0 à 4 et 6 sont faites : jetons uniques, contrat de fenêtre et cadre partagés par KIRC, AudioLinker et cdx-windows (Explorateur, navigateur, Dépôts), bus de messages et
+Les phases 0 à 4 et 6 sont faites : jetons uniques, contrat de fenêtre et cadre partagés par Messages, AudioLinker et cdx-windows (Explorateur, navigateur, Dépôts), bus de messages et
 accent commun, lint de la charte dans la CI de chaque application (`tools/charte-lint.mjs` en copie, exceptions justifiées dans l'application), moteur de pictogrammes commun
 (`gen/pixel_engine.py`), colonnes redimensionnables. Vérifié : 16 tests Node, les pages de test (Chrome headless), rapport de dérive à 0 dans les quatre applications.
 

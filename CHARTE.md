@@ -1,6 +1,6 @@
 # Charte graphique CDX-UI
 
-L'interface de KIRC, mise au point pour être indiscernable de celle de KDX (Haxial Software), consignée ici pour
+L'interface de Messages (anciennement KIRC), mise au point pour être indiscernable de celle de KDX (Haxial Software), consignée ici pour
 servir à d'autres projets. Tout ce qui suit est mesuré au pixel sur KDX 1.6 : les **seize apparences** de KDX sont les seize
 thèmes de la charte (`kdx-reference/`, mesures brutes ; `tokens.json`, palette de chaque thème). Les valeurs « finales » sont
 dans `cdx-ui.css` et `themes.css`, la page `exemple.html` montre chaque élément dans chaque thème, et `tools/kdx-compare.py`
@@ -111,9 +111,9 @@ Les **lignes de liste** ne se colorent pas : sélection = un peu plus clair que 
 
 | Police | Usage | Taille / interligne | Particularités |
 |---|---|---|---|
-| **KIRC Pixel** (`--font`) | toute l'interface | 14 px / 16 px | majuscules de 9 px, hauteur d'x de 7 px, espace entre lettres de 2 px |
-| **KIRC Pixel Log** (`--font-log`) | console, saisie sous la console | 14 px / 13 px | majuscules de 8 px, espace de 1 px, mots séparés de 7 px |
-| **KIRC Pixel Log Italic** (`--font-log-italic`) | actions, présence | 14 px / 13 px | version inclinée par lignes ; l'italique est une police à part |
+| **CDX Pixel** (`--font`) | toute l'interface | 14 px / 16 px | majuscules de 9 px, hauteur d'x de 7 px, espace entre lettres de 2 px |
+| **CDX Pixel Log** (`--font-log`) | console, saisie sous la console | 14 px / 13 px | majuscules de 8 px, espace de 1 px, mots séparés de 7 px |
+| **CDX Pixel Log Italic** (`--font-log-italic`) | actions, présence | 14 px / 13 px | version inclinée par lignes ; l'italique est une police à part |
 
 Règles :
 
@@ -233,7 +233,7 @@ gris ; **mise en évidence** fond bleu marine, filet rose ; **erreur et expulsio
    `.win.active` (plusieurs) selon le focus ; un écouteur `focus`/`blur` suffit sur le web.
 4. **Application de bureau (Tauri 2 / WebView2)** : fenêtres sans décoration (`decorations(false)`), glisser par
    la barre de titre (commande native, pas `data-tauri-drag-region`, pour pouvoir aimanter), `additional_browser_args`
-   avec `--disable-lcd-text`. KIRC (`src-tauri/src/app.rs`) montre l'aimantation, l'enroulement, l'agrandissement et
+   avec `--disable-lcd-text`. Messages (`src-tauri/src/app.rs`) montre l'aimantation, l'enroulement, l'agrandissement et
    les onglets par fusion de fenêtres.
 5. Les mises en page propres à l'application (colonnes, volets) vont dans le CSS du projet, pas dans `cdx-ui.css` :
    ce fichier ne contient que des composants.
@@ -245,11 +245,11 @@ Régénérer les ressources : voir `README.md` (polices, icônes, thèmes).
 
 ## 10. Réserves de licence
 
-- **Les formes des lettres de KIRC Pixel et KIRC Pixel Log reproduisent celles des polices de KDX** (relevées sur
-  des captures de KDX 1.6) ; les glyphes manquants ont été dessinés pour KIRC. Elles restent l'œuvre de Haxial :
+- **Les formes des lettres de CDX Pixel et CDX Pixel Log reproduisent celles des polices de KDX** (relevées sur
+  des captures de KDX 1.6) ; les glyphes manquants ont été dessinés pour Messages (alors KIRC). Elles restent l'œuvre de Haxial :
   avant de publier un projet qui les embarque, décider si on les garde ou si l'on redessine une police propre
   (`gen/gen_font.py` en est l'unique source).
-- Les icônes (`pixel_icons.py`), les couleurs et les mesures sont dessinées ou relevées pour KIRC.
+- Les icônes (`pixel_icons.py`), les couleurs et les mesures sont dessinées ou relevées pour Messages.
 - KDX est une marque de Haxial ; aucun lien avec Haxial. Un projet qui adopte cette charte doit le préciser s'il
   parle de CDX.
 

@@ -1,7 +1,7 @@
 """Moteur des pictogrammes pixel (16x16, contour noir, aplats) de la suite CDX : palette et toile.
 
 Chaque pictogramme se dessine avec quelques primitives, se contourne seul et s'exporte en SVG compact (un <path> par couleur).
-Source unique : cdx-ui/gen/pixel_engine.py ; KIRC et AudioLinker en ont une copie (charte-sync) et y ajoutent leurs propres
+Source unique : cdx-ui/gen/pixel_engine.py ; Messages et AudioLinker en ont une copie (charte-sync) et y ajoutent leurs propres
 pictogrammes (pixel_icons.py). svg(accent={}) garde le rouge fixe (AudioLinker) ; par défaut le rouge suit l'accent du thème.
 """
 import math  # noqa: F401  (utilisé par les modules d'icônes qui font « from pixel_engine import * »)

@@ -89,8 +89,8 @@ C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de
 
 <details><summary><code>weight</code> : undefined (exemples)</summary>
 
-- `web/terminal/terminal.css:4` — `@font-face { font-family: 'KIRC Pixel Mono'; font-style: normal; font-weight: 100 900; src: url(/terminal/fonts/kirc-pixel-mono.ttf) format(`
-- `web/terminal/terminal.css:5` — `@font-face { font-family: 'KIRC Pixel Mono'; font-style: italic; font-weight: 100 900; src: url(/terminal/fonts/kirc-pixel-mono-italic.ttf) `
+- `web/terminal/terminal.css:4` — `@font-face { font-family: 'CDX Pixel Mono'; font-style: normal; font-weight: 100 900; src: url(/terminal/fonts/cdx-pixel-mono.ttf) format(`
+- `web/terminal/terminal.css:5` — `@font-face { font-family: 'CDX Pixel Mono'; font-style: italic; font-weight: 100 900; src: url(/terminal/fonts/cdx-pixel-mono-italic.ttf) `
 - `web/terminal/vendor/addon-webgl.js:1` — `!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"obje`
 
 </details>

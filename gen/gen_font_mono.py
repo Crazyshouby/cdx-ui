@@ -1,11 +1,11 @@
-"""Variante à chasse fixe de KIRC Pixel Log, pour les terminaux (une grille de cases égales n'accepte pas une police proportionnelle).
+"""Variante à chasse fixe de CDX Pixel Log, pour les terminaux (une grille de cases égales n'accepte pas une police proportionnelle).
 
-    python gen/gen_font_mono.py ../polices        écrit kirc-pixel-mono.ttf et kirc-pixel-mono-italic.ttf
+    python gen/gen_font_mono.py ../polices        écrit cdx-pixel-mono.ttf et cdx-pixel-mono-italic.ttf
 
-Chaque glyphe de la police console (KIRC Pixel Log) est posé dans une case de 6 colonnes, centré, avec 1 pixel d'espacement : 7 pixels d'avance, comme la
+Chaque glyphe de la police console (CDX Pixel Log) est posé dans une case de 6 colonnes, centré, avec 1 pixel d'espacement : 7 pixels d'avance, comme la
 plupart des lettres de la police d'origine (6 colonnes + 1). Les glyphes plus larges que la case (M, W, %, tirets longs, points de suspension, œ, æ, Æ) sont
 redessinés à 6 colonnes ci-dessous. Même moteur de construction que gen_font.py (couches COLR : un pixel de police = un pixel d'écran à 14 px).
-Les formes de lettres sont celles de KIRC Pixel Log : voir la note sur leur origine dans CHARTE.md avant de publier.
+Les formes de lettres sont celles de CDX Pixel Log : voir la note sur leur origine dans CHARTE.md avant de publier.
 
 Volontairement hors de gen_font.FACES : gen_assets.py y prend les polices à embarquer dans fonts.css, et la charte distribuée ne doit pas changer pour une
 police que seuls les terminaux utilisent.
@@ -66,8 +66,8 @@ def slanted(table):
 MONO_ITALIC = slanted(MONO)
 
 # (table, pixels d'espacement, largeur d'une espace, colonnes de marge que l'avance ignore)
-G.FACES["KIRC Pixel Mono"] = (MONO, SPACING, CELL + SPACING, 0)
-G.FACES["KIRC Pixel Mono Italic"] = (MONO_ITALIC, SPACING, CELL + SPACING, 1)
+G.FACES["CDX Pixel Mono"] = (MONO, SPACING, CELL + SPACING, 0)
+G.FACES["CDX Pixel Mono Italic"] = (MONO_ITALIC, SPACING, CELL + SPACING, 1)
 
 
 def mono_font(family):
@@ -82,6 +82,6 @@ def mono_font(family):
 if __name__ == "__main__":
     out_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent / "polices"
     out_dir.mkdir(exist_ok=True)
-    for family, name in (("KIRC Pixel Mono", "kirc-pixel-mono.ttf"), ("KIRC Pixel Mono Italic", "kirc-pixel-mono-italic.ttf")):
+    for family, name in (("CDX Pixel Mono", "cdx-pixel-mono.ttf"), ("CDX Pixel Mono Italic", "cdx-pixel-mono-italic.ttf")):
         mono_font(family).save(out_dir / name)
         print(family, len(G.FACES[family][0]), "glyphes ->", out_dir / name)

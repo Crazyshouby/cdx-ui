@@ -16,7 +16,7 @@ static void WriteFileText(const std::wstring& path, const std::string& text) {
 int main() {
     using namespace cdx;
     // ---- Compose
-    Check("Compose : enveloppe type/from/data", bus::Compose("open-url", "kirc", "{\"url\":\"https://example.org/\"}") == "{\"type\":\"open-url\",\"from\":\"kirc\",\"data\":{\"url\":\"https://example.org/\"}}");
+    Check("Compose : enveloppe type/from/data", bus::Compose("open-url", "messages", "{\"url\":\"https://example.org/\"}") == "{\"type\":\"open-url\",\"from\":\"messages\",\"data\":{\"url\":\"https://example.org/\"}}");
     Check("Compose : data absent -> {}", bus::Compose("audio.get", "shell") == "{\"type\":\"audio.get\",\"from\":\"shell\",\"data\":{}}");
     Check("Compose : guillemets et retours à la ligne échappés dans le type", bus::Compose("a\"b\n", "x").find('\n') == std::string::npos);
     Check("IsApp : liste blanche des noms", bus::IsApp("browser") && bus::IsApp("audiolinker") && !bus::IsApp("..\\evil") && !bus::IsApp(""));
@@ -67,12 +67,12 @@ int main() {
         }
     });
     WaitForSingleObject(ready, 2000); Sleep(100);
-    bool sent = bus::Send("browser", "open-url", "{\"url\":\"https://example.org/\"}", "kirc");
+    bool sent = bus::Send("browser", "open-url", "{\"url\":\"https://example.org/\"}", "messages");
     th.join();
     CloseHandle(srv);
     Check("Send : message écrit", sent);
     if (got.size() < 200) printf("      recu : [%s] (%zu octets)\n", got.c_str(), got.size());
-    Check("Send : le serveur reçoit exactement une ligne d'enveloppe", got == "{\"type\":\"open-url\",\"from\":\"kirc\",\"data\":{\"url\":\"https://example.org/\"}}\n");
+    Check("Send : le serveur reçoit exactement une ligne d'enveloppe", got == "{\"type\":\"open-url\",\"from\":\"messages\",\"data\":{\"url\":\"https://example.org/\"}}\n");
     std::string huge(kBusMaxLine, 'x');
     Check("Send : ligne de plus de 64 Ko refusée", !bus::Send("browser", "open-url", "{\"u\":\"" + huge + "\"}"));
 

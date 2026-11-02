@@ -1,6 +1,6 @@
-"""L'icône de KIRC (le pictogramme « kirc » de pixel_icons.py, 16 x 16 agrandi 64 fois) en PNG RGBA.
+"""L'icône de Messages (le pictogramme « messages » de pixel_icons.py, 16 x 16 agrandi 64 fois) en PNG RGBA.
 
-    python gen/gen_kirc_icon.py <fichier.png>      (KIRC : src-tauri/icons/source.png, entrée de `tauri icon`)
+    python gen/gen_messages_icon.py <fichier.png>      (cdx-messages : src-tauri/icons/source.png, entrée de `tauri icon`)
 
 Le fichier de sortie est versionné dans l'application ; ce générateur n'est relancé que si le dessin change.
 """
@@ -39,5 +39,5 @@ def png(path, pixels, scale):
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         sys.exit(__doc__)
-    png(sys.argv[1], pixel_icons.kirc_app().p, 64)
+    png(sys.argv[1], pixel_icons.messages_app().p, 64)
     print('écrit :', sys.argv[1])

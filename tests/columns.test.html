@@ -50,7 +50,7 @@ ptr(handle(1), 'pointerdown', 0); handle(1).dispatchEvent(new MouseEvent('dblcli
 ok('un double-clic sur une poignée rend les largeurs d\'origine', JSON.stringify(W()) === '[370,170,170,90]', JSON.stringify(W()));
 ok('... et les garde aussi', JSON.parse(localStorage.getItem('cdx.cols.t'))[1] === 170);
 
-// une colonne souple en dernier (liste des salons de KIRC) : tirer la dernière poignée aux dépens de la colonne « 1fr »
+// une colonne souple en dernier (liste des salons de Messages) : tirer la dernière poignée aux dépens de la colonne « 1fr »
 document.body.insertAdjacentHTML('beforeend', '<div id="box3" style="width:600px"><div class="lhead" id="head3" style="padding-right:0"><button class="lh">Salon</button><button class="lh">Membres</button><span class="lh static">Sujet</span></div></div>');
 const head3 = document.getElementById('head3'); try { localStorage.removeItem('cdx.cols.k'); } catch { }
 CdxColumns.init({ head: head3, cols: [180, 80, '1fr'], key: 'k' });

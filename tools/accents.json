@@ -1,12 +1,12 @@
 {
-  "_note": "Les fichiers qui écrivent à la main la liste des accents. Les chemins commencent par cdx-ui/ (ce dépôt) ou par le nom d'un dépôt voisin. alias : le nom que le fichier donne à un accent (KIRC appelle « cdx » le rouge).",
+  "_note": "Les fichiers qui écrivent à la main la liste des accents. Les chemins commencent par cdx-ui/ (ce dépôt) ou par le nom d'un dépôt voisin. alias : le nom que le fichier donne à un accent (Messages appelle « cdx » le rouge).",
   "files": [
     { "path": "cdx-ui/bus/cpp/cdx_bus.h" },
     { "path": "cdx-ui/bus/rust/cdx_bus.rs" },
     { "path": "cdx-windows/src/Cdx.Host/Suite.cs" },
     { "path": "cdx-windows/lancer.ps1" },
-    { "path": "KIRC/src-tauri/src/config.rs", "alias": { "rouge": "cdx" } },
-    { "path": "KIRC/ui/index.html", "alias": { "rouge": "cdx" } },
+    { "path": "cdx-messages/src-tauri/src/config.rs", "alias": { "rouge": "cdx" } },
+    { "path": "cdx-messages/ui/index.html", "alias": { "rouge": "cdx" } },
     { "path": "cdx-windows/web/cdx/host.js" },
     { "path": "cdx-ui/exemple.html" }
   ]

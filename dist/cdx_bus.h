@@ -114,7 +114,7 @@ private:
 namespace bus {
 
 inline bool IsApp(const std::string& s) {
-    return s == "shell" || s == "explorer" || s == "browser" || s == "audiolinker" || s == "kirc";
+    return s == "shell" || s == "explorer" || s == "browser" || s == "audiolinker" || s == "messages";
 }
 
 inline std::string Escape(const std::string& s) {
@@ -133,7 +133,7 @@ inline std::string Compose(const std::string& type, const std::string& from, con
 }
 
 // Un message « tire et oublie » vers \\.\pipe\cdx.<app>. False : l'application n'écoute pas (ou nom inconnu, ou ligne trop longue).
-inline bool Send(const std::string& app, const std::string& type, const std::string& dataJson = "{}", const std::string& from = "kirc") {
+inline bool Send(const std::string& app, const std::string& type, const std::string& dataJson = "{}", const std::string& from = "messages") {
     if (!IsApp(app)) return false;
     std::string line = Compose(type, from, dataJson) + "\n";
     if (line.size() > static_cast<size_t>(kBusMaxLine)) return false;
