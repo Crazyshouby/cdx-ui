@@ -1,6 +1,6 @@
 # Rapport de dérive à la charte CDX-UI
 
-Version de la charte : **2.1.0** · généré le 2026-11-02 par `node tools/drift-report.mjs`.
+Version de la charte : **2.2.0** · généré le 2026-11-02 par `node tools/drift-report.mjs`.
 Les comptes sont des **déclarations** (lignes de CSS / HTML / JS), pas des éléments affichés. Une copie identique à `dist/` n'est pas recomptée (elle se contrôle à la source) ; une exception propre à une application est déclarée, avec sa raison, dans `tools/apps/<application>.allow` et comptée à part (« tolérés »).
 Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même contrôle avec 18 exceptions justifiées dans `charte-lint.allow`.
 
@@ -118,7 +118,7 @@ C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de
 | `web/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34173 / 34173 |
 | `web/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
 | `web/cdx/fonts.css` | `fonts.css` | identique | 15363 / 15363 |
-| `web/cdx/icons.js` | `icons.js` | identique | 62712 / 62712 |
+| `web/cdx/icons.js` | `icons.js` | identique | 80689 / 80689 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
 | `web/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4439 / 4439 |
 | `web/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11698 / 11698 |
@@ -168,7 +168,7 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 | `ui/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34173 / 34173 |
 | `ui/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
 | `ui/cdx/fonts.css` | `fonts.css` | identique | 15363 / 15363 |
-| `ui/cdx/icons.js` | `icons.js` | identique | 62712 / 62712 |
+| `ui/cdx/icons.js` | `icons.js` | identique | 80689 / 80689 |
 | `src-tauri/src/cdx_bus.rs` | `cdx_bus.rs` | identique | 12397 / 12397 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
 | `ui/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4439 / 4439 |

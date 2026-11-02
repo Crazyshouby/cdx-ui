@@ -1,6 +1,6 @@
 {
   "name": "cdx-ui",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "description": "La charte graphique CDX-UI : jetons, composants, pont et cadre de fenêtre, outils de contrôle.",
   "type": "module",

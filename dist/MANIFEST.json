@@ -1,5 +1,5 @@
 {
-  "cdxUi": "2.1.0",
+  "cdxUi": "2.2.0",
   "files": {
     "cdx-ui.css": {
       "sha256": "03848b11a5c7c932349a2274c2dcc7e7ececce6414a5086661f16d0a8111078e",
@@ -18,11 +18,11 @@
       "bytes": 15363
     },
     "icons.js": {
-      "sha256": "c9b559516e1deaab5e095be385ab49056858f77f584543ff928da0f016c39371",
-      "bytes": 62712
+      "sha256": "6a8d0bb931f49c74fffecf0f995e38ac3531f43327e9f11ed16c5047124f7b0b",
+      "bytes": 80689
     },
     "cdx-bridge.js": {
-      "sha256": "1a61fb573c23562427321170e3e8c462536470c77884b246823b091c6bc2aa7f",
+      "sha256": "c2bc0dcfcc40054fc4ae7879203de6ffae1d2bf1b01f53da0914a7dcb4a91d79",
       "bytes": 4439
     },
     "cdx-frame.js": {

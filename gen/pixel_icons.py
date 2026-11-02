@@ -558,5 +558,152 @@ APPS = dict(explorateur=folder, navigateur=app_browser, depots=app_repos, notes=
 ICONS.update(APPS)
 
 
+# ---- Icônes des applications tierces de la zone de notification (02/11/2026) ------------------------------------------------
+# Demande de Valentin : la barre CDX montre les icônes des autres programmes (Discord, NVIDIA, AMD…) avec nos propres pictogrammes
+# pixel, rendus en un seul ton dans la case de l'heure. Dessinées ici en couleurs d'objet (lisibles aussi en couleur) ; la barre
+# recolore tout ce qui n'est pas le contour noir. Une forme pleine et simple : à 16 px et en un ton, le détail ne se voit pas.
+
+def _pat(rows, dx=0, dy=0):
+    c = C(); c.pat(dx, dy, rows); return c.outline()
+
+
+def tray_discord():
+    """Discord : le visage de manette, deux yeux en creux."""
+    return _pat(['....BBBBBBBB....', '...BBBBBBBBBB...', '..BBBBBBBBBBBB..', '..BBBBBBBBBBBB..', '..BB..BBBB..BB..', '..BB..BBBB..BB..',
+                 '..BBBBBBBBBBBB..', '..BBBBBBBBBBBB..', '..BBBBBBBBBBBB..', '.BBBB......BBBB.', '.BB..........BB.'], 0, 2)
+
+
+def tray_steam():
+    """Steam : le piston, un anneau et son bras."""
+    return _pat(['........wwww....', '.......wwwwww...', '......ww....ww..', '......w......w..', '......ww....ww..', '.......wwwwww...',
+                 '......www.......', '.....www........', '...wwww.........', '..ww.ww.........', '..ww............', '...ww...........'], 0, 2)
+
+
+def tray_nvidia():
+    """NVIDIA : l'œil vert."""
+    return _pat(['.....LLLLLL.....', '...LLL....LLL...', '.LLL...LL...LLL.', 'LL....LLLL....LL', 'LL....LLLL....LL', '.LLL...LL...LLL.',
+                 '...LLL....LLL...', '.....LLLLLL.....'], 0, 4)
+
+
+def tray_amd():
+    """AMD : le carré à l'angle coupé et sa flèche."""
+    return _pat(['..EEEEEEEEEEEE..', '...EEEEEEEEEEE..', '....EEEEEEEEEE..', '.....EE.....EE..', '......E.....EE..', '............EE..',
+                 '..E.........EE..', '..EE........EE..', '..EEE.......EE..', '..EEEEEEEEEEEE..', '..EEEEEEEEEEEE..'], 0, 2)
+
+
+def tray_localsend():
+    """LocalSend : l'avion en papier."""
+    return _pat(['..............BB', '............BBBB', '..........BBBBB.', '........BBBBBB..', '......BBBBBBB...', '....BBBBBBBB....',
+                 '..BBBBBBBBB.....', 'BBBBBBBBBB......', '......BBB.......', '......BBB.......', '......BB........', '......B.........'], 0, 2)
+
+
+def tray_tailscale():
+    """Tailscale : la grille de neuf points."""
+    return _pat(['.dd...dd...dd...', '.dd...dd...dd...', '................', '.ww...ww...ww...', '.ww...ww...ww...', '................',
+                 '.ww...ww...ww...', '.ww...ww...ww...'], 1, 3)
+
+
+def tray_obs():
+    """OBS : l'anneau et ses trois pales."""
+    c = C()
+    _ring(c, 7.5, 7.5, 7.2, 5.6, 'D')
+    for ax, ay in ((7, 4), (4, 10), (11, 10)):
+        c.rect(ax, ay, ax + 1, ay + 1, 'w')
+    c.set(8, 6, 'w'); c.set(6, 9, 'w'); c.set(10, 9, 'w')
+    return c.outline()
+
+
+def tray_whatsapp():
+    """WhatsApp : la bulle verte et le combiné en creux."""
+    return _pat(['....LLLLLLLL....', '..LLLLLLLLLLLL..', '.LLLLLLLLLLLLLL.', '.LLLL..LLLLLLLL.', 'LLLL...LLLLLLLLL', 'LLLLL...LLLLLLLL',
+                 'LLLLLL...LLLLLLL', 'LLLLLLL...LLLLLL', 'LLLLLLLL...LLLLL', '.LLLLLLLL..LLLL.', '.LLLLLLLLLLLLLL.', '..L.LLLLLLLLLL..',
+                 '.LL..LLLLLLLL...', 'LL..............'], 0, 1)
+
+
+def tray_vlc():
+    """VLC : le cône de chantier."""
+    return _pat(['.......OO.......', '......OOOO......', '......OOOO......', '.....OOOOOO.....', '.....wwwwww.....', '.....wwwwww.....',
+                 '....OOOOOOOO....', '....OOOOOOOO....', '...wwwwwwwwww...', '...wwwwwwwwww...', '..OOOOOOOOOOOO..', '.OOOOOOOOOOOOOO.',
+                 'OOOOOOOOOOOOOOOO'], 0, 1)
+
+
+def tray_epic():
+    """Epic Games : l'écusson et son E."""
+    return _pat(['...wwwwwwwwww...', '...w........w...', '...w.wwwwww.w...', '...w.ww.....w...', '...w.ww.....w...', '...w.wwwww..w...',
+                 '...w.ww.....w...', '...w.ww.....w...', '...w.wwwwww.w...', '...w........w...', '....w......w....', '.....w....w.....',
+                 '......wwww......'], 0, 1)
+
+
+def tray_battlenet():
+    """Battle.net : l'éclair."""
+    return _pat(['.........BBB....', '........BBB.....', '.......BBB......', '......BBB.......', '.....BBBBBBB....', '....BBBBBBB.....',
+                 '.......BBB......', '......BBB.......', '.....BBB........', '....BBB.........'], 0, 3)
+
+
+def tray_temperature():
+    """Core Temp, HWiNFO : le thermomètre."""
+    return _pat(['.......ww.......', '......w..w......', '......w..w......', '......wEEw......', '......wEEw......', '......wEEw......',
+                 '......wEEw......', '......wEEw......', '.....wEEEEw.....', '....wEEEEEEw....', '....wEEEEEEw....', '....wEEEEEEw....',
+                 '.....wEEEEw.....', '......wwww......'], 0, 1)
+
+
+def tray_telephone():
+    """Mobile connecté (Phone Link) : le combiné."""
+    return _pat(['..gg............', '.gggg...........', '.gggg...........', '..ggg...........', '...ggg..........', '....ggg.........',
+                 '.....ggg........', '......ggg.......', '.......gggg..gg.', '........gggggggg', '.........gggggg.', '..........gggg..'], 0, 2)
+
+
+def tray_camera():
+    """Webcam (Iriun, DroidCam) : l'objectif sur son pied."""
+    return _pat(['....gggggggg....', '..gggggggggggg..', '.ggggg....ggggg.', '.ggg..gggg..ggg.', 'gggg.gg..gg.gggg', 'ggg..g....g..ggg',
+                 'ggg..g....g..ggg', 'gggg.gg..gg.gggg', '.ggg..gggg..ggg.', '.ggggg....ggggg.', '..gggggggggggg..', '......gggg......',
+                 '....gggggggg....'], 0, 2)
+
+
+def tray_adobe():
+    """Creative Cloud : le A."""
+    return _pat(['......EEEE......', '.....EEEEEE.....', '.....EE..EE.....', '....EEE..EEE....', '....EE....EE....', '...EEE....EEE...',
+                 '...EEEEEEEEEE...', '..EEEEEEEEEEEE..', '..EEE......EEE..', '.EEE........EEE.', '.EE..........EE.', 'EEE..........EEE'], 0, 2)
+
+
+def tray_medal():
+    """Medal : la médaille et son ruban."""
+    return _pat(['...BB......BB...', '....BB....BB....', '.....BB..BB.....', '......BBBB......', '.....YYYYYY.....', '....YYYYYYYY....',
+                 '...YYYYYYYYYY...', '...YYYY..YYYY...', '...YYYY..YYYY...', '...YYYYYYYYYY...', '....YYYYYYYY....', '.....YYYYYY.....'], 0, 2)
+
+
+def tray_ecran_distant():
+    """AnyDesk, TeamViewer, Barrier : l'écran et le curseur."""
+    return _pat(['gggggggggggggggg', 'g..............g', 'g..............g', 'g.....ww.......g', 'g.....www......g', 'g.....wwww.....g',
+                 'g.....wwwww....g', 'g.....www......g', 'g.....w.ww.....g', 'gggggggggggggggg', '.......gg.......', '.....gggggg.....'], 0, 2)
+
+
+def tray_ia():
+    """LM Studio et les assistants : l'étincelle à quatre pointes."""
+    return _pat(['.......PP.......', '.......PP.......', '......PPPP......', '......PPPP......', '.....PPPPPP.....', 'PPPPPPPPPPPPPPPP',
+                 'PPPPPPPPPPPPPPPP', '.....PPPPPP.....', '......PPPP......', '......PPPP......', '.......PP.......', '.......PP.......'], 0, 2)
+
+
+def tray_tennis():
+    """Tennis (l'agent local) : la raquette et la balle."""
+    return _pat(['......LLLL......', '.....L....L.....', '....L..L...L....', '....L.L.L..L....', '....L..L...L....', '.....L....L.....',
+                 '......LLLL......', '.......LL.......', '.......LL.......', '.......LL.......', '......LL........', '.....LL....YY...',
+                 '....LL.....YY...'], 0, 1)
+
+
+def tray_appli():
+    """Toute autre application : une petite fenêtre."""
+    return _pat(['.gggggggggggggg.', '.gDDDDDDDDDDDDg.', '.gggggggggggggg.', '.g............g.', '.g............g.', '.g............g.',
+                 '.g............g.', '.g............g.', '.g............g.', '.g............g.', '.gggggggggggggg.'], 0, 2)
+
+
+TRAY = {'discord': tray_discord, 'steam': tray_steam, 'nvidia': tray_nvidia, 'amd': tray_amd, 'localsend': tray_localsend,
+        'tailscale': tray_tailscale, 'obs': tray_obs, 'whatsapp': tray_whatsapp, 'vlc': tray_vlc, 'epic': tray_epic,
+        'battlenet': tray_battlenet, 'temperature': tray_temperature, 'telephone': tray_telephone, 'camera': tray_camera,
+        'adobe': tray_adobe, 'medal': tray_medal, 'distant': tray_ecran_distant, 'ia': tray_ia, 'tennis': tray_tennis,
+        'appli': tray_appli}
+ICONS.update(TRAY)
+
+
 def all_svgs():
     return {name: draw().svg() for name, draw in ICONS.items()}
