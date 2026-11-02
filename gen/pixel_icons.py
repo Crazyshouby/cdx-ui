@@ -558,150 +558,441 @@ APPS = dict(explorateur=folder, navigateur=app_browser, depots=app_repos, notes=
 ICONS.update(APPS)
 
 
-# ---- Icônes des applications tierces de la zone de notification (02/11/2026) ------------------------------------------------
-# Demande de Valentin : la barre CDX montre les icônes des autres programmes (Discord, NVIDIA, AMD…) avec nos propres pictogrammes
-# pixel, rendus en un seul ton dans la case de l'heure. Dessinées ici en couleurs d'objet (lisibles aussi en couleur) ; la barre
-# recolore tout ce qui n'est pas le contour noir. Une forme pleine et simple : à 16 px et en un ton, le détail ne se voit pas.
+# ---- Icônes de la zone de notification, en 1 bit (02/11/2026, deuxième version) -----------------------------------------------
+# La barre CDX les rend en un seul ton (la couleur du texte de la case de l'heure) : elles sont dessinées directement en 1 bit, une seule
+# couleur ('w'), et tout détail est un CREUX dans la forme (une différence de couleur disparaîtrait). Formes pleines, environ 13 px de côté,
+# centrées ; reprises des vrais logos, simplifiées jusqu'à rester lisibles à 16 px.
 
-def _pat(rows, dx=0, dy=0):
-    c = C(); c.pat(dx, dy, rows); return c.outline()
+def _g(rows, dy=0):
+    """Un pictogramme 1 bit depuis un dessin : '#' plein, '.' vide."""
+    c = C()
+    for y, row in enumerate(rows):
+        for x, ch in enumerate(row):
+            if ch == '#':
+                c.set(x, y + dy, 'w')
+    return c.outline()
+
+
+def _disc(c, cx, cy, r, col='w'):
+    for y in range(16):
+        for x in range(16):
+            if (x - cx) ** 2 + (y - cy) ** 2 <= r * r:
+                if col is None:
+                    c.p.pop((x, y), None)
+                else:
+                    c.set(x, y, col)
+
+
+def _anneau(c, cx, cy, r_out, r_in, col='w'):
+    for y in range(16):
+        for x in range(16):
+            d = (x - cx) ** 2 + (y - cy) ** 2
+            if r_in * r_in < d <= r_out * r_out:
+                if col is None:
+                    c.p.pop((x, y), None)
+                else:
+                    c.set(x, y, col)
 
 
 def tray_discord():
-    """Discord : le visage de manette, deux yeux en creux."""
-    return _pat(['....BBBBBBBB....', '...BBBBBBBBBB...', '..BBBBBBBBBBBB..', '..BBBBBBBBBBBB..', '..BB..BBBB..BB..', '..BB..BBBB..BB..',
-                 '..BBBBBBBBBBBB..', '..BBBBBBBBBBBB..', '..BBBBBBBBBBBB..', '.BBBB......BBBB.', '.BB..........BB.'], 0, 2)
+    """Discord : le visage de manette, yeux et bouche en creux."""
+    return _g(['................',
+               '................',
+               '...###....###...',
+               '..############..',
+               '.##############.',
+               '.##############.',
+               '.###..####..###.',
+               '.###..####..###.',
+               '.###..####..###.',
+               '################',
+               '################',
+               '.#####....#####.',
+               '..###......###..',
+               '...#........#...'])
 
 
 def tray_steam():
-    """Steam : le piston, un anneau et son bras."""
-    return _pat(['........wwww....', '.......wwwwww...', '......ww....ww..', '......w......w..', '......ww....ww..', '.......wwwwww...',
-                 '......www.......', '.....www........', '...wwww.........', '..ww.ww.........', '..ww............', '...ww...........'], 0, 2)
+    """Steam : le piston, grand anneau en haut à droite, petit disque en bas à gauche, le bras entre les deux."""
+    c = C()
+    _anneau(c, 10, 5.5, 4.3, 2.4)
+    _disc(c, 10, 5.5, 1.2)
+    _disc(c, 4.5, 11, 2.8)
+    _disc(c, 4.5, 11, 1.0, None)
+    c.line(6, 9, 8, 7, 'w'); c.line(6, 10, 8, 8, 'w'); c.line(7, 9, 9, 7, 'w')
+    return c.outline()
 
 
 def tray_nvidia():
-    """NVIDIA : l'œil vert."""
-    return _pat(['.....LLLLLL.....', '...LLL....LLL...', '.LLL...LL...LLL.', 'LL....LLLL....LL', 'LL....LLLL....LL', '.LLL...LL...LLL.',
-                 '...LLL....LLL...', '.....LLLLLL.....'], 0, 4)
+    """NVIDIA : l'œil, contour épais et pupille."""
+    return _g(['....########....',
+               '..###......###..',
+               '.##....##....##.',
+               '##....####....##',
+               '##....####....##',
+               '.##....##....##.',
+               '..###......###..',
+               '....########....'], 4)
 
 
 def tray_amd():
-    """AMD : le carré à l'angle coupé et sa flèche."""
-    return _pat(['..EEEEEEEEEEEE..', '...EEEEEEEEEEE..', '....EEEEEEEEEE..', '.....EE.....EE..', '......E.....EE..', '............EE..',
-                 '..E.........EE..', '..EE........EE..', '..EEE.......EE..', '..EEEEEEEEEEEE..', '..EEEEEEEEEEEE..'], 0, 2)
+    """AMD : la flèche, une équerre en haut et à droite, la pièce à l'angle coupé en bas à gauche."""
+    return _g(['................',
+               '................',
+               '..############..',
+               '...###########..',
+               '....##########..',
+               '...........###..',
+               '...........###..',
+               '...........###..',
+               '..####.....###..',
+               '..#####....###..',
+               '..######...###..',
+               '..######...###..',
+               '..######...###..',
+               '..######...###..'])
 
 
 def tray_localsend():
-    """LocalSend : l'avion en papier."""
-    return _pat(['..............BB', '............BBBB', '..........BBBBB.', '........BBBBBB..', '......BBBBBBB...', '....BBBBBBBB....',
-                 '..BBBBBBBBB.....', 'BBBBBBBBBB......', '......BBB.......', '......BBB.......', '......BB........', '......B.........'], 0, 2)
+    """LocalSend : le disque central dans un anneau en pointillés."""
+    c = C()
+    _disc(c, 7.5, 7.5, 3.2)
+    for y in range(16):
+        for x in range(16):
+            d = math.hypot(x - 7.5, y - 7.5)
+            a = (math.degrees(math.atan2(y - 7.5, x - 7.5)) + 360 + 22.5) % 45
+            if 5.6 < d <= 7.4 and a < 30:
+                c.set(x, y, 'w')
+    return c.outline()
 
 
 def tray_tailscale():
-    """Tailscale : la grille de neuf points."""
-    return _pat(['.dd...dd...dd...', '.dd...dd...dd...', '................', '.ww...ww...ww...', '.ww...ww...ww...', '................',
-                 '.ww...ww...ww...', '.ww...ww...ww...'], 1, 3)
+    """Tailscale : la grille de neuf points ; le T en gros points, les autres en petits."""
+    return _g(['................',
+               '.###..###..###..',
+               '.###..###..###..',
+               '.###..###..###..',
+               '................',
+               '................',
+               '..#...###...#...',
+               '......###.......',
+               '......###.......',
+               '................',
+               '................',
+               '..#...###...#...',
+               '......###.......',
+               '......###.......'], 1)
 
 
 def tray_obs():
     """OBS : l'anneau et ses trois pales."""
     c = C()
-    _ring(c, 7.5, 7.5, 7.2, 5.6, 'D')
-    for ax, ay in ((7, 4), (4, 10), (11, 10)):
-        c.rect(ax, ay, ax + 1, ay + 1, 'w')
-    c.set(8, 6, 'w'); c.set(6, 9, 'w'); c.set(10, 9, 'w')
+    _anneau(c, 7.5, 7.5, 7.4, 6.0)
+    for a in (-90, 30, 150):
+        x, y = 7.5 + 3.0 * math.cos(math.radians(a)), 7.5 + 3.0 * math.sin(math.radians(a))
+        _disc(c, x, y, 1.9)
     return c.outline()
 
 
 def tray_whatsapp():
-    """WhatsApp : la bulle verte et le combiné en creux."""
-    return _pat(['....LLLLLLLL....', '..LLLLLLLLLLLL..', '.LLLLLLLLLLLLLL.', '.LLLL..LLLLLLLL.', 'LLLL...LLLLLLLLL', 'LLLLL...LLLLLLLL',
-                 'LLLLLL...LLLLLLL', 'LLLLLLL...LLLLLL', 'LLLLLLLL...LLLLL', '.LLLLLLLL..LLLL.', '.LLLLLLLLLLLLLL.', '..L.LLLLLLLLLL..',
-                 '.LL..LLLLLLLL...', 'LL..............'], 0, 1)
+    """WhatsApp : la bulle ronde en anneau, sa pointe en bas à gauche, le combiné au milieu."""
+    c = C()
+    _anneau(c, 8, 7.5, 7.0, 5.3)
+    for x, y in ((1, 13), (2, 13), (1, 14), (2, 12), (3, 12)):
+        c.set(x, y, 'w')
+    for x, y in ((5, 4), (6, 4), (5, 5), (6, 5), (5, 6), (5, 7), (6, 7), (6, 8), (7, 8), (7, 9), (8, 9), (8, 10), (9, 10), (10, 10), (10, 9), (11, 9), (11, 10)):
+        c.set(x, y, 'w')
+    return c.outline()
 
 
 def tray_vlc():
-    """VLC : le cône de chantier."""
-    return _pat(['.......OO.......', '......OOOO......', '......OOOO......', '.....OOOOOO.....', '.....wwwwww.....', '.....wwwwww.....',
-                 '....OOOOOOOO....', '....OOOOOOOO....', '...wwwwwwwwww...', '...wwwwwwwwww...', '..OOOOOOOOOOOO..', '.OOOOOOOOOOOOOO.',
-                 'OOOOOOOOOOOOOOOO'], 0, 1)
+    """VLC : le cône de chantier, ses bandes en creux."""
+    return _g(['.......##.......',
+               '......####......',
+               '......####......',
+               '................',
+               '.....######.....',
+               '.....######.....',
+               '................',
+               '....########....',
+               '....########....',
+               '...##########...',
+               '................',
+               '..############..',
+               '.##############.'], 2)
 
 
 def tray_epic():
-    """Epic Games : l'écusson et son E."""
-    return _pat(['...wwwwwwwwww...', '...w........w...', '...w.wwwwww.w...', '...w.ww.....w...', '...w.ww.....w...', '...w.wwwww..w...',
-                 '...w.ww.....w...', '...w.ww.....w...', '...w.wwwwww.w...', '...w........w...', '....w......w....', '.....w....w.....',
-                 '......wwww......'], 0, 1)
+    """Epic Games : l'écusson et son E, en creux."""
+    return _g(['..############..',
+               '..############..',
+               '..##........##..',
+               '..##.######.##..',
+               '..##.##.....##..',
+               '..##.#####..##..',
+               '..##.##.....##..',
+               '..##.######.##..',
+               '..##........##..',
+               '..############..',
+               '...##########...',
+               '.....######.....',
+               '.......##.......'], 1)
 
 
 def tray_battlenet():
     """Battle.net : l'éclair."""
-    return _pat(['.........BBB....', '........BBB.....', '.......BBB......', '......BBB.......', '.....BBBBBBB....', '....BBBBBBB.....',
-                 '.......BBB......', '......BBB.......', '.....BBB........', '....BBB.........'], 0, 3)
+    return _g(['.........###....',
+               '........###.....',
+               '.......###......',
+               '......###.......',
+               '.....#######....',
+               '....#######.....',
+               '.......###......',
+               '......###.......',
+               '.....###........',
+               '....###.........'], 3)
 
 
 def tray_temperature():
-    """Core Temp, HWiNFO : le thermomètre."""
-    return _pat(['.......ww.......', '......w..w......', '......w..w......', '......wEEw......', '......wEEw......', '......wEEw......',
-                 '......wEEw......', '......wEEw......', '.....wEEEEw.....', '....wEEEEEEw....', '....wEEEEEEw....', '....wEEEEEEw....',
-                 '.....wEEEEw.....', '......wwww......'], 0, 1)
+    """Core Temp, HWiNFO : le thermomètre, tube creux, bulbe plein, graduations."""
+    return _g(['......####......',
+               '......#..#.##...',
+               '......#..#......',
+               '......#..#.##...',
+               '......#..#......',
+               '......####.##...',
+               '......####......',
+               '......####......',
+               '.....######.....',
+               '....########....',
+               '....########....',
+               '....########....',
+               '.....######.....',
+               '......####......'], 1)
 
 
 def tray_telephone():
-    """Mobile connecté (Phone Link) : le combiné."""
-    return _pat(['..gg............', '.gggg...........', '.gggg...........', '..ggg...........', '...ggg..........', '....ggg.........',
-                 '.....ggg........', '......ggg.......', '.......gggg..gg.', '........gggggggg', '.........gggggg.', '..........gggg..'], 0, 2)
+    """Mobile connecté (Phone Link) : le téléphone, écran en creux, bouton en bas."""
+    return _g(['....########....',
+               '...##########...',
+               '...##......##...',
+               '...##......##...',
+               '...##......##...',
+               '...##......##...',
+               '...##......##...',
+               '...##......##...',
+               '...##......##...',
+               '...##########...',
+               '...####..####...',
+               '...##########...',
+               '....########....'], 1)
 
 
 def tray_camera():
-    """Webcam (Iriun, DroidCam) : l'objectif sur son pied."""
-    return _pat(['....gggggggg....', '..gggggggggggg..', '.ggggg....ggggg.', '.ggg..gggg..ggg.', 'gggg.gg..gg.gggg', 'ggg..g....g..ggg',
-                 'ggg..g....g..ggg', 'gggg.gg..gg.gggg', '.ggg..gggg..ggg.', '.ggggg....ggggg.', '..gggggggggggg..', '......gggg......',
-                 '....gggggggg....'], 0, 2)
+    """Webcam (Iriun, DroidCam) : l'objectif rond sur son pied."""
+    c = C()
+    _disc(c, 7.5, 6.5, 6.2)
+    _disc(c, 7.5, 6.5, 3.4, None)
+    _disc(c, 7.5, 6.5, 1.6)
+    c.rect(7, 12, 8, 13, 'w'); c.rect(4, 14, 11, 14, 'w')
+    return c.outline()
 
 
 def tray_adobe():
-    """Creative Cloud : le A."""
-    return _pat(['......EEEE......', '.....EEEEEE.....', '.....EE..EE.....', '....EEE..EEE....', '....EE....EE....', '...EEE....EEE...',
-                 '...EEEEEEEEEE...', '..EEEEEEEEEEEE..', '..EEE......EEE..', '.EEE........EEE.', '.EE..........EE.', 'EEE..........EEE'], 0, 2)
+    """Creative Cloud : le A d'Adobe, plein, le creux sous la barre."""
+    return _g(['......####......',
+               '......####......',
+               '.....######.....',
+               '.....##..##.....',
+               '....###..###....',
+               '....##....##....',
+               '...###....###...',
+               '...##########...',
+               '..############..',
+               '..###......###..',
+               '.###........###.',
+               '.##..........##.'], 2)
 
 
 def tray_medal():
-    """Medal : la médaille et son ruban."""
-    return _pat(['...BB......BB...', '....BB....BB....', '.....BB..BB.....', '......BBBB......', '.....YYYYYY.....', '....YYYYYYYY....',
-                 '...YYYYYYYYYY...', '...YYYY..YYYY...', '...YYYY..YYYY...', '...YYYYYYYYYY...', '....YYYYYYYY....', '.....YYYYYY.....'], 0, 2)
+    """Medal : le ruban en haut, la médaille ronde et son anneau en creux."""
+    return _g(['....########....',
+               '....###..###....',
+               '.....##..##.....',
+               '......#..#......',
+               '.....######.....',
+               '...##########...',
+               '..###......###..',
+               '..##..####..##..',
+               '.###.######.###.',
+               '.###.######.###.',
+               '..##..####..##..',
+               '..###......###..',
+               '...##########...',
+               '.....######.....'], 1)
 
 
-def tray_ecran_distant():
-    """AnyDesk, TeamViewer, Barrier : l'écran et le curseur."""
-    return _pat(['gggggggggggggggg', 'g..............g', 'g..............g', 'g.....ww.......g', 'g.....www......g', 'g.....wwww.....g',
-                 'g.....wwwww....g', 'g.....www......g', 'g.....w.ww.....g', 'gggggggggggggggg', '.......gg.......', '.....gggggg.....'], 0, 2)
+def tray_distant():
+    """AnyDesk, TeamViewer, Barrier : les deux losanges d'AnyDesk, l'un plein, l'autre en contour."""
+    return _g(['................',
+               '....#......#....',
+               '...###....#.#...',
+               '..#####..#...#..',
+               '.#######.#....#.',
+               '#########.....##',
+               '.#######.#....#.',
+               '..#####..#...#..',
+               '...###....#.#...',
+               '....#......#....'], 3)
+
+
+def tray_lmstudio():
+    """LM Studio : quatre barres décalées."""
+    return _g(['................',
+               '..########......',
+               '..########......',
+               '................',
+               '....##########..',
+               '....##########..',
+               '................',
+               '.##########.....',
+               '.##########.....',
+               '................',
+               '...######.......',
+               '...######.......'], 1)
 
 
 def tray_ia():
-    """LM Studio et les assistants : l'étincelle à quatre pointes."""
-    return _pat(['.......PP.......', '.......PP.......', '......PPPP......', '......PPPP......', '.....PPPPPP.....', 'PPPPPPPPPPPPPPPP',
-                 'PPPPPPPPPPPPPPPP', '.....PPPPPP.....', '......PPPP......', '......PPPP......', '.......PP.......', '.......PP.......'], 0, 2)
+    """Les autres assistants : l'étincelle à quatre pointes."""
+    return _g(['.......##.......',
+               '.......##.......',
+               '......####......',
+               '......####......',
+               '.....######.....',
+               '###############.',
+               '.#############..',
+               '.....######.....',
+               '......####......',
+               '......####......',
+               '.......##.......',
+               '.......##.......'], 2)
 
 
 def tray_tennis():
-    """Tennis (l'agent local) : la raquette et la balle."""
-    return _pat(['......LLLL......', '.....L....L.....', '....L..L...L....', '....L.L.L..L....', '....L..L...L....', '.....L....L.....',
-                 '......LLLL......', '.......LL.......', '.......LL.......', '.......LL.......', '......LL........', '.....LL....YY...',
-                 '....LL.....YY...'], 0, 1)
+    """Tennis (l'agent local) : la balle et ses deux coutures courbes en creux."""
+    c = C()
+    _disc(c, 7.5, 7.5, 6.9)
+    for y in range(16):
+        for x in range(16):
+            if abs(math.hypot(x + 1.5, y + 1.5) - 9.2) < 0.75 or abs(math.hypot(x - 16.5, y - 16.5) - 9.2) < 0.75:
+                c.p.pop((x, y), None)
+    return c.outline()
 
 
 def tray_appli():
-    """Toute autre application : une petite fenêtre."""
-    return _pat(['.gggggggggggggg.', '.gDDDDDDDDDDDDg.', '.gggggggggggggg.', '.g............g.', '.g............g.', '.g............g.',
-                 '.g............g.', '.g............g.', '.g............g.', '.g............g.', '.gggggggggggggg.'], 0, 2)
+    """Toute autre application : une fenêtre, barre de titre pleine."""
+    return _g(['.##############.',
+               '.##############.',
+               '.##############.',
+               '.##..........##.',
+               '.##..........##.',
+               '.##..........##.',
+               '.##..........##.',
+               '.##..........##.',
+               '.##..........##.',
+               '.##############.',
+               '.##############.'], 2)
+
+
+def tray_securite():
+    """Sécurité Windows : l'écusson et la coche en creux."""
+    return _g(['.......##.......',
+               '.....######.....',
+               '..############..',
+               '..############..',
+               '..##########.##.',
+               '..#########..##.',
+               '..##.#####..###.',
+               '..##..###..####.',
+               '...##..#..####..',
+               '...###...#####..',
+               '....###.#####...',
+               '.....#######....',
+               '......#####.....',
+               '.......###......',
+               '........#.......'], 1)
+
+
+def tray_reseau():
+    """Réseau (Wi-Fi) : trois arcs et le point."""
+    c = C()
+    for y in range(16):
+        for x in range(16):
+            d = math.hypot(x - 7.5, y - 13)
+            ang = math.degrees(math.atan2(13 - y, x - 7.5))
+            if 45 <= ang <= 135 and any(abs(d - r) < 0.8 for r in (4.0, 7.5, 11.0)):
+                c.set(x, y, 'w')
+    c.rect(7, 12, 8, 13, 'w')
+    return c.outline()
+
+
+def tray_son():
+    """Son : le haut-parleur et deux ondes."""
+    c = C()
+    c.rect(1, 6, 3, 9, 'w')
+    for i, (y0, y1) in enumerate(((5, 10), (4, 11), (3, 12), (2, 13))):
+        c.rect(4 + i, y0, 4 + i, y1, 'w')
+    for y in range(16):
+        for x in range(9, 16):
+            d = math.hypot(x - 7, y - 7.5)
+            if abs(math.degrees(math.atan2(y - 7.5, x - 7))) <= 50 and (abs(d - 3.6) < 0.7 or abs(d - 6.6) < 0.7):
+                c.set(x, y, 'w')
+    return c.outline()
+
+
+def tray_batterie():
+    """Batterie : le corps, sa borne, la charge pleine aux trois quarts."""
+    return _g(['##############..',
+               '#............#..',
+               '#.#########..###',
+               '#.#########..###',
+               '#.#########..###',
+               '#.#########..###',
+               '#............#..',
+               '##############..'], 4)
+
+
+def tray_loupe():
+    """QuickLook et la recherche : la loupe."""
+    c = C()
+    _anneau(c, 6, 6, 5.4, 3.4)
+    for i in range(4):
+        c.rect(9 + i, 10 + i, 10 + i, 11 + i, 'w')
+    return c.outline()
+
+
+def tray_discussion():
+    """Messages (CDX) : la bulle et le dièse en creux."""
+    return _g(['.##############.',
+               '.##############.',
+               '.####.##.##.###.',
+               '.###........###.',
+               '.####.##.##.###.',
+               '.###........###.',
+               '.####.##.##.###.',
+               '.##############.',
+               '.##############.',
+               '..###...........',
+               '..##............',
+               '..#.............'], 2)
 
 
 TRAY = {'discord': tray_discord, 'steam': tray_steam, 'nvidia': tray_nvidia, 'amd': tray_amd, 'localsend': tray_localsend,
         'tailscale': tray_tailscale, 'obs': tray_obs, 'whatsapp': tray_whatsapp, 'vlc': tray_vlc, 'epic': tray_epic,
         'battlenet': tray_battlenet, 'temperature': tray_temperature, 'telephone': tray_telephone, 'camera': tray_camera,
-        'adobe': tray_adobe, 'medal': tray_medal, 'distant': tray_ecran_distant, 'ia': tray_ia, 'tennis': tray_tennis,
-        'appli': tray_appli}
+        'adobe': tray_adobe, 'medal': tray_medal, 'distant': tray_distant, 'lmstudio': tray_lmstudio, 'ia': tray_ia,
+        'tennis': tray_tennis, 'appli': tray_appli, 'securite': tray_securite, 'reseau': tray_reseau, 'son': tray_son,
+        'batterie': tray_batterie, 'loupe': tray_loupe, 'discussion': tray_discussion}
 ICONS.update(TRAY)
 
 
