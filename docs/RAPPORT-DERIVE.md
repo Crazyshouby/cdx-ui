@@ -1,6 +1,6 @@
 # Rapport de dérive à la charte CDX-UI
 
-Version de la charte : **2.0.1** · généré le 2026-11-01 par `node tools/drift-report.mjs`.
+Version de la charte : **2.1.0** · généré le 2026-11-02 par `node tools/drift-report.mjs`.
 Les comptes sont des **déclarations** (lignes de CSS / HTML / JS), pas des éléments affichés. Une copie identique à `dist/` n'est pas recomptée (elle se contrôle à la source) ; une exception propre à une application est déclarée, avec sa raison, dans `tools/apps/<application>.allow` et comptée à part (« tolérés »).
 Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même contrôle avec 18 exceptions justifiées dans `charte-lint.allow`.
 
@@ -9,9 +9,8 @@ Les règles sont celles de `CHARTE.md` §8 ; la charte elle-même passe le même
 | Application | fichiers | radius | weight | size | blur | gradient | gray-tint | color | **total** | tolérés |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | AudioLinker | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
-| cdx-frames | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 0 |
-| cdx-windows (shell, Explorateur, Navigateur) | 45 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 45 |
-| KIRC | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 24 |
+| cdx-windows (shell, Explorateur, Navigateur) | 49 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 45 |
+| Messages | 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | **0** | 24 |
 
 | règle | ce qu'elle mesure |
 |---|---|
@@ -43,54 +42,39 @@ C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake 
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34150 / 34150 |
+| `cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34173 / 34173 |
 | `cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
-| `cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
-| `cdx/cdx_bus.h` | `cdx_bus.h` | identique | 7222 / 7222 |
+| `cdx/fonts.css` | `fonts.css` | identique | 15363 / 15363 |
+| `cdx/cdx_bus.h` | `cdx_bus.h` | identique | 7230 / 7230 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
-| `tools/pixel_engine.py` | `pixel_engine.py` | identique | 3394 / 3394 |
-| `cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4431 / 4431 |
-| `cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11690 / 11690 |
-| `cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2269 / 2269 |
+| `tools/pixel_engine.py` | `pixel_engine.py` | identique | 3398 / 3398 |
+| `cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4439 / 4439 |
+| `cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11698 / 11698 |
+| `cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2273 / 2273 |
 | `cdx/tokens.json` | `tokens.json` | identique | 31740 / 31740 |
 | `tools/charte-lint.mjs` | `charte-lint.mjs` | identique | 2815 / 2815 |
 | `tools/lib/lint.mjs` | `lint.mjs` | identique | 6715 / 6715 |
-
-## cdx-frames
-
-Rust, pas de page web : la palette et les mesures du cadre sont des constantes Rust (paint.rs), à rapprocher de tokens.json (generated/tokens.rs).
-
-**Constantes de `paint.rs` contre `tokens.json`**
-
-| constante Rust | jeton | identique | remarque |
-|---|---|---|---|
-| `RING = 6` | `frame_ring + frame_outline = 6` | oui | anneau de cadre : 5 px + 1 px de contour noir (CHARTE.md §4) |
-| `TITLE = 21` | `title_height = 21` | oui | barre de titre |
-| `BUTTON = 14` | `title_button_size = 14` | oui | boutons de titre |
-
-Couleurs écrites dans `paint.rs` : `#333333`, `#cc0000`, `#880000`, `#440000`, `#320000`, `#c30000`, `#555555`, `#222222`, `#111111`, `#0c0c0c`, `#8f8f8f`, `#444444`, `#8a8a8a`.
-Toutes sont des jetons de la charte.
 
 ## cdx-windows (shell, Explorateur, Navigateur)
 
 C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de la bibliothèque Cdx.Host. Les pages sont servies depuis web/ par l'hôte virtuel cdx.shell ; web/cdx/ est une copie exacte de la charte (charte-sync). Les pages _test-*.html sont ignorées.
 
-**0 écart(s)** (+ 45 toléré(s) avec raison) dans 45 fichier(s) examiné(s), 13 copie(s) identique(s) de la charte non recomptée(s).
+**0 écart(s)** (+ 45 toléré(s) avec raison) dans 49 fichier(s) examiné(s), 14 copie(s) identique(s) de la charte non recomptée(s).
 
 | fichier | radius | weight | size | blur | gradient | gray-tint | color |
 |---|---:|---:|---:|---:|---:|---:|---:|
 
 **Ce que l'application emploie réellement**
 
-- tailles de police : `28px` ×2, `14px` ×1, `11px` ×1 (la charte : une seule, 14 px)
+- tailles de police : `14px` ×3, `28px` ×2, `11px` ×1 (la charte : une seule, 14 px)
 - arrondis : — (la charte : aucun)
-- graisses : `inherit` ×5, `400` ×2, `100` ×2 (la charte : aucune)
+- graisses : `inherit` ×7, `400` ×2, `100` ×2 (la charte : aucune)
 - couleurs hors jetons : **16** valeurs distinctes, dont `#ffcc99` ×1, `#2e3436` ×1, `#4e9a06` ×1, `#c4a000` ×1, `#3465a4` ×1, `#75507b` ×1
 
 <details><summary><code>weight</code> : undefined (exemples)</summary>
 
-- `web/terminal/terminal.css:4` — `@font-face { font-family: 'CDX Pixel Mono'; font-style: normal; font-weight: 100 900; src: url(/terminal/fonts/cdx-pixel-mono.ttf) format(`
-- `web/terminal/terminal.css:5` — `@font-face { font-family: 'CDX Pixel Mono'; font-style: italic; font-weight: 100 900; src: url(/terminal/fonts/cdx-pixel-mono-italic.ttf) `
+- `web/terminal/terminal.css:4` — `@font-face { font-family: 'CDX Pixel Mono'; font-style: normal; font-weight: 100 900; src: url(/terminal/fonts/cdx-pixel-mono.ttf) format('t`
+- `web/terminal/terminal.css:5` — `@font-face { font-family: 'CDX Pixel Mono'; font-style: italic; font-weight: 100 900; src: url(/terminal/fonts/cdx-pixel-mono-italic.ttf) fo`
 - `web/terminal/vendor/addon-webgl.js:1` — `!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"obje`
 
 </details>
@@ -131,23 +115,24 @@ C# + WebView2, trois programmes (cdx-shell, cdx-explorer, cdx-browser) autour de
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `web/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34150 / 34150 |
+| `web/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34173 / 34173 |
 | `web/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
-| `web/cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
-| `web/cdx/icons.js` | `icons.js` | identique | 48934 / 48934 |
+| `web/cdx/fonts.css` | `fonts.css` | identique | 15363 / 15363 |
+| `web/cdx/icons.js` | `icons.js` | identique | 62712 / 62712 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
-| `web/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4431 / 4431 |
-| `web/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11690 / 11690 |
-| `web/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2269 / 2269 |
+| `web/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4439 / 4439 |
+| `web/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11698 / 11698 |
+| `web/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2273 / 2273 |
 | `web/cdx/tokens.json` | `tokens.json` | identique | 31740 / 31740 |
 | `tools/charte-lint.mjs` | `charte-lint.mjs` | identique | 2815 / 2815 |
 | `tools/lib/lint.mjs` | `lint.mjs` | identique | 6715 / 6715 |
 | `web/cdx/cdx-columns.js` | `cdx-columns.js` | identique | 5013 / 5013 |
 | `web/cdx/cdx-split.js` | `cdx-split.js` | identique | 4949 / 4949 |
+| `web/cdx/cdx-spell.js` | `cdx-spell.js` | identique | 23574 / 23574 |
 
-## KIRC
+## Messages
 
-Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/cdx-verify.mjs. kirc.css ne garde que la mise en page de KIRC.
+Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est une copie exacte de la charte (charte-sync), contrôlée en CI par tools/cdx-verify.mjs. messages.css ne garde que la mise en page de Messages.
 
 **0 écart(s)** (+ 24 toléré(s) avec raison) dans 3 fichier(s) examiné(s), 14 copie(s) identique(s) de la charte non recomptée(s).
 
@@ -163,16 +148,16 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 
 <details><summary><code>gradient</code> : undefined (exemples)</summary>
 
-- `ui/kirc.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
-- `ui/kirc.css:62` — `color: transparent; background: linear-gradient(#fff 0, #b9b9b9 45%, #444 55%, #9a9a9a); -webkit-background-clip: text; background-clip: tex`
+- `ui/messages.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
+- `ui/messages.css:62` — `color: transparent; background: linear-gradient(#fff 0, #b9b9b9 45%, #444 55%, #9a9a9a); -webkit-background-clip: text; background-clip: tex`
 
 </details>
 
 <details><summary><code>color</code> : undefined (exemples)</summary>
 
-- `ui/kirc.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
-- `ui/kirc.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
-- `ui/kirc.css:155` — `.mem.r0 { border-left-color: #ff5cf0; } .mem.r1 { border-left-color: #ff8a3c; } .mem.r2 { border-left-color: #ff3030; }`
+- `ui/messages.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
+- `ui/messages.css:58` — `background: radial-gradient(ellipse 70% 90% at 50% 130%, #f58a1a 0, #8a3a00 38%, transparent 72%), linear-gradient(#050505, #2c2c2c);`
+- `ui/messages.css:155` — `.mem.r0 { border-left-color: #ff5cf0; } .mem.r1 { border-left-color: #ff8a3c; } .mem.r2 { border-left-color: #ff3030; }`
 
 </details>
 
@@ -180,15 +165,15 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 
 | copie dans l'application | source (dist/) | état | octets (app / dist) |
 |---|---|---|---|
-| `ui/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34150 / 34150 |
+| `ui/cdx/cdx-ui.css` | `cdx-ui.css` | identique | 34173 / 34173 |
 | `ui/cdx/themes.css` | `themes.css` | identique | 37735 / 37735 |
-| `ui/cdx/fonts.css` | `fonts.css` | identique | 15330 / 15330 |
-| `ui/cdx/icons.js` | `icons.js` | identique | 48934 / 48934 |
-| `src-tauri/src/cdx_bus.rs` | `cdx_bus.rs` | identique | 12365 / 12365 |
+| `ui/cdx/fonts.css` | `fonts.css` | identique | 15363 / 15363 |
+| `ui/cdx/icons.js` | `icons.js` | identique | 62712 / 62712 |
+| `src-tauri/src/cdx_bus.rs` | `cdx_bus.rs` | identique | 12397 / 12397 |
 | `tools/cdx-verify.mjs` | `cdx-verify.mjs` | identique | 1868 / 1868 |
-| `ui/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4431 / 4431 |
-| `ui/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11690 / 11690 |
-| `ui/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2269 / 2269 |
+| `ui/cdx/cdx-bridge.js` | `cdx-bridge.js` | identique | 4439 / 4439 |
+| `ui/cdx/cdx-frame.js` | `cdx-frame.js` | identique | 11698 / 11698 |
+| `ui/cdx/cdx-frame.css` | `cdx-frame.css` | identique | 2273 / 2273 |
 | `ui/cdx/tokens.json` | `tokens.json` | identique | 31740 / 31740 |
 | `tools/charte-lint.mjs` | `charte-lint.mjs` | identique | 2815 / 2815 |
 | `tools/lib/lint.mjs` | `lint.mjs` | identique | 6715 / 6715 |
@@ -198,4 +183,4 @@ Tauri (Rust). Les pages sont chargées depuis ui/ (frontendDist) ; ui/cdx/ est u
 ## Lecture
 
 - Les applications C# (shell, Explorateur, Navigateur) lisent la charte sans copie : leur dérive se mesure par ce rapport, pas par synchronisation.
-- Rien n'est corrigé ici : la phase 3 du plan traite KIRC, `cdx-frames` puis AudioLinker, une branche et une version mineure chacune, après validation de ce rapport.
+- Rien n'est corrigé ici : ce rapport mesure ; les corrections se font dans chaque application, une branche et une version mineure chacune.
