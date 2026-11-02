@@ -1,6 +1,6 @@
 # La suite CDX : réglages communs et bus de messages
 
-Les applications de la suite (cdx-shell, cdx-explorer, cdx-browser, cdx-repos, AudioLinker, Messages) restent des programmes séparés. Elles partagent deux choses, volontairement
+Les applications de la suite (cdx-shell, cdx-explorer, cdx-browser, cdx-repos, Audio Linker, Messages) restent des programmes séparés. Elles partagent deux choses, volontairement
 minimes : un **fichier de réglages** (l'accent) et un **bus de messages** (des tubes nommés). Aucun démon central : si une application ne tourne pas, les autres
 continuent, et ce qui lui était destiné se perd sans bruit (ou la lance, voir §3.5).
 
@@ -23,11 +23,11 @@ Règles :
   aussi fiable qu'une notification de dossier, pour un coût nul). Elle applique le nouvel accent sans redémarrer : la suite se recolore en moins d'une seconde.
 - **Dérogation** : une application peut offrir un accent à elle. Messages garde son réglage « thème » ; il ne suit la suite que lorsqu'il est sur sa valeur par défaut (`cdx`).
 - **Qui écrit** : `cdx-shell.exe --accent <nom>` (et, plus tard, un sélecteur dans le centre rapide). Une application n'écrit jamais autre chose que `accent`.
-- Les réglages propres à chaque application restent chez elle (`%APPDATA%\CDX\Messages`, `%APPDATA%\AudioLinker`, `%LOCALAPPDATA%\CdxShell`).
+- Les réglages propres à chaque application restent chez elle (`%APPDATA%\CDX\Messages`, `%APPDATA%\cdx-audio_linker`, `%LOCALAPPDATA%\CdxShell`).
 
 ## 2. Le bus : un tube par application
 
-Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audiolinker`, `messages` (et `transfers`, `notes`, `agenda`, `mail`, `pilote`, décrits dans leurs applications).
+Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audio_linker`, `messages` (et `transfers`, `notes`, `agenda`, `mail`, `pilote`, `youtube`, décrits dans leurs applications ; `youtube` reçoit `show`, comme Dépôts).
 
 - **Sécurité** : le tube n'est accessible qu'à l'utilisateur courant (descripteur de sécurité : un seul droit, celui du SID de l'utilisateur ; sous .NET `PipeOptions.CurrentUserOnly`),
   les connexions distantes sont refusées (`PIPE_REJECT_REMOTE_CLIENTS`), la première instance est créée avec `FILE_FLAG_FIRST_PIPE_INSTANCE` (un autre processus ne peut pas
@@ -47,7 +47,7 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom
 - **Rien n'est évalué** : un message est une donnée, jamais du code ni une commande de shell. Chaque application **valide** `type` (liste blanche), puis chaque champ de `data`
   (type JSON, longueur, valeurs admises). Un message hors liste, mal formé ou invalide est **ignoré** et noté dans le journal ; il ne ferme pas la connexion.
 - **Sans réponse par défaut** : l'émetteur ouvre le tube, écrit une ou plusieurs lignes, referme (« tire et oublie »). Si le tube n'existe pas, l'application n'est pas lancée.
-- **Connexions longues** : une application peut garder la connexion ouverte pour **recevoir** des messages poussés (AudioLinker envoie `audio.state` à chaque changement).
+- **Connexions longues** : une application peut garder la connexion ouverte pour **recevoir** des messages poussés (Audio Linker envoie `audio.state` à chaque changement).
   Le premier message de l'abonné peut être `audio.get`, qui demande l'état tout de suite.
 - **Plusieurs émetteurs** : un serveur accepte plusieurs connexions simultanées (8 au plus) ; les lignes d'une même connexion arrivent dans l'ordre.
 
@@ -58,7 +58,7 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom
 |---|---|---|
 | `notify` | `title` (texte, ≤ 80), `text` (texte, ≤ 400), `level` (`info` `warn` `error`, défaut `info`) | une notification : la barre affiche une cloche et le nombre de notifications non vues, le centre rapide les liste (50 au plus, la plus récente en haut) |
 
-Émetteurs : **Messages** (messages privés et mentions, en plus de la notification de Windows), **cdx-browser** (téléchargement terminé ou échoué), **AudioLinker** (erreurs et avertissements du groupe ; une même ligne n'est pas répétée avant 10 s).
+Émetteurs : **Messages** (messages privés et mentions, en plus de la notification de Windows), **cdx-browser** (téléchargement terminé ou échoué), **Audio Linker** (erreurs et avertissements du groupe ; une même ligne n'est pas répétée avant 10 s).
 
 ### 3.2 `cdx.explorer`
 | `type` | `data` | Effet |
@@ -76,16 +76,16 @@ Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom
 
 Émetteurs : **Messages** (`open-url` : un lien cliqué s'ouvre dans le navigateur CDX s'il tourne ou s'il est installé, sinon dans celui de Windows), **cdx-explorer** (`open-file` : le double-clic sur un fichier de ces types).
 
-### 3.4 `cdx.audiolinker`
+### 3.4 `cdx.audio_linker`
 | `type` | `data` | Effet |
 |---|---|---|
 | `audio.get` | — | demande l'état |
 | `audio.toggle` | — | démarre ou arrête le groupe |
-| `audio.volume` | `v` (entier 0 à 100), `commit` (booléen) | volume du groupe ; `commit` l'enregistre et rafraîchit les fenêtres d'AudioLinker |
+| `audio.volume` | `v` (entier 0 à 100), `commit` (booléen) | volume du groupe ; `commit` l'enregistre et rafraîchit les fenêtres d'Audio Linker |
 | `audio.mute` | `on` (booléen) | coupe ou rétablit le son du groupe |
 | `audio.setup` | `name` (nom d'un setup existant, ≤ 200) | joue ce setup |
 
-AudioLinker répond par des messages `audio.state` (`running`, `starting`, `volume`, `muted`, `playing`, `setups` = liste de `{name, count}`), à la connexion et à chaque changement.
+Audio Linker répond par des messages `audio.state` (`running`, `starting`, `volume`, `muted`, `playing`, `setups` = liste de `{name, count}`), à la connexion et à chaque changement.
 Un seul abonné à la fois pour l'instant.
 
 ### 3.4b `cdx.repos` (Dépôts)

@@ -5,7 +5,7 @@ Ce contrat est la liste unique de ces demandes ; `cdx-bridge.js` les traduit ver
 
 ## Page → hôte
 
-| Demande (`cdx.win.*`) | Quand | Messages (Tauri) | AudioLinker (chaînes) | Applications C# (JSON) |
+| Demande (`cdx.win.*`) | Quand | Messages (Tauri) | Audio Linker (chaînes) | Applications C# (JSON) |
 |---|---|---|---|---|
 | `ready()` | la page est chargée, la fenêtre peut s'afficher | `invoke("win_ready")` | — | `{cmd:"win.ready"}` |
 | `drag("start")` | appui sur la barre de titre | `win_drag {phase:"start"}` | `dragstart` | `{cmd:"win.drag"}` (boucle de déplacement native) |
@@ -30,7 +30,7 @@ Un « — » signifie : la demande est sans effet sur cet hôte (aujourd'hui), s
 | `shade` | `true` si la fenêtre est enroulée | classe `shaded` sur `<body>` |
 | `theme` | nom de l'accent (`rouge`, `bleu`…) | attribut `data-theme` de `<html>` (le rouge n'en porte pas) |
 
-Transport des événements : Tauri `listen(type)` (charge utile = valeur) ; AudioLinker et applications C# : message `{ "type": "active", "value": true }` (objet ou texte JSON).
+Transport des événements : Tauri `listen(type)` (charge utile = valeur) ; Audio Linker et applications C# : message `{ "type": "active", "value": true }` (objet ou texte JSON).
 
 ## Ce que chaque hôte doit fournir
 
@@ -42,15 +42,15 @@ Transport des événements : Tauri `listen(type)` (charge utile = valeur) ; Audi
 ## Qui l'utilise (30/10/2026)
 
 Un seul code de cadre, `cdx-frame.js` sur `cdx-bridge.js`, pour toutes les applications : Messages (transport `tauri`, écoute limitée à la fenêtre courante),
-AudioLinker (transport `strings`, `data-cdx-host="strings"` sur `<html>`), l'Explorateur et le navigateur de cdx-windows (transport `webview2`). Chaque application en
-reçoit une copie par `charte-sync` ; la page ne garde que ses besoins propres (menu de fenêtre de Messages par l'événement `cdx:menu`, messages d'état d'AudioLinker).
-Les essais : `tests/bridge.test.html` (les trois transports simulés), `AudioLinker/tools/ui_smoke.py` (le transport `strings` sur la vraie page), `cdx-messages/tests/e2e.mjs`
+Audio Linker (transport `strings`, `data-cdx-host="strings"` sur `<html>`), l'Explorateur et le navigateur de cdx-windows (transport `webview2`). Chaque application en
+reçoit une copie par `charte-sync` ; la page ne garde que ses besoins propres (menu de fenêtre de Messages par l'événement `cdx:menu`, messages d'état d'Audio Linker).
+Les essais : `tests/bridge.test.html` (les trois transports simulés), `cdx-windows/src/cdx-audio_linker/tools/ui_smoke.py` (le transport `strings` sur la vraie page), `cdx-messages/tests/e2e.mjs`
 (la vraie application), `cdx-windows/tests/cadre.ps1` (les vraies fenêtres de l'Explorateur et du navigateur).
 
 ## Écarts connus
 
 - Les hôtes C# ignorent `win.shade` et `win.ready` (sans erreur) ; ils n'envoient pas `active`.
-- Messages n'a pas de commande `min` ni de `title` ; AudioLinker n'a pas d'agrandissement.
-- L'aimantation existe dans Messages (`app.rs::drag`, `SNAP_DIST`, `SNAP_GAP`) et, depuis le 01/11/2026, dans l'hôte C# de cdx-windows (`Cdx.Host/Snap.cs`, corrige le rectangle de `WM_MOVING` / `WM_SIZING`, voisines = toutes les fenêtres de la suite) ; pas dans AudioLinker.
+- Messages n'a pas de commande `min` ni de `title` ; Audio Linker n'a pas d'agrandissement.
+- L'aimantation existe dans Messages (`app.rs::drag`, `SNAP_DIST`, `SNAP_GAP`) et, depuis le 01/11/2026, dans l'hôte C# de cdx-windows (`Cdx.Host/Snap.cs`, corrige le rectangle de `WM_MOVING` / `WM_SIZING`, voisines = toutes les fenêtres de la suite) ; pas dans Audio Linker.
 - Les pages du shell (barre, Démarrer, centre rapide) n'ont pas de cadre à déplacer : elles n'utilisent que le pont (`cdx.on`) par `host.js`.
-- Messages prend le menu contextuel de CdxFrame (`CdxFrame.menu`) ; il n'a pas de dialogue modal. Le menu des périphériques d'AudioLinker (cases, listes déroulantes, pastilles de couleur) est plus riche que `CdxFrame.menu` : il reste le sien.
+- Messages prend le menu contextuel de CdxFrame (`CdxFrame.menu`) ; il n'a pas de dialogue modal. Le menu des périphériques d'Audio Linker (cases, listes déroulantes, pastilles de couleur) est plus riche que `CdxFrame.menu` : il reste le sien.

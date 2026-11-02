@@ -1,6 +1,6 @@
 """Pixel-art icon set (16x16, black outline, flat colours) of the KDX-style UI.
 
-The drawing engine is pixel_engine.py (shared with AudioLinker), here are the icons of an IRC client.
+The drawing engine is pixel_engine.py (shared with Audio Linker), here are the icons of an IRC client.
 Each icon is drawn from a few primitives, outlined automatically and exported
 as a compact SVG (one <path> per colour). Imported by gen_assets.py, which
 writes them into ui/icons.js (and the application icon).

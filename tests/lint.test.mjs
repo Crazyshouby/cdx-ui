@@ -56,7 +56,7 @@ test('couleurs : jetons et gris neutres permis, gris teintés et couleurs inconn
   assert.deepEqual(rules('.a { color: #00ff00; }'), []);            // jeton (vert)
   assert.deepEqual(rules('.a { color: #fff; background: #000; }'), []);
   assert.deepEqual(rules('.a { background: #1c1c1c; }'), []);       // gris neutre
-  assert.deepEqual(rules('.a { color: #a7afb2; }'), ['gray-tint']);  // gris bleuté d'AudioLinker
+  assert.deepEqual(rules('.a { color: #a7afb2; }'), ['gray-tint']);  // gris bleuté d'Audio Linker
   assert.deepEqual(rules('.a { color: #353038; }'), ['gray-tint']);  // gris violacé
   assert.deepEqual(rules('.a { color: #2a5ae0; }'), ['color']);      // bleu vif hors jetons
   assert.deepEqual(rules('.a { color: #bbc; }'), ['gray-tint']);

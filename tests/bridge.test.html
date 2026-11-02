@@ -1,5 +1,5 @@
 <!doctype html><meta charset="utf-8"><title>test cdx-bridge / cdx-frame</title>
-<!-- Teste le contrat de fenêtre : trois transports simulés (Tauri, chaînes AudioLinker, WebView2 JSON) dans des cadres isolés, plus dialogue et menu.
+<!-- Teste le contrat de fenêtre : trois transports simulés (Tauri, chaînes Audio Linker, WebView2 JSON) dans des cadres isolés, plus dialogue et menu.
      Lancé par tests/run-browser-tests.mjs (Chrome headless) ; le résultat est écrit dans #out. -->
 <pre id="out">en attente</pre>
 <script>
@@ -40,7 +40,7 @@ const J = x => JSON.stringify(x);
   w.__H.theme && w.__H.theme({ payload: 'bleu' }); ok('tauri : événement theme -> data-theme', d.documentElement.dataset.theme === 'bleu');
   w.__H.theme && w.__H.theme({ payload: 'rouge' }); ok('tauri : theme rouge -> attribut retiré', !d.documentElement.dataset.theme);
 
-  // ---- chaînes AudioLinker ----
+  // ---- chaînes Audio Linker ----
   w = await load('strings'); L = w.__LOG; d = w.document; const tb2 = d.querySelector('.tb');
   ok('strings : transport forcé par data-cdx-host', w.cdx.host === 'strings');
   L.length = 0; ptr(w, tb2, 'pointerdown'); ok('strings : appui -> "dragstart"', L[0] === 'dragstart', J(L));

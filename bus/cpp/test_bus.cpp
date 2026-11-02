@@ -19,7 +19,7 @@ int main() {
     Check("Compose : enveloppe type/from/data", bus::Compose("open-url", "messages", "{\"url\":\"https://example.org/\"}") == "{\"type\":\"open-url\",\"from\":\"messages\",\"data\":{\"url\":\"https://example.org/\"}}");
     Check("Compose : data absent -> {}", bus::Compose("audio.get", "shell") == "{\"type\":\"audio.get\",\"from\":\"shell\",\"data\":{}}");
     Check("Compose : guillemets et retours à la ligne échappés dans le type", bus::Compose("a\"b\n", "x").find('\n') == std::string::npos);
-    Check("IsApp : liste blanche des noms", bus::IsApp("browser") && bus::IsApp("audiolinker") && !bus::IsApp("..\\evil") && !bus::IsApp(""));
+    Check("IsApp : liste blanche des noms", bus::IsApp("browser") && bus::IsApp("audio_linker") && !bus::IsApp("..\\evil") && !bus::IsApp(""));
 
     // ---- suite.json
     Check("ParseAccent : accent valide", suite::ParseAccent("{\"version\":1,\"accent\":\"bleu\"}") == "bleu");

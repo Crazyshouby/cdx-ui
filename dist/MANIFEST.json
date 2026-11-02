@@ -1,13 +1,13 @@
 {
-  "cdxUi": "2.3.0",
+  "cdxUi": "2.3.1",
   "files": {
     "cdx-ui.css": {
       "sha256": "03848b11a5c7c932349a2274c2dcc7e7ececce6414a5086661f16d0a8111078e",
       "bytes": 34173
     },
     "cdx-frame.css": {
-      "sha256": "370abe1609e5f6d1e79aaf2fdb32c4778de29162df193665d4719548c640cb8c",
-      "bytes": 2273
+      "sha256": "2f1a7698193b728609f6a340e4036c104a2e6a4fcf0e272e4c0d2464f1092ac7",
+      "bytes": 2274
     },
     "themes.css": {
       "sha256": "9015ba7598fefedc18d417b066f2a12e36b0369738e7711e163178655db27379",
@@ -22,12 +22,12 @@
       "bytes": 88523
     },
     "cdx-bridge.js": {
-      "sha256": "a873832739a1040504e08447d7ec39d0767951660c7f2585a0f684ce5ae8b0dc",
-      "bytes": 4439
+      "sha256": "3e1500c773012f4e37b4948919dace309acfb5712bc93703f35e70d33f26ae72",
+      "bytes": 4441
     },
     "cdx-frame.js": {
-      "sha256": "ca0c321f87b783e9e139664d89ee0e9957f158e2a1f864f0fa013a5655c5eb5b",
-      "bytes": 11698
+      "sha256": "f16698986b72b7dc374246353675d0c1dc2f789109477cc319c9b4c5e5ce4e97",
+      "bytes": 11700
     },
     "cdx-columns.js": {
       "sha256": "908f8232b35c519a3b8df7c6825e6fba8bfb953007a2dc8485c44b27e3fd73ef",
@@ -54,20 +54,20 @@
       "bytes": 1868
     },
     "cdx_bus.h": {
-      "sha256": "f179a2f1f457f89e0401262ae07072e519b5f4e4fe820ad747a400addbaad446",
-      "bytes": 7230
+      "sha256": "7e340f40a8eb2829ae48b9e5f610029ffe1b7e196267ae3f04c8d151c83ee65f",
+      "bytes": 7232
     },
     "cdx_bus.rs": {
-      "sha256": "9b1bafb9e5552cb4ac9024e5fddfec7e438c5fa0aa32f1fc3991795b6f90d8eb",
-      "bytes": 12397
+      "sha256": "15561d35da4071858d058be282dc6d15ebe26931e04a0f47af77a15b5aecadf9",
+      "bytes": 12399
     },
     "tokens.json": {
       "sha256": "1ba2ba2b857f151e07b995077aa7060b704a40641b59737be61033ab15ffbba2",
       "bytes": 31740
     },
     "pixel_engine.py": {
-      "sha256": "d24f72d0eee66f83e95a019f357c2dea2b8e8cef1290db4fbeec59a16563b626",
-      "bytes": 3398
+      "sha256": "92938e32e5a53f667b24782b8671c6e9421a78cdf53f15462c2365bbe1ccca57",
+      "bytes": 3400
     },
     "charte-lint.mjs": {
       "sha256": "103784201d7461c19761ac2c4bae18f213150e6b08d3459c5c4b5bf10cd01636",

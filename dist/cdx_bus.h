@@ -4,7 +4,7 @@
 //   cdx::suite::ReadAccent()        l'accent de %APPDATA%\CDX\suite.json ("rouge" si le fichier manque ou est abîmé)
 //   cdx::suite::Watcher             sondage de la date et de la taille du fichier : Changed() à appeler toutes les 250 ms
 //   cdx::bus::Send(app, type, data) un message « tire et oublie » vers le tube \\.\pipe\cdx.<app>
-//   cdx::bus::Compose(...)          la ligne JSON d'un message (pour une connexion longue, comme celle d'AudioLinker)
+//   cdx::bus::Compose(...)          la ligne JSON d'un message (pour une connexion longue, comme celle d'Audio Linker)
 #pragma once
 
 #include <windows.h>
@@ -114,7 +114,7 @@ private:
 namespace bus {
 
 inline bool IsApp(const std::string& s) {
-    return s == "shell" || s == "explorer" || s == "browser" || s == "audiolinker" || s == "messages";
+    return s == "shell" || s == "explorer" || s == "browser" || s == "audio_linker" || s == "messages";
 }
 
 inline std::string Escape(const std::string& s) {

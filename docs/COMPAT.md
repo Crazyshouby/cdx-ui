@@ -8,7 +8,7 @@ La charte suit [SemVer](https://semver.org/lang/fr/) (`VERSION`, `dist/MANIFEST.
 
 Chaque application copie `dist/` par `charte-sync` et garde la version dans son `cdx-sync.json` (champ `cdxUi`).
 
-| cdx-ui | cdx-windows | cdx-messages (ex-KIRC) | AudioLinker | Notes |
+| cdx-ui | cdx-windows | cdx-messages (ex-KIRC) | Audio Linker | Notes |
 |---|---|---|---|---|
 | 2.3.0 | copie à jour, pas de release | copie à jour, pas de release | copie à jour, pas de release | **mineure** : les pictogrammes de la zone de notification redessinés en 1 bit (une couleur, détails en creux), plus sept nouveaux : lmstudio, securite, reseau, son, batterie, loupe, discussion ; 02/11/2026 |
 | 2.2.0 | copie à jour, pas de release | copie à jour, pas de release | copie à jour, pas de release | **mineure** : vingt pictogrammes pour les applications tierces de la zone de notification (discord, steam, nvidia, amd, localsend, tailscale, obs, whatsapp, vlc, epic, battlenet, temperature, telephone, camera, adobe, medal, distant, ia, tennis, appli), rendus en un ton par la barre CDX ; 02/11/2026 |
@@ -19,4 +19,4 @@ Chaque application copie `dist/` par `charte-sync` et garde la version dans son 
 | 2.0.0 | copie à jour, pas de release | copie à jour, pas de release | copie à jour, pas de release | les seize thèmes de KDX ; **majeure** : les jetons `--tb-edge`/`--tb-low`/`--tb-grad`/`--tbb-*` ne sont plus écrits par `body.active` (lire `--t-*`), `kAccents`/`ACCENTS` deviennent `Theme` (plus de champs), les noms `bleu` `vert` `violet` `charbon` sont des alias ; 31/10/2026 |
 
 Avant toute publication d'une application : son `cdx-sync.json` doit porter la version de charte de cette ligne, `node tools/cdx-verify.mjs` doit être vert, et `node tools/drift-report.mjs` (dans cdx-ui) ne doit montrer aucun écart non justifié.
-Publier AudioLinker ou Messages avec la charte exige en plus la décision sur le nom « CDX » et sur la police (`CHARTE.md` §10).
+Publier Audio Linker ou Messages avec la charte exige en plus la décision sur le nom « CDX » et sur la police (`CHARTE.md` §10).

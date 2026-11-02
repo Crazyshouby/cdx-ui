@@ -5,7 +5,7 @@
 
   ../cdx-ui.css                  le bloc entre « tokens:begin » et « tokens:end » : les couleurs du thème par défaut (rouge) et les couleurs de statut
   ../themes.css                  la palette complète de chaque autre thème (html[data-theme="…"]), avec les anciens noms en alias
-  ../generated/cdx-tokens.h      C++ : couleurs 0xRRGGBB, thèmes, mesures (AudioLinker)
+  ../generated/cdx-tokens.h      C++ : couleurs 0xRRGGBB, thèmes, mesures (Audio Linker)
   ../generated/tokens.rs         Rust : les mêmes (Messages)
 
 Les thèmes sont les seize apparences de KDX 1.6 : mesurées par gen/kdx_reference.py (kdx-reference/kdx.json), puis écrites dans tokens.json par
