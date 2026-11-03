@@ -27,7 +27,7 @@ Règles :
 
 ## 2. Le bus : un tube par application
 
-Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audio_linker`, `messages` (et `transfers`, `notes`, `agenda`, `mail`, `pilote`, `youtube`, décrits dans leurs applications ; `youtube` reçoit `show`, comme Dépôts).
+Chaque application qui veut **recevoir** ouvre un tube `\\.\pipe\cdx.<nom>`, nom ∈ `shell`, `explorer`, `browser`, `repos`, `terminal`, `audio_linker`, `messages` (et `transfers`, `notes`, `agenda`, `mail`, `youtube`, décrits dans leurs applications ; `youtube` reçoit `show`, comme Dépôts).
 
 - **Sécurité** : le tube n'est accessible qu'à l'utilisateur courant (descripteur de sécurité : un seul droit, celui du SID de l'utilisateur ; sous .NET `PipeOptions.CurrentUserOnly`),
   les connexions distantes sont refusées (`PIPE_REJECT_REMOTE_CLIENTS`), la première instance est créée avec `FILE_FLAG_FIRST_PIPE_INSTANCE` (un autre processus ne peut pas
@@ -103,12 +103,6 @@ tous deux lancés au besoin ; le repli est l'explorateur et le navigateur de Win
 | `open-path` | `path` (chemin absolu d'un dossier ; un fichier donne son dossier) | ouvre un **onglet** dont le shell démarre dans ce dossier, et passe la fenêtre devant (second lancement `cdx-terminal.exe <dossier>`, « Ouvrir dans un terminal » de l'Explorateur) |
 
 Un chemin qui n'est pas un dossier existant est refusé. L'Explorateur envoie `open-path` au terminal CDX et le lance au besoin (chemin de `apps.json`) ; le repli est Windows Terminal, puis `cmd.exe`.
-
-### 3.4d Le canal de pilotage `cdx.<nom>.pilot` (cdx-windows)
-À côté de son tube du bus, chaque programme de cdx-windows ouvre un tube **de commande** `cdx.<nom>.pilot` (utilisateur courant, une ligne reçue → une ligne rendue), par lequel
-**Pilote** (le chat avec Claude, `cdx-pilote`) le commande : `state` (son état), `cmd <json>` (une commande de sa page, validée comme si elle venait d'elle), et ce que le programme ajoute
-(le navigateur : `page.text`, `page.find`, `page.click`, `page.fill`, `page.scroll`, `page.shot`, des scripts fixes sur l'onglet actif). Jamais `eval` : exécuter du JavaScript reçu reste
-le fait du canal de test `.ctl`, qui n'existe qu'avec `debug.txt`. Un message refusé rend `ERREUR …`.
 
 ### 3.5 Lancer la destination absente
 `%APPDATA%\CDXpps.json` donne, pour chaque nom, le chemin de l'exécutable : `{ "browser": "C:\…\cdx-browser.exe" }`. Chaque programme y écrit son propre chemin au démarrage. Un émetteur qui
