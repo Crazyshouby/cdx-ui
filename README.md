@@ -52,7 +52,11 @@ node tools/charte-sync.mjs --check <app>  # compare les copies d'une application
 node tools/drift-report.mjs               # régénère docs/RAPPORT-DERIVE.md
 ```
 
-## État (03/11/2026, cdx-ui 2.3.1)
+## État (03/11/2026, cdx-ui 2.4.0)
+
+**2.4.0** : les mesures de la charte et les couleurs de statut sont aussi générées pour C# (`generated/CdxTokens.g.cs`, par `gen/gen_tokens.py`), et
+recopiées comme le reste : `src/Cdx.Host/CdxTokens.g.cs` dans cdx-windows, `tokens.rs` en `src-tauri/src/cdx_tokens.rs` dans Messages. L'aimantation des
+fenêtres (`snap_distance`, `snap_gap`) ne se recopie plus à la main dans `Snap.cs` et `app.rs` (aucun changement de rendu).
 
 **2.3.1** : AudioLinker devient **Audio Linker** et rejoint cdx-windows (`src/cdx-audio_linker`) : nom du bus `audio_linker` (clients C++ et Rust, essais), tube
 `cdx.audio_linker`, profil de recopie `tools/apps/audio_linker.json` ; commentaires de la charte mis à jour (aucun changement de rendu).

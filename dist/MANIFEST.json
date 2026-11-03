@@ -1,5 +1,5 @@
 {
-  "cdxUi": "2.3.1",
+  "cdxUi": "2.4.0",
   "files": {
     "cdx-ui.css": {
       "sha256": "03848b11a5c7c932349a2274c2dcc7e7ececce6414a5086661f16d0a8111078e",
@@ -22,7 +22,7 @@
       "bytes": 88523
     },
     "cdx-bridge.js": {
-      "sha256": "3e1500c773012f4e37b4948919dace309acfb5712bc93703f35e70d33f26ae72",
+      "sha256": "9a584fc4cb2f36e22a06694150996a7d289388d549d6e64287c4434319ee5e17",
       "bytes": 4441
     },
     "cdx-frame.js": {
@@ -48,6 +48,10 @@
     "tokens.rs": {
       "sha256": "cf4681462088de8d52329557d22ed9439cc9173d83827f6691e6e4c34f7e3966",
       "bytes": 23580
+    },
+    "CdxTokens.g.cs": {
+      "sha256": "1252412902d796b8e02383db5893275443445a3951a68ca3b17b7e8710a1bda3",
+      "bytes": 1156
     },
     "cdx-verify.mjs": {
       "sha256": "347fc3c292ee0b9ca2b3ae82b78e6c9abe62fdea38b529ebeb088b7623240982",

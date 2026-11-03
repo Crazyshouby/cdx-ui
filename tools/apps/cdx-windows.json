@@ -15,7 +15,8 @@
     "lint.mjs": "tools/lib/lint.mjs",
     "cdx-columns.js": "web/cdx/cdx-columns.js",
     "cdx-split.js": "web/cdx/cdx-split.js",
-    "cdx-spell.js": "web/cdx/cdx-spell.js"
+    "cdx-spell.js": "web/cdx/cdx-spell.js",
+    "CdxTokens.g.cs": "src/Cdx.Host/CdxTokens.g.cs"
   },
   "lint": [
     "web"

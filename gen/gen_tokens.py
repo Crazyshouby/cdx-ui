@@ -201,9 +201,26 @@ def rust_module(t):
     return "\n".join(L) + "\n"
 
 
+def csharp_tokens(t):
+    v = t["version"]
+    L = [f"// CdxTokens.g.cs -- généré par gen/gen_tokens.py (cdx-ui {v}) depuis tokens.json : ne pas modifier à la main.",
+         "// Les mesures de la charte et les couleurs de statut pour les programmes C# de la suite (cdx-windows, Cdx.Host) ; copié par charte-sync.",
+         "namespace Cdx;", "", "static class CdxTokens", "{", "    // Couleurs de statut (0xRRGGBB) : les mêmes dans tous les thèmes."]
+    for k, val in t["global"].items():
+        h = hexval(val)
+        if h is not None:
+            L.append(f"    public const int {camel(k)[1:]} = 0x{h:06X};")
+    L += ["", "    // Mesures (pixels de la charte, avant mise à l'échelle de l'écran)."]
+    for k, val in t["measures"].items():
+        L.append(f"    public const int {camel(k)[1:]} = {val};")
+    L += ["}", ""]
+    return "\n".join(L)
+
+
 def outputs(t):
     cssp, csst = patch_css(t)
-    return {cssp: csst, ROOT / "themes.css": themes_css(t), ROOT / "generated" / "cdx-tokens.h": cpp_header(t), ROOT / "generated" / "tokens.rs": rust_module(t)}
+    return {cssp: csst, ROOT / "themes.css": themes_css(t), ROOT / "generated" / "cdx-tokens.h": cpp_header(t), ROOT / "generated" / "tokens.rs": rust_module(t),
+            ROOT / "generated" / "CdxTokens.g.cs": csharp_tokens(t)}
 
 
 def main(argv):

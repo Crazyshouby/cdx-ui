@@ -7,6 +7,7 @@
     "fonts.css": "ui/cdx/fonts.css",
     "icons.js": "ui/cdx/icons.js",
     "cdx_bus.rs": "src-tauri/src/cdx_bus.rs",
+    "tokens.rs": "src-tauri/src/cdx_tokens.rs",
     "cdx-verify.mjs": "tools/cdx-verify.mjs",
     "cdx-bridge.js": "ui/cdx/cdx-bridge.js",
     "cdx-frame.js": "ui/cdx/cdx-frame.js",
