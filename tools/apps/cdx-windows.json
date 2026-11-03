@@ -16,7 +16,8 @@
     "cdx-columns.js": "web/cdx/cdx-columns.js",
     "cdx-split.js": "web/cdx/cdx-split.js",
     "cdx-spell.js": "web/cdx/cdx-spell.js",
-    "CdxTokens.g.cs": "src/Cdx.Host/CdxTokens.g.cs"
+    "CdxTokens.g.cs": "src/Cdx.Host/CdxTokens.g.cs",
+    "bus-vectors.json": "web/cdx/bus-vectors.json"
   },
   "lint": [
     "web"

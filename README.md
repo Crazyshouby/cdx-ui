@@ -52,7 +52,12 @@ node tools/charte-sync.mjs --check <app>  # compare les copies d'une application
 node tools/drift-report.mjs               # régénère docs/RAPPORT-DERIVE.md
 ```
 
-## État (03/11/2026, cdx-ui 2.4.0)
+## État (03/11/2026, cdx-ui 2.5.0)
+
+**2.5.0** : `bus/bus-vectors.json`, les cas de conformité communs du bus et de `suite.json` (limite de ligne, liste des douze programmes, dix-neuf `suite.json`
+avec l'accent attendu), recopié par `charte-sync` et rejoué par les trois clients : `cdx-shell --selftest-bus` (C#), le ctest `test_bus_vectors` d'Audio Linker
+(C++) et `cargo test` de Messages (Rust). `cdx_bus.h` ne lit plus que les clés du premier niveau (une `version` imbriquée, `"1"` ou `1.5` étaient pris pour la
+version 1) ; `cdx_bus.rs` gagne `register_app` (Messages s'inscrit dans `apps.json`, sous le même verrou `Local\cdx.apps` que le C#) et la liste `APPS`.
 
 **2.4.0** : les mesures de la charte et les couleurs de statut sont aussi générées pour C# (`generated/CdxTokens.g.cs`, par `gen/gen_tokens.py`), et
 recopiées comme le reste : `src/Cdx.Host/CdxTokens.g.cs` dans cdx-windows, `tokens.rs` en `src-tauri/src/cdx_tokens.rs` dans Messages. L'aimantation des

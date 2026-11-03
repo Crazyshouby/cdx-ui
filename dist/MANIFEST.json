@@ -1,5 +1,5 @@
 {
-  "cdxUi": "2.4.0",
+  "cdxUi": "2.5.0",
   "files": {
     "cdx-ui.css": {
       "sha256": "03848b11a5c7c932349a2274c2dcc7e7ececce6414a5086661f16d0a8111078e",
@@ -22,7 +22,7 @@
       "bytes": 88523
     },
     "cdx-bridge.js": {
-      "sha256": "9a584fc4cb2f36e22a06694150996a7d289388d549d6e64287c4434319ee5e17",
+      "sha256": "fed968433f222e82f8b62a65d8f8937cce35981bf1713b090fdd990ccde19b7c",
       "bytes": 4441
     },
     "cdx-frame.js": {
@@ -58,12 +58,16 @@
       "bytes": 1868
     },
     "cdx_bus.h": {
-      "sha256": "7e340f40a8eb2829ae48b9e5f610029ffe1b7e196267ae3f04c8d151c83ee65f",
-      "bytes": 7232
+      "sha256": "e63c552cedf1fae4250680069ad79de72ebd537609c5c8a9dc7ff7711457526b",
+      "bytes": 9695
     },
     "cdx_bus.rs": {
-      "sha256": "15561d35da4071858d058be282dc6d15ebe26931e04a0f47af77a15b5aecadf9",
-      "bytes": 12399
+      "sha256": "d4cfa7d6d7cb9b8a4ba075d3c0cf3b9b674aca06bcfabc4c8971634930e13708",
+      "bytes": 16534
+    },
+    "bus-vectors.json": {
+      "sha256": "61695fe1bfa71af2f9c42d12bc08fbecb62b1213f5b5302313da716c20dd2677",
+      "bytes": 2907
     },
     "tokens.json": {
       "sha256": "1ba2ba2b857f151e07b995077aa7060b704a40641b59737be61033ab15ffbba2",

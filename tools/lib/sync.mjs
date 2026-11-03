@@ -6,7 +6,7 @@ import crypto from 'node:crypto';
 // nom dans dist/  <-  fichier source du dépôt
 export const DIST_FILES = {
   'cdx-ui.css': 'cdx-ui.css', 'cdx-frame.css': 'cdx-frame.css', 'themes.css': 'themes.css', 'fonts.css': 'fonts.css', 'icons.js': 'icons.js',
-  'cdx-bridge.js': 'cdx-bridge.js', 'cdx-frame.js': 'cdx-frame.js', 'cdx-columns.js': 'cdx-columns.js', 'cdx-split.js': 'cdx-split.js', 'cdx-spell.js': 'cdx-spell.js', 'cdx-tokens.h': 'generated/cdx-tokens.h', 'tokens.rs': 'generated/tokens.rs', 'CdxTokens.g.cs': 'generated/CdxTokens.g.cs', 'cdx-verify.mjs': 'tools/cdx-verify.mjs', 'cdx_bus.h': 'bus/cpp/cdx_bus.h', 'cdx_bus.rs': 'bus/rust/cdx_bus.rs', 'tokens.json': 'tokens.json', 'pixel_engine.py': 'gen/pixel_engine.py', 'charte-lint.mjs': 'tools/charte-lint.mjs', 'lint.mjs': 'tools/lib/lint.mjs',
+  'cdx-bridge.js': 'cdx-bridge.js', 'cdx-frame.js': 'cdx-frame.js', 'cdx-columns.js': 'cdx-columns.js', 'cdx-split.js': 'cdx-split.js', 'cdx-spell.js': 'cdx-spell.js', 'cdx-tokens.h': 'generated/cdx-tokens.h', 'tokens.rs': 'generated/tokens.rs', 'CdxTokens.g.cs': 'generated/CdxTokens.g.cs', 'cdx-verify.mjs': 'tools/cdx-verify.mjs', 'cdx_bus.h': 'bus/cpp/cdx_bus.h', 'cdx_bus.rs': 'bus/rust/cdx_bus.rs', 'bus-vectors.json': 'bus/bus-vectors.json', 'tokens.json': 'tokens.json', 'pixel_engine.py': 'gen/pixel_engine.py', 'charte-lint.mjs': 'tools/charte-lint.mjs', 'lint.mjs': 'tools/lib/lint.mjs',
 };
 
 export const sha256 = buf => crypto.createHash('sha256').update(buf).digest('hex');

@@ -6,6 +6,7 @@
     "themes.css": "cdx/themes.css",
     "fonts.css": "cdx/fonts.css",
     "cdx_bus.h": "cdx/cdx_bus.h",
+    "bus-vectors.json": "cdx/bus-vectors.json",
     "cdx-verify.mjs": "tools/cdx-verify.mjs",
     "pixel_engine.py": "tools/pixel_engine.py",
     "cdx-bridge.js": "cdx/cdx-bridge.js",
