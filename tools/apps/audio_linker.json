@@ -1,0 +1,24 @@
+{
+  "name": "Audio Linker (cdx-windows/src/cdx-audio_linker)",
+  "root": "../cdx-windows/src/cdx-audio_linker",
+  "files": {
+    "cdx-ui.css": "cdx/cdx-ui.css",
+    "themes.css": "cdx/themes.css",
+    "fonts.css": "cdx/fonts.css",
+    "cdx_bus.h": "cdx/cdx_bus.h",
+    "bus-vectors.json": "cdx/bus-vectors.json",
+    "cdx-verify.mjs": "tools/cdx-verify.mjs",
+    "pixel_engine.py": "tools/pixel_engine.py",
+    "cdx-bridge.js": "cdx/cdx-bridge.js",
+    "cdx-frame.js": "cdx/cdx-frame.js",
+    "cdx-frame.css": "cdx/cdx-frame.css",
+    "tokens.json": "cdx/tokens.json",
+    "charte-lint.mjs": "tools/charte-lint.mjs",
+    "lint.mjs": "tools/lib/lint.mjs"
+  },
+  "lint": [
+    "assets"
+  ],
+  "notes": "C++ (Win32) + WebView2. Les pages sont assemblées par cmake/InlineAssets.cmake (marqueurs /*@cdx-ui.css@*/, /*@themes.css@*/, /*@fonts.css@*/ dans common.css, remplacés par les copies de cdx/) puis embarquées en RCDATA. cdx/ est une copie exacte de la charte et du client du bus (charte-sync), contrôlée en CI par tools/cdx-verify.mjs. icons.js reste le jeu de pictogrammes propre à Audio Linker (tools/pixel_icons.py dessine, tools/pixel_engine.py est le moteur commun).",
+  "manifest": "cdx/cdx-sync.json"
+}

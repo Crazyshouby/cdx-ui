@@ -1,0 +1,19 @@
+# Contrôles de la charte (non exécuté à ce jour : à essayer au premier push).
+name: charte
+on: [push, pull_request]
+jobs:
+  verifier:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install fonttools brotli
+      - run: python gen/gen_tokens.py --check
+      - run: node tools/build-dist.mjs --check
+      - run: node tools/charte-lint.mjs cdx-ui.css cdx-frame.css cdx-frame.js cdx-columns.js cdx-split.js cdx-bridge.js exemple.html
+      - run: node tools/check-accents.mjs
+      - run: node --test "tests/*.test.mjs"
+      - run: node tests/run-browser-tests.mjs
