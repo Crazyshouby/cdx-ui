@@ -1,0 +1,9 @@
+# Exceptions justifiées de charte-lint : règle<TAB>fragment du fichier<TAB>fragment de la ligne<TAB>raison. Aucune exception sans raison.
+# Un « # » en début de ligne commente. « * » vaut pour toute règle.
+weight	cdx-ui.css	font-weight	Repli Segoe UI seulement : sans effet avec la police pixel qui n'a qu'une graisse (CHARTE.md §3)
+radius	cdx-ui.css	.orb	Voyant rond : composant .orb de la charte (CHARTE.md §6)
+gradient	cdx-ui.css	.orb	Sphère du voyant : dégradé radial du composant .orb (CHARTE.md §6)
+gradient	cdx-ui.css	linear-gradient(var(--btn-outline), var(--btn-outline))	Un aplat (le filet de la case de flèche d'une liste déroulante) : pas un dégradé visible
+gradient	cdx-columns.js	--cdx-stripes	Rayures par colonne des listes : un dégradé par paliers nets, aux couleurs col-a et col-b du thème (CHARTE.md §6)
+color	exemple.html	--nc:	Couleur d'auteur d'un message de console : donnée de l'exemple, choisie par l'utilisateur (CHARTE.md §6)
+gradient	cdx-ui.css	--t-grad: linear-gradient(var(--a-title-from)	Dégradé de barre de titre active : jeton --t-grad, défini dans body.active (CHARTE.md §4)

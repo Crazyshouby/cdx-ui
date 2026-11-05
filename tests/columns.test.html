@@ -1,0 +1,68 @@
+<!doctype html><meta charset="utf-8"><title>test cdx-columns</title>
+<!-- Teste les colonnes redimensionnables (cdx-columns.js) : poignées, déplacement des bords, minimums, mémoire, retour aux largeurs d'origine, tri non déclenché.
+     Lancé par tests/run-browser-tests.mjs (Chrome headless) ; le résultat est écrit dans #out. -->
+<link rel="stylesheet" href="/cdx-ui.css">
+<style> body { margin: 0; } #box { width: 800px; display: flex; flex-direction: column; } .rw { display: grid; grid-template-columns: var(--cdx-cols, 1fr 170px 170px 90px); } .rw > * { min-width: 0; overflow: hidden; } </style>
+<div id="box"><div class="lhead" id="head" style="padding-right:0"><button class="lh" data-k="n">Nom</button><button class="lh" data-k="m">Date</button><button class="lh" data-k="t">Type</button><button class="lh" data-k="s">Taille</button></div>
+<div class="rw" id="r1"><span>a</span><span>b</span><span>c</span><span>d</span></div></div>
+<pre id="out">en attente</pre>
+<script src="/cdx-columns.js"></script>
+<script>
+const res = [], ok = (name, cond, extra = '') => res.push((cond ? 'OK     ' : 'ÉCHEC  ') + name + (cond ? '' : '  ' + extra));
+const head = document.getElementById('head'), box = document.getElementById('box');
+const W = () => [...head.children].map(b => Math.round(b.getBoundingClientRect().width));
+const rowW = () => [...document.getElementById('r1').children].map(b => Math.round(b.getBoundingClientRect().width));
+const handle = i => head.children[i].querySelector('.cdx-colrz');
+const ptr = (el, type, x) => el.dispatchEvent(new PointerEvent(type, { bubbles: true, button: 0, pointerId: 3, clientX: x }));
+const drag = (i, dx) => { const h = handle(i), x = h.getBoundingClientRect().left; ptr(h, 'pointerdown', x); ptr(h, 'pointermove', x + dx); ptr(h, 'pointerup', x + dx); };
+let sorted = 0; head.addEventListener('click', e => { if (e.target.closest('.lh')) sorted++; });
+try { localStorage.removeItem('cdx.cols.t'); } catch { }
+
+const cols = CdxColumns.init({ head, cols: ['1fr', 170, 170, 90], key: 't' });
+ok('init : une poignée sur chaque colonne sauf la dernière', head.querySelectorAll('.cdx-colrz').length === 3 && !head.children[3].querySelector('.cdx-colrz'));
+ok('largeurs d\'origine : 1fr prend le reste (370), puis 170 170 90', JSON.stringify(W()) === '[370,170,170,90]', JSON.stringify(W()));
+ok('les lignes de la liste suivent les mêmes colonnes que l\'en-tête', JSON.stringify(rowW()) === JSON.stringify(W()), JSON.stringify(rowW()));
+
+drag(1, 40);
+ok('tirer le bord droit de « Date » de +40 : Date 210, Type 130, le reste ne bouge pas', JSON.stringify(W()) === '[370,210,130,90]', JSON.stringify(W()));
+ok('la largeur totale ne change pas (800)', W().reduce((a, b) => a + b) === 800);
+ok('la ligne suit', JSON.stringify(rowW()) === JSON.stringify(W()));
+drag(0, -50);
+ok('tirer le bord de la colonne « 1fr » de -50 : elle rétrécit (320) et la suivante grandit (260)', JSON.stringify(W()) === '[320,260,130,90]', JSON.stringify(W()));
+drag(1, -500);
+ok('un minimum de 48 px : la colonne Date s\'arrête à 48 (Type reprend tout)', W()[1] === 48 && W()[2] === 342 && W()[0] === 320, JSON.stringify(W()));
+drag(0, -1000);
+ok('la colonne « 1fr » ne passe pas sous 80 px', W()[0] === 80, JSON.stringify(W()));
+ok('tirer une poignée ne trie pas (aucun clic sur l\'en-tête)', sorted === 0, 'tris : ' + sorted);
+handle(1).dispatchEvent(new MouseEvent('click', { bubbles: true }));
+ok('un clic sur la poignée ne trie pas non plus', sorted === 0);
+head.children[2].click();
+ok('un clic sur l\'en-tête lui-même trie toujours', sorted === 1);
+
+const saved = JSON.parse(localStorage.getItem('cdx.cols.t') || 'null');
+ok('les largeurs sont gardées (localStorage cdx.cols.t)', Array.isArray(saved) && saved.length === 4 && saved[1] === 288 && saved[2] === 342, JSON.stringify(saved));
+document.body.insertAdjacentHTML('beforeend', '<div id="box2" style="width:800px"><div class="lhead" id="head2" style="padding-right:0"><button class="lh">A</button><button class="lh">B</button><button class="lh">C</button><button class="lh">D</button></div></div>');
+const head2 = document.getElementById('head2');
+CdxColumns.init({ head: head2, cols: ['1fr', 170, 170, 90], key: 't' });
+ok('une autre instance avec la même clé retrouve ces largeurs', JSON.stringify([...head2.children].map(b => Math.round(b.getBoundingClientRect().width))) === JSON.stringify(W()), JSON.stringify([...head2.children].map(b => Math.round(b.getBoundingClientRect().width))));
+
+ptr(handle(1), 'pointerdown', 0); handle(1).dispatchEvent(new MouseEvent('dblclick', { bubbles: true })); ptr(handle(1), 'pointerup', 0);
+ok('un double-clic sur une poignée rend les largeurs d\'origine', JSON.stringify(W()) === '[370,170,170,90]', JSON.stringify(W()));
+ok('... et les garde aussi', JSON.parse(localStorage.getItem('cdx.cols.t'))[1] === 170);
+
+// une colonne souple en dernier (liste des salons de Messages) : tirer la dernière poignée aux dépens de la colonne « 1fr »
+document.body.insertAdjacentHTML('beforeend', '<div id="box3" style="width:600px"><div class="lhead" id="head3" style="padding-right:0"><button class="lh">Salon</button><button class="lh">Membres</button><span class="lh static">Sujet</span></div></div>');
+const head3 = document.getElementById('head3'); try { localStorage.removeItem('cdx.cols.k'); } catch { }
+CdxColumns.init({ head: head3, cols: [180, 80, '1fr'], key: 'k' });
+const W3 = () => [...head3.children].map(b => Math.round(b.getBoundingClientRect().width));
+ok('colonne souple en dernier : 180 80 puis le reste (340)', JSON.stringify(W3()) === '[180,80,340]', JSON.stringify(W3()));
+{ const h = head3.children[0].querySelector('.cdx-colrz'), x = h.getBoundingClientRect().left; ptr(h, 'pointerdown', x); ptr(h, 'pointermove', x + 60); ptr(h, 'pointerup', x + 60); }
+ok('tirer le bord de « Salon » de +60 : 240, « Membres » ne change pas (80), la colonne souple absorbe (280)', JSON.stringify(W3()) === '[240,80,280]', JSON.stringify(W3()));
+{ const h = head3.children[0].querySelector('.cdx-colrz'), x = h.getBoundingClientRect().left; ptr(h, 'pointerdown', x); ptr(h, 'pointermove', x - 60); ptr(h, 'pointerup', x - 60); }
+{ const h = head3.children[1].querySelector('.cdx-colrz'), x = h.getBoundingClientRect().left; ptr(h, 'pointerdown', x); ptr(h, 'pointermove', x + 60); ptr(h, 'pointerup', x + 60); }
+ok('tirer le bord de « Membres » de +60 : 140, et la colonne souple rétrécit (280)', JSON.stringify(W3()) === '[180,140,280]', JSON.stringify(W3()));
+{ const h = head3.children[1].querySelector('.cdx-colrz'), x = h.getBoundingClientRect().left; ptr(h, 'pointerdown', x); ptr(h, 'pointermove', x + 900); ptr(h, 'pointerup', x + 900); }
+ok('la colonne souple ne passe pas sous 80 px même si on tire très loin', W3()[2] === 80 && W3().reduce((p, c) => p + c) === 600, JSON.stringify(W3()));
+
+document.getElementById('out').textContent = res.join('\n') + '\n' + (res.some(r => r.startsWith('ÉCHEC')) ? 'RÉSULTAT : ÉCHEC' : 'RÉSULTAT : TOUT EST BON');
+</script>
